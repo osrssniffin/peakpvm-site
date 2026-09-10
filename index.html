@@ -1,1068 +1,782 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#0b0905" />
-  <meta name="description" content="Peak PvM — an Old School RuneScape PvM Discord community for raids, bossing, learners, events, and finding teams." />
-  <meta property="og:title" content="Peak PvM | OSRS PvM Discord" />
-  <meta property="og:description" content="Join Peak PvM — an OSRS PvM Discord community for raids, bossing, learners, events, and finding teams." />
-  <meta property="og:type" content="website" />
-  <meta property="og:image" content="peakpvm-banner.png" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101112">
+  <meta name="description" content="Peak PvM is an Old School RuneScape Discord community for raids, bossing, learners, events, and finding teams.">
+
+  <meta property="og:title" content="Peak PvM | OSRS PvM Discord">
+  <meta property="og:description" content="Find teams, learn content, and send some PvM with us.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="peakpvm-banner.png">
+
   <title>Peak PvM | OSRS PvM Discord</title>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link href="https://fonts.cdnfonts.com/css/runescape-uf" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.cdnfonts.com">
+  <link rel="stylesheet" href="https://fonts.cdnfonts.com/css/runescape-uf">
 
   <style>
     :root {
-      --bg: #080805;
-      --bg-soft: #121008;
-      --panel: rgba(16, 14, 8, .88);
-      --panel-2: rgba(25, 21, 12, .82);
-      --line: rgba(255, 226, 74, .14);
-      --line-strong: rgba(255, 226, 74, .24);
-      --gold: #ffea35;
-      --gold-deep: #c9b116;
-      --text: #f4efd6;
-      --muted: #bcb398;
-      --muted-2: #948a6d;
-      --discord: #5865F2;
-      --green: #57d780;
-      --shadow: 0 22px 70px rgba(0,0,0,.45);
-      --shadow-2: 0 26px 100px rgba(0,0,0,.62);
-      --radius: 24px;
-      --rune: 'RuneScape UF', serif;
-      --body: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      color-scheme: dark;
+      --bg: #101112;
+      --panel: #151617;
+      --text: #eeede7;
+      --muted: #b6b5ae;
+      --gold: #ccb578;
+      --line: #2c2d2d;
+      --rune: "RuneScape UF", "Palatino Linotype", fantasy;
+      --body: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
-      font-family: var(--body);
+      background: var(--bg);
       color: var(--text);
-      background:
-        radial-gradient(circle at 20% 0%, rgba(255, 214, 0, .08), transparent 28%),
-        radial-gradient(circle at 100% 20%, rgba(255, 70, 0, .08), transparent 22%),
-        linear-gradient(180deg, #0d0b06 0%, #090804 40%, #060503 100%);
-      overflow-x: hidden;
+      font-family: var(--body);
+      font-size: 1rem;
+      line-height: 1.65;
     }
 
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      opacity: .12;
-      background:
-        linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
-      background-size: 42px 42px;
-      mask-image: linear-gradient(to bottom, black, transparent 82%);
-      z-index: -1;
+    a {
+      color: inherit;
+      text-decoration: none;
     }
 
-    a { color: inherit; text-decoration: none; }
-    img { max-width: 100%; display: block; }
-    .wrap { width: min(1160px, calc(100% - 32px)); margin: 0 auto; }
+    img {
+      display: block;
+      max-width: 100%;
+    }
 
-    .rune {
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1,
+    h2,
+    h3,
+    .brand {
       font-family: var(--rune);
-      color: var(--gold);
-      line-height: .92;
-      text-shadow:
-        -3px 0 #000,
-        0 3px #000,
-        3px 0 #000,
-        0 -3px #000,
-        0 8px 18px rgba(0,0,0,.55);
+      font-weight: 400;
     }
+
+    h2 {
+      color: var(--gold);
+      font-size: clamp(2rem, 3.4vw, 2.75rem);
+      line-height: 1.2;
+      text-wrap: balance;
+    }
+
+    p {
+      color: var(--muted);
+    }
+
+    a:focus-visible {
+      outline: 3px solid var(--gold);
+      outline-offset: 5px;
+    }
+
+    .wrap {
+      width: min(1120px, calc(100% - 64px));
+      margin-inline: auto;
+    }
+
+    .skip-link {
+      position: absolute;
+      top: -100px;
+      left: 16px;
+      z-index: 10;
+      padding: 12px;
+      background: var(--bg);
+    }
+
+    .skip-link:focus {
+      top: 12px;
+    }
+
+    .icon-definitions {
+      position: absolute;
+      width: 0;
+      height: 0;
+      overflow: hidden;
+    }
+
+    /* Header */
 
     .topbar {
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      background: rgba(7, 6, 4, .84);
-      border-bottom: 1px solid rgba(255,255,255,.06);
-      backdrop-filter: blur(12px);
+      background: #111213;
+      border-bottom: 1px solid var(--line);
     }
 
-    .nav {
-      min-height: 70px;
+    .header-inner {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 16px;
+      gap: 32px;
+      min-height: 76px;
+      padding-block: 12px;
     }
 
     .brand {
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      gap: 12px;
-      min-width: 0;
+      gap: 10px;
+      color: var(--gold);
+      font-size: 1.75rem;
+      line-height: 1.2;
     }
 
     .brand img {
-      width: 40px;
-      height: 40px;
-      border-radius: 12px;
-      border: 1px solid rgba(255, 226, 74, .24);
-      background: rgba(0,0,0,.25);
-      box-shadow: 0 8px 24px rgba(0,0,0,.32);
+      width: 38px;
+      height: 38px;
+      object-fit: contain;
     }
 
-    .brand-copy {
+    nav {
       display: flex;
-      flex-direction: column;
-      gap: 4px;
-      line-height: 1;
+      gap: 28px;
+      margin-left: auto;
+      font-size: 0.875rem;
     }
 
-    .brand-copy strong {
-      font-family: var(--rune);
-      color: var(--gold);
-      font-size: 18px;
-      text-shadow: -2px 0 #000, 0 2px #000, 2px 0 #000, 0 -2px #000;
-    }
-
-    .brand-copy span {
-      color: var(--muted-2);
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: .9px;
-      text-transform: uppercase;
-    }
-
-    .navlinks {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-      font-size: 14px;
-      font-weight: 700;
-      color: #dfd8bf;
-    }
-
-    .navlinks a:not(.btn):hover { color: #fff6ad; }
-
-    .btn {
+    nav a {
       display: inline-flex;
       align-items: center;
-      justify-content: center;
-      gap: 10px;
-      min-height: 48px;
-      padding: 0 18px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.08);
-      font-weight: 900;
-      transition: transform .18s ease, box-shadow .18s ease, background .18s ease, border-color .18s ease;
+      min-height: 44px;
+      color: var(--muted);
     }
 
-    .btn:hover { transform: translateY(-2px); }
-
-    .btn-ghost {
-      background: rgba(255,255,255,.04);
+    nav a:hover {
       color: var(--text);
     }
 
-    .btn-ghost:hover {
-      background: rgba(255,255,255,.07);
-      border-color: rgba(255,226,74,.18);
-    }
+    /* Discord buttons */
 
-    .btn-discord {
-      background: linear-gradient(180deg, #7280ff 0%, #5865F2 60%, #4f5ade 100%);
+    .discord-button {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      min-height: 54px;
+      padding: 12px 22px;
+      border: 1px solid #7380ff;
+      border-radius: 6px;
+      background: #5865f2;
       color: #fff;
-      border-color: rgba(255,255,255,.18);
-      box-shadow: 0 14px 36px rgba(88,101,242,.28), inset 0 1px rgba(255,255,255,.2);
+      font-family: var(--body);
+      font-size: 1rem;
+      font-weight: 600;
+      line-height: 1.4;
+      text-align: center;
     }
 
-    .btn-discord:hover {
-      box-shadow: 0 18px 48px rgba(88,101,242,.38), inset 0 1px rgba(255,255,255,.2);
+    .discord-button:hover {
+      background: #4752c4;
+      border-color: #6672e6;
     }
 
-    .btn-gold {
-      color: #161300;
-      background: linear-gradient(180deg, #fff15d 0%, #f3d91c 55%, #dfbf00 100%);
-      border-color: #fff39c;
-      box-shadow: 0 12px 32px rgba(255,226,74,.14), inset 0 1px rgba(255,255,255,.55);
+    .discord-icon {
+      width: 23px;
+      height: 20px;
+      fill: currentColor;
+      flex-shrink: 0;
     }
+
+    .header-inner > .discord-button {
+      min-height: 42px;
+      padding: 10px 15px;
+      font-size: 0.875rem;
+    }
+
+    .header-inner > .discord-button .discord-icon {
+      width: 18px;
+      height: 16px;
+    }
+
+    /* Hero */
 
     .hero {
-      position: relative;
-      padding: 42px 0 64px;
-      overflow: clip;
-      isolation: isolate;
+      background-color: #191411;
+      background-image:
+        linear-gradient(
+          0deg,
+          var(--bg) 0%,
+          transparent 45%
+        ),
+        linear-gradient(
+          90deg,
+          rgba(10, 11, 12, 0.94) 0%,
+          rgba(10, 11, 12, 0.83) 40%,
+          rgba(10, 11, 12, 0.28) 100%
+        ),
+        url("bg.png");
+      background-size: cover;
+      background-position: center;
     }
 
-    .hero::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      z-index: -3;
-      background:
-        linear-gradient(180deg, rgba(5,4,2,.22) 0%, rgba(8,7,4,.82) 70%, rgba(8,8,5,.98) 100%),
-        url('peakpvm-banner.png') center top / cover no-repeat;
-      filter: saturate(1.04) contrast(1.02);
-    }
-
-    .hero::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      z-index: -2;
-      background:
-        radial-gradient(circle at 30% 16%, rgba(255,218,62,.10), transparent 22%),
-        radial-gradient(circle at 85% 28%, rgba(255,55,0,.09), transparent 18%),
-        linear-gradient(180deg, transparent 0%, rgba(0,0,0,.20) 45%, rgba(0,0,0,.48) 100%);
-    }
-
-    .hero-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1.05fr) minmax(300px, 400px);
-      gap: 24px;
-      align-items: stretch;
-    }
-
-    .hero-main,
-    .hero-side {
-      position: relative;
-      border-radius: 30px;
-      overflow: hidden;
-      border: 1px solid rgba(255,255,255,.07);
-      background: linear-gradient(180deg, rgba(17,14,8,.76), rgba(10,8,5,.88));
-      box-shadow: var(--shadow-2);
-      backdrop-filter: blur(8px);
-    }
-
-    .hero-main {
-      padding: 42px;
-      min-height: 560px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    .hero-main::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(circle at 78% 50%, rgba(255, 226, 74, .10), transparent 20%),
-        linear-gradient(90deg, rgba(0,0,0,.08) 0%, rgba(0,0,0,.18) 100%),
-        url('peakpvm-banner.png') right center / cover no-repeat;
-      opacity: .22;
-      pointer-events: none;
-    }
-
-    .hero-copy,
-    .hero-points,
-    .hero-actions,
-    .hero-footer {
-      position: relative;
-      z-index: 1;
+    .hero-inner {
+      padding-block: 66px 74px;
     }
 
     .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,226,74,.20);
-      background: rgba(0,0,0,.28);
-      color: #f0ebb7;
-      font-size: 12px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: .8px;
-    }
-
-    .dot {
-      width: 9px;
-      height: 9px;
-      border-radius: 50%;
-      background: var(--green);
-      box-shadow: 0 0 18px var(--green);
+      color: var(--gold);
+      font-size: 0.875rem;
+      line-height: 1.6;
+      letter-spacing: 0.07em;
     }
 
     h1 {
-      margin: 18px 0 16px;
-      font-size: clamp(56px, 8vw, 106px);
+      margin: 17px 0 20px;
+      color: #e0c787;
+      font-size: clamp(4.5rem, 8vw, 6.5rem);
+      line-height: 1.1;
+      text-shadow: 0 3px 2px #000;
     }
 
-    .hero-copy p {
-      margin: 0;
-      max-width: 670px;
-      color: #eee7cf;
-      font-size: clamp(18px, 2vw, 22px);
-      line-height: 1.65;
-      text-shadow: 0 4px 16px rgba(0,0,0,.6);
-    }
-
-    .hero-actions {
-      margin-top: 28px;
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .hero-join {
-      min-height: 70px;
-      padding: 0 28px;
-      font-size: 18px;
-      border-radius: 18px;
-    }
-
-    .discord-icon,
-    .discord-icon-lg {
-      flex: 0 0 auto;
-      fill: currentColor;
-    }
-
-    .discord-icon { width: 18px; height: 18px; }
-    .discord-icon-lg { width: 26px; height: 26px; }
-
-    .hero-points {
-      margin-top: 28px;
-      display: grid;
-      gap: 14px;
-    }
-
-    .point {
-      display: grid;
-      grid-template-columns: 44px 1fr;
-      gap: 14px;
-      align-items: start;
-      padding: 14px 16px;
-      border-radius: 18px;
-      background: rgba(255,255,255,.035);
-      border: 1px solid rgba(255,255,255,.07);
-    }
-
-    .point-icon {
-      width: 44px;
-      height: 44px;
-      display: grid;
-      place-items: center;
-      border-radius: 14px;
-      background: rgba(255,226,74,.08);
-      border: 1px solid rgba(255,255,255,.06);
-      font-size: 22px;
-    }
-
-    .point strong {
-      display: block;
-      font-size: 15px;
-      margin-bottom: 4px;
-      color: #faf5d9;
-    }
-
-    .point span {
-      display: block;
-      color: var(--muted);
-      line-height: 1.55;
-      font-size: 14px;
-    }
-
-    .hero-footer {
-      margin-top: 24px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .chip {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 10px 14px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.045);
-      border: 1px solid rgba(255,255,255,.07);
-      color: #eee6c8;
-      font-size: 13px;
-      font-weight: 800;
-    }
-
-    .hero-side {
-      padding: 22px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      gap: 18px;
-    }
-
-    .invite-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 10px;
-      border-radius: 999px;
-      background: rgba(88,101,242,.16);
-      border: 1px solid rgba(88,101,242,.26);
-      color: #d5d9ff;
-      font-size: 12px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: .8px;
-      width: max-content;
-    }
-
-    .invite-brand {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      margin-top: 16px;
-    }
-
-    .invite-brand img {
-      width: 70px;
-      height: 70px;
-      border-radius: 18px;
-      border: 1px solid rgba(255,226,74,.20);
-      background: rgba(0,0,0,.25);
-      box-shadow: 0 10px 30px rgba(0,0,0,.32);
-    }
-
-    .invite-brand h2 {
-      margin: 0 0 4px;
-      font-family: var(--rune);
-      color: var(--gold);
-      font-size: 34px;
-      line-height: .92;
-      text-shadow: -2px 0 #000, 0 2px #000, 2px 0 #000, 0 -2px #000;
-    }
-
-    .invite-brand p {
-      margin: 0;
-      color: #ded4b6;
-      font-size: 14px;
-      font-weight: 700;
-      letter-spacing: .3px;
-    }
-
-    .invite-copy {
-      margin: 16px 0 0;
-      color: var(--muted);
-      line-height: 1.65;
-      font-size: 15px;
-    }
-
-    .invite-list {
-      display: grid;
-      gap: 12px;
-      margin-top: 18px;
-    }
-
-    .invite-row {
-      padding: 14px 16px;
-      border-radius: 16px;
-      background: rgba(255,255,255,.04);
-      border: 1px solid rgba(255,255,255,.07);
-    }
-
-    .invite-row strong {
-      display: block;
-      margin-bottom: 5px;
-      color: #b7ae8f;
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: .8px;
-    }
-
-    .invite-row span {
-      display: block;
-      color: #f3edd4;
-      font-size: 15px;
-      font-weight: 800;
-      line-height: 1.4;
-      word-break: break-word;
-    }
-
-    .online {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      color: #def4e7;
-      font-size: 13px;
-      font-weight: 800;
-    }
-
-    section { padding: 84px 0; }
-
-    .section-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: end;
-      gap: 24px;
-      margin-bottom: 30px;
-    }
-
-    .section-head h2,
-    .content-copy h2,
-    .steps h2,
-    .cta h2 {
-      margin: 0;
-      font-family: var(--rune);
-      color: var(--gold);
-      line-height: .94;
-      text-shadow: -2px 0 #000, 0 2px #000, 2px 0 #000, 0 -2px #000, 0 6px 14px rgba(0,0,0,.5);
-    }
-
-    .section-head h2 { font-size: clamp(34px, 5vw, 58px); }
-
-    .section-head p,
-    .content-copy p,
-    .steps p,
-    .cta p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.72;
-      font-size: 16px;
-      max-width: 660px;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
-    }
-
-    .card {
-      padding: 26px;
-      border-radius: var(--radius);
-      border: 1px solid rgba(255,255,255,.075);
-      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
-      box-shadow: var(--shadow);
-      transition: transform .18s ease, border-color .18s ease, background .18s ease;
-    }
-
-    .card:hover {
-      transform: translateY(-4px);
-      border-color: rgba(255,226,74,.2);
-      background: linear-gradient(180deg, rgba(255,226,74,.05), rgba(255,255,255,.02));
-    }
-
-    .icon {
-      width: 54px;
-      height: 54px;
-      display: grid;
-      place-items: center;
-      margin-bottom: 18px;
-      border-radius: 14px;
-      background: rgba(255,226,74,.08);
-      border: 1px solid rgba(255,255,255,.06);
-      font-size: 26px;
-    }
-
-    .card h3 {
-      margin: 0 0 10px;
-      font-size: 20px;
-    }
-
-    .card p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.65;
-      font-size: 15px;
-    }
-
-    .content-band {
-      display: grid;
-      grid-template-columns: minmax(320px, 500px) minmax(0, 1fr);
-      gap: 24px;
-      align-items: stretch;
-    }
-
-    .content-art,
-    .content-copy {
-      border-radius: 28px;
-      border: 1px solid rgba(255,255,255,.08);
-      background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.018));
-      box-shadow: var(--shadow);
-    }
-
-    .content-art {
-      position: relative;
-      min-height: 440px;
-      overflow: hidden;
-      background:
-        linear-gradient(180deg, rgba(0,0,0,.12), rgba(0,0,0,.56)),
-        url('peakpvm-banner.png') center / cover no-repeat;
-    }
-
-    .content-art::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at 68% 40%, rgba(255,226,74,.10), transparent 22%);
-      pointer-events: none;
-    }
-
-    .art-badge {
-      position: absolute;
-      top: 18px;
-      left: 18px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 12px 14px;
-      border-radius: 18px;
-      background: rgba(10,9,6,.72);
-      border: 1px solid rgba(255,255,255,.08);
-      backdrop-filter: blur(8px);
-    }
-
-    .art-badge img {
-      width: 36px;
-      height: 36px;
-      border-radius: 10px;
-      border: 1px solid rgba(255,226,74,.18);
-    }
-
-    .art-badge strong {
-      display: block;
-      font-size: 14px;
-      color: #fff5c2;
-    }
-
-    .art-badge span {
-      display: block;
-      font-size: 12px;
-      color: #cac19f;
-    }
-
-    .art-overlay {
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      padding: 24px;
-      background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,.18) 12%, rgba(0,0,0,.70) 100%);
-    }
-
-    .art-overlay strong {
-      display: block;
-      margin-bottom: 8px;
-      color: #fff5c1;
-      font-size: 18px;
-    }
-
-    .art-overlay p {
-      margin: 0;
-      color: #ddd5b8;
-      line-height: 1.6;
-      font-size: 15px;
-      max-width: 420px;
-    }
-
-    .content-copy {
-      padding: 30px;
-    }
-
-    .checklist {
-      display: grid;
-      gap: 12px;
-      margin: 24px 0 0;
-    }
-
-    .check {
-      display: flex;
-      gap: 12px;
-      align-items: flex-start;
-      color: #ebe5cb;
-      line-height: 1.6;
-    }
-
-    .check b { color: var(--gold); }
-
-    .role-row {
-      margin-top: 24px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .role-pill {
-      padding: 11px 14px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.04);
-      border: 1px solid rgba(255,255,255,.07);
-      color: #eee6ca;
-      font-size: 13px;
-      font-weight: 800;
-    }
-
-    .steps {
-      padding: 34px;
-      border-radius: 28px;
-      border: 1px solid rgba(255,255,255,.08);
-      background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.016));
-      box-shadow: var(--shadow);
-    }
-
-    .steps h2 { font-size: clamp(36px, 4vw, 52px); margin-bottom: 12px; }
-    .steps p { margin-bottom: 24px; }
-
-    .step-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
-    }
-
-    .step {
-      padding: 24px;
-      border-radius: 22px;
-      background: rgba(255,255,255,.03);
-      border: 1px solid rgba(255,255,255,.075);
-    }
-
-    .step-num {
-      width: 42px;
-      height: 42px;
-      display: grid;
-      place-items: center;
-      margin-bottom: 14px;
-      border-radius: 12px;
-      background: rgba(255,226,74,.10);
-      border: 1px solid rgba(255,255,255,.08);
-      color: var(--gold);
-      font-weight: 900;
-    }
-
-    .step h3 { margin: 0 0 10px; font-size: 18px; }
-    .step p { margin: 0; max-width: none; font-size: 15px; }
-
-    .cta {
-      text-align: center;
-      padding: 72px 28px;
-      border-radius: 30px;
-      border: 1px solid rgba(255,226,74,.18);
-      background:
-        radial-gradient(circle at 50% 0%, rgba(255,226,74,.13), transparent 42%),
-        linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.018));
-      box-shadow: var(--shadow);
-    }
-
-    .cta h2 { font-size: clamp(40px, 6vw, 64px); margin-bottom: 12px; }
-    .cta p { margin: 0 auto 24px; }
-
-    .fine {
-      margin-top: 16px;
-      color: var(--muted-2);
-      font-size: 13px;
-      line-height: 1.55;
-    }
-
-    footer {
-      padding: 36px 0 48px;
-      text-align: center;
-      color: #8f876e;
-      font-size: 13px;
+    .hero-description {
+      max-width: 610px;
+      color: #e1e0d9;
+      font-size: 1.125rem;
       line-height: 1.7;
     }
 
-    footer strong { color: #e0d6b7; }
+    .hero .discord-button {
+      margin-top: 26px;
+    }
 
-    @media (max-width: 1024px) {
-      .hero-grid,
-      .content-band,
-      .grid,
-      .step-grid {
-        grid-template-columns: 1fr 1fr;
+    .hero-note {
+      max-width: 565px;
+      margin-top: 20px;
+      font-size: 0.9375rem;
+    }
+
+    /* Activity strip */
+
+    .activity-strip {
+      border-bottom: 1px solid var(--line);
+    }
+
+    .activities {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px 24px;
+      margin: 0;
+      padding: 19px 0;
+      list-style: none;
+      color: #c9c5b7;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .activities li:last-child {
+      color: var(--gold);
+    }
+
+    /* About */
+
+    section[id] {
+      scroll-margin-top: 24px;
+    }
+
+    .about {
+      display: grid;
+      grid-template-columns: 1fr 1.65fr;
+      align-items: start;
+      gap: 48px;
+      padding-block: 54px;
+    }
+
+    .about p {
+      max-width: 680px;
+    }
+
+    /* Features */
+
+    .features {
+      padding-block: 44px 48px;
+      border-block: 1px solid var(--line);
+      background: var(--panel);
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0 34px;
+      margin-top: 18px;
+    }
+
+    .feature {
+      padding-block: 24px;
+      border-top: 1px solid var(--line);
+    }
+
+    .feature:nth-child(-n+3) {
+      border-top: 0;
+    }
+
+    .feature h3 {
+      margin-bottom: 8px;
+      color: #ded2b0;
+      font-size: 1.625rem;
+      line-height: 1.25;
+    }
+
+    .feature p {
+      font-size: 0.9375rem;
+    }
+
+    /* Community */
+
+    .community {
+      display: grid;
+      grid-template-columns: 1fr 1.65fr;
+      gap: 48px;
+      padding-block: 52px;
+    }
+
+    .community-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px 28px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      color: #cfcec6;
+      font-size: 0.9375rem;
+    }
+
+    .community-list li {
+      position: relative;
+      padding-left: 20px;
+    }
+
+    .community-list li::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: var(--gold);
+    }
+
+    .community-list li:last-child {
+      grid-column: 1 / -1;
+    }
+
+    /* Final invite */
+
+    .join {
+      border-block: 1px solid #3a3329;
+      background: #191817;
+    }
+
+    .join-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 32px;
+      padding-block: 40px;
+    }
+
+    .join h2 {
+      font-size: clamp(2rem, 3vw, 2.5rem);
+    }
+
+    .join p {
+      margin-top: 10px;
+    }
+
+    .join .discord-button {
+      flex-shrink: 0;
+    }
+
+    footer {
+      padding-block: 25px;
+      color: #9f9f99;
+      font-size: 0.8125rem;
+    }
+
+    /* Tablet */
+
+    @media (max-width: 800px) {
+      .header-inner {
+        gap: 20px;
       }
 
-      .hero-grid,
-      .content-band {
+      nav {
+        gap: 20px;
+      }
+
+      .about,
+      .community {
+        grid-template-columns: 1fr;
+        gap: 22px;
+      }
+
+      .feature-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .feature:nth-child(3) {
+        border-top: 1px solid var(--line);
+      }
+
+      .join-inner {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 22px;
+      }
+
+      .hero {
+        background-position: 60% center;
+      }
+    }
+
+    /* Mobile */
+
+    @media (max-width: 540px) {
+      .wrap {
+        width: calc(100% - 40px);
+      }
+
+      .header-inner {
+        flex-wrap: wrap;
+        gap: 4px 12px;
+        padding-block: 10px 4px;
+      }
+
+      .brand {
+        font-size: 1.5rem;
+      }
+
+      .brand img {
+        width: 32px;
+        height: 32px;
+      }
+
+      .header-inner > .discord-button {
+        margin-left: auto;
+      }
+
+      nav {
+        order: 3;
+        justify-content: center;
+        gap: 36px;
+        width: 100%;
+      }
+
+      .hero-inner {
+        padding-block: 38px 46px;
+      }
+
+      .hero {
+        background-image:
+          linear-gradient(
+            0deg,
+            var(--bg),
+            transparent 70%
+          ),
+          linear-gradient(
+            90deg,
+            rgba(10, 11, 12, 0.91),
+            rgba(10, 11, 12, 0.62)
+          ),
+          url("bg.png");
+      }
+
+      h1 {
+        margin-block: 14px 18px;
+      }
+
+      .hero-description {
+        font-size: 1rem;
+      }
+
+      .activities {
+        justify-content: flex-start;
+        gap: 10px 23px;
+      }
+
+      .about,
+      .community {
+        padding-block: 36px;
+      }
+
+      .features {
+        padding-block: 32px 16px;
+      }
+
+      .feature-grid,
+      .community-list {
         grid-template-columns: 1fr;
       }
 
-      .section-head {
-        display: block;
+      .feature:nth-child(2) {
+        border-top: 1px solid var(--line);
       }
 
-      .section-head p { margin-top: 12px; }
-    }
+      .feature {
+        padding-block: 19px;
+      }
 
-    @media (max-width: 820px) {
-      .navlinks a:not(.btn) { display: none; }
-      .hero-main { min-height: auto; }
-      .hero-grid,
-      .grid,
-      .step-grid {
-        grid-template-columns: 1fr;
+      .join-inner {
+        padding-block: 32px;
+      }
+
+      .hero .discord-button,
+      .join .discord-button {
+        width: 100%;
       }
     }
 
-    @media (max-width: 620px) {
-      .wrap { width: min(100% - 22px, 1160px); }
-      .nav { min-height: 64px; }
-      .brand img { width: 36px; height: 36px; }
-      .brand-copy strong { font-size: 16px; }
-      .hero,
-      section { padding: 22px 0 64px; }
-      .hero-main,
-      .hero-side,
-      .content-copy,
-      .steps,
-      .cta { padding: 22px; }
-      h1 { font-size: clamp(44px, 15vw, 72px); }
-      .hero-actions .btn,
-      .nav .btn,
-      .cta .btn { width: 100%; }
-      .hero-join { min-height: 62px; font-size: 17px; }
-      .content-art { min-height: 320px; }
+    @media (max-width: 340px) {
+      .header-inner > .discord-button {
+        padding-inline: 9px;
+      }
+
+      .header-inner > .discord-button .discord-icon {
+        display: none;
+      }
+
+      .brand {
+        font-size: 1.25rem;
+      }
     }
   </style>
 </head>
+
 <body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <svg
+    class="icon-definitions"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden="true"
+    focusable="false"
+  >
+    <symbol id="discord-mark" viewBox="0 0 127.14 96.36">
+      <path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.62,85.1a68.42,68.42,0,0,1-10.89-5.19c.91-.66,1.8-1.34,2.66-2,20.87,9.53,43.46,9.53,64.08,0,.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.91,5.2,77,77,0,0,0,6.92,11.25A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,59.93,31,52.84S36.06,40,42.45,40s11.6,5.82,11.49,12.85S48.78,65.69,42.45,65.69Zm42.24,0c-6.27,0-11.4-5.76-11.4-12.85S78.3,40,84.69,40s11.6,5.82,11.49,12.85S91,65.69,84.69,65.69Z"/>
+    </symbol>
+  </svg>
+
   <header class="topbar">
-    <div class="wrap nav">
-      <a class="brand" href="#top" aria-label="Peak PvM home">
-        <img src="peakpvm-logo.png" alt="Peak PvM logo" />
-        <div class="brand-copy">
-          <strong>Peak PvM</strong>
-          <span>OSRS PvM Discord</span>
-        </div>
+    <div class="wrap header-inner">
+      <a class="brand" href="#main" aria-label="Peak PvM home">
+        <img
+          src="peakpvm-logo.png"
+          alt=""
+          width="38"
+          height="38"
+        >
+        <span>Peak PvM</span>
       </a>
 
-      <nav class="navlinks" aria-label="Primary navigation">
+      <nav aria-label="Main navigation">
+        <a href="#about">About</a>
         <a href="#features">Features</a>
-        <a href="#community">Community</a>
-        <a href="#how">How it works</a>
-        <a class="btn btn-discord" href="https://discord.gg/sg8Pq3whSS" target="_blank" rel="noopener">Join Discord ↗</a>
+        <a href="#join">Join</a>
       </nav>
+
+      <a
+        class="discord-button"
+        href="https://discord.gg/sg8Pq3whSS"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <svg class="discord-icon" aria-hidden="true" focusable="false">
+          <use href="#discord-mark"></use>
+        </svg>
+        <span>Discord</span>
+      </a>
     </div>
   </header>
 
-  <main id="top">
-    <section class="hero">
-      <div class="wrap hero-grid">
-        <div class="hero-main">
-          <div class="hero-copy">
-            <div class="eyebrow"><span class="dot"></span> Old School RuneScape PvM Discord Community</div>
-            <h1 class="rune">Peak PvM</h1>
-            <p><strong>Peak PvM is a PvM-focused OSRS Discord community</strong> for people who want more homies to raid, boss, learn content, join events, and play the game with. It’s built for both learners and end-game players, with no expectation to leave your current clan.</p>
-          </div>
+  <main id="main">
+    <section class="hero" aria-labelledby="hero-heading">
+      <div class="wrap hero-inner">
+        <p class="eyebrow">
+          Old School RuneScape PvM Discord Community
+        </p>
 
-          <div class="hero-actions">
-            <a class="btn btn-discord hero-join" href="https://discord.gg/sg8Pq3whSS" target="_blank" rel="noopener">
-              <svg class="discord-icon-lg" viewBox="0 0 127.14 96.36" aria-hidden="true">
-                <path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.62,85.1a68.42,68.42,0,0,1-10.89-5.19c.91-.66,1.8-1.34,2.66-2,20.87,9.53,43.46,9.53,64.08,0,.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.91,5.2,77,77,0,0,0,6.92,11.25A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,59.93,31,52.84S36.06,40,42.45,40s11.6,5.82,11.49,12.85S48.78,65.69,42.45,65.69Zm42.24,0c-6.27,0-11.4-5.76-11.4-12.85S78.3,40,84.69,40s11.6,5.82,11.49,12.85S91,65.69,84.69,65.69Z"/>
-              </svg>
-              <span>Join Peak PvM Discord</span>
-            </a>
-            <a class="btn btn-ghost" href="#features">See what we’ve built</a>
-          </div>
+        <h1 id="hero-heading">Peak PvM</h1>
 
-          <div class="hero-points">
-            <div class="point">
-              <div class="point-icon">⚔️</div>
-              <div>
-                <strong>Find teams fast</strong>
-                <span>PvM party finder, role pings, and a scheduler built to help people actually form raids and boss trips.</span>
-              </div>
-            </div>
-            <div class="point">
-              <div class="point-icon">🔥</div>
-              <div>
-                <strong>Built for learners and end-gamers</strong>
-                <span>No elitist requirements. No weird rank hierarchy. Just people sending content and helping each other improve.</span>
-              </div>
-            </div>
-          </div>
+        <p class="hero-description">
+          A PvM-focused OSRS Discord community for people who want
+          more homies to raid, boss, learn content, join events,
+          and play the game with.
+        </p>
 
-          <div class="hero-footer">
-            <span class="chip">ToA</span>
-            <span class="chip">CoX</span>
-            <span class="chip">ToB</span>
-            <span class="chip">Nex</span>
-            <span class="chip">Yama</span>
-            <span class="chip">Corp</span>
-            <span class="chip">Nightmare</span>
-            <span class="chip">Learners welcome</span>
-          </div>
-        </div>
+        <a
+          class="discord-button"
+          href="https://discord.gg/sg8Pq3whSS"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <svg class="discord-icon" aria-hidden="true" focusable="false">
+            <use href="#discord-mark"></use>
+          </svg>
+          <span>Join Peak PvM Discord</span>
+        </a>
 
-        <aside class="hero-side" id="join" aria-label="Official Peak PvM Discord invite">
-          <div>
-            <div class="invite-tag">
-              <svg class="discord-icon" viewBox="0 0 127.14 96.36" aria-hidden="true">
-                <path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.62,85.1a68.42,68.42,0,0,1-10.89-5.19c.91-.66,1.8-1.34,2.66-2,20.87,9.53,43.46,9.53,64.08,0,.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.91,5.2,77,77,0,0,0,6.92,11.25A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,59.93,31,52.84S36.06,40,42.45,40s11.6,5.82,11.49,12.85S48.78,65.69,42.45,65.69Zm42.24,0c-6.27,0-11.4-5.76-11.4-12.85S78.3,40,84.69,40s11.6,5.82,11.49,12.85S91,65.69,84.69,65.69Z"/>
-              </svg>
-              Official Discord Invite
-            </div>
-
-            <div class="invite-brand">
-              <img src="peakpvm-logo.png" alt="Peak PvM crest" />
-              <div>
-                <h2>Peak PvM</h2>
-                <p>OSRS PvM Discord Community</p>
-              </div>
-            </div>
-
-            <p class="invite-copy">Come chill, find teams, learn content, and have more people to PvM with. Peak PvM is a Discord community first, with an optional in-game chat channel for anyone who wants to hang out there too.</p>
-
-            <div class="invite-list">
-              <div class="invite-row">
-                <strong>Invite Link</strong>
-                <span>discord.gg/sg8Pq3whSS</span>
-              </div>
-              <div class="invite-row">
-                <strong>What’s inside</strong>
-                <span>PvM party finder, scheduler, WOM hiscores, onboarding, loot tracking, events</span>
-              </div>
-              <div class="invite-row">
-                <strong>Status</strong>
-                <div class="online"><span class="dot"></span>Active and recruiting</div>
-              </div>
-            </div>
-          </div>
-
-          <a class="btn btn-discord" href="https://discord.gg/sg8Pq3whSS" target="_blank" rel="noopener">
-            <svg class="discord-icon" viewBox="0 0 127.14 96.36" aria-hidden="true">
-              <path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.62,85.1a68.42,68.42,0,0,1-10.89-5.19c.91-.66,1.8-1.34,2.66-2,20.87,9.53,43.46,9.53,64.08,0,.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.91,5.2,77,77,0,0,0,6.92,11.25A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,59.93,31,52.84S36.06,40,42.45,40s11.6,5.82,11.49,12.85S48.78,65.69,42.45,65.69Zm42.24,0c-6.27,0-11.4-5.76-11.4-12.85S78.3,40,84.69,40s11.6,5.82,11.49,12.85S91,65.69,84.69,65.69Z"/>
-            </svg>
-            Join Peak PvM Discord
-          </a>
-        </aside>
+        <p class="hero-note">
+          Learners and end-game players are both welcome.
+          Already in a clan? That’s completely fine — there’s
+          no expectation to leave it.
+        </p>
       </div>
     </section>
 
-    <section id="features">
+    <div class="activity-strip">
       <div class="wrap">
-        <div class="section-head">
-          <h2>Built to make PvM easier.</h2>
-          <p>Peak PvM is set up around actually helping people play the game together. Clear onboarding, useful tools, and a clean Discord-first experience instead of a bunch of dead-server clutter.</p>
-        </div>
+        <ul class="activities" aria-label="Community activities">
+          <li>ToA</li>
+          <li>CoX</li>
+          <li>ToB</li>
+          <li>Nex</li>
+          <li>Yama</li>
+          <li>Corp</li>
+          <li>Nightmare</li>
+          <li>BA</li>
+          <li>Learners</li>
+        </ul>
+      </div>
+    </div>
 
-        <div class="grid">
-          <article class="card">
-            <div class="icon">🗡️</div>
+    <section
+      class="wrap about"
+      id="about"
+      aria-labelledby="about-heading"
+    >
+      <h2 id="about-heading">What is Peak PvM?</h2>
+
+      <p>
+        Peak PvM is a Discord-first OSRS PvM community built around
+        finding teams, learning content, organizing runs, and having
+        more people to play with. The focus is PvM, raids, bossing,
+        events, and community — without elitist requirements or
+        weird rank hierarchy.
+      </p>
+    </section>
+
+    <section
+      class="features"
+      id="features"
+      aria-labelledby="features-heading"
+    >
+      <div class="wrap">
+        <h2 id="features-heading">Features</h2>
+
+        <div class="feature-grid">
+          <article class="feature">
             <h3>PvM Party Finder</h3>
-            <p>Role pings for ToA, CoX, ToB, Nex, Yama, Corp, Nightmare, BA, learners, and more.</p>
+            <p>
+              Role pings for ToA, CoX, ToB, Nex, Yama, Corp,
+              Nightmare, BA, Learners, and more.
+            </p>
           </article>
-          <article class="card">
-            <div class="icon">📅</div>
+
+          <article class="feature">
             <h3>PvM Scheduler</h3>
-            <p>Set up runs now or later with activity, time, notes, and team size so people can join fast.</p>
+            <p>
+              Set up raids and bossing runs now or later.
+            </p>
           </article>
-          <article class="card">
-            <div class="icon">🏆</div>
+
+          <article class="feature">
             <h3>Community Hiscores</h3>
-            <p>Wise Old Man synced hiscores so the community can track progress and follow the grind.</p>
+            <p>
+              Synced with Wise Old Man to follow the
+              community’s progress.
+            </p>
           </article>
-          <article class="card">
-            <div class="icon">✅</div>
-            <h3>Easy RSN Onboarding</h3>
-            <p>Simple Discord verification flow that gets members into the server without a clunky application process.</p>
+
+          <article class="feature">
+            <h3>Easy RSN Verification / Onboarding</h3>
+            <p>
+              Verify your RuneScape name and get settled
+              into the server.
+            </p>
           </article>
-          <article class="card">
-            <div class="icon">💰</div>
-            <h3>Loot Tracking</h3>
-            <p>Share spoons, splits, and big drops in the community feed with OSRS utilities built around actual players.</p>
+
+          <article class="feature">
+            <h3>Loot Tracking &amp; OSRS Utilities</h3>
+            <p>
+              Keep track of drops, share loot, and use
+              handy tools for your next run.
+            </p>
           </article>
-          <article class="card">
-            <div class="icon">📆</div>
-            <h3>Events Planned</h3>
-            <p>Boss of the Week, PvM bingo, competitions, and community events as the server keeps growing.</p>
-          </article>
-        </div>
-      </div>
-    </section>
 
-    <section id="community">
-      <div class="wrap content-band">
-        <div class="content-art" role="img" aria-label="Peak PvM in-game themed artwork">
-          <div class="art-badge">
-            <img src="peakpvm-logo.png" alt="Peak PvM icon" />
-            <div>
-              <strong>Peak PvM</strong>
-              <span>OSRS PvM Discord</span>
-            </div>
-          </div>
-          <div class="art-overlay">
-            <strong>Subtle OSRS style. Clean presentation.</strong>
-            <p>A Discord community for finding teams, sending raids, learning bosses, and actually having people around to game with.</p>
-          </div>
-        </div>
-
-        <div class="content-copy">
-          <h2>Clean, chill, and blatantly clear.</h2>
-          <p>Peak PvM is not meant to be some bloated clan site. It’s a clean front door for an OSRS Discord community where learners and experienced players can both show up, hang out, and send content.</p>
-
-          <div class="checklist">
-            <div class="check">✓ <span><b>Discord community first:</b> join the server, grab your roles, and start finding people immediately.</span></div>
-            <div class="check">✓ <span><b>No clan lock-in:</b> already in a clan? That’s completely fine. There’s no expectation to leave it.</span></div>
-            <div class="check">✓ <span><b>OSRS-focused utility:</b> everything is built around raids, bossing, team formation, and community progress.</span></div>
-            <div class="check">✓ <span><b>Welcoming by design:</b> learners and experienced players are both wanted here.</span></div>
-          </div>
-
-          <div class="role-row" aria-label="Popular activities">
-            <span class="role-pill">ToA</span>
-            <span class="role-pill">CoX</span>
-            <span class="role-pill">ToB</span>
-            <span class="role-pill">Nex</span>
-            <span class="role-pill">Yama</span>
-            <span class="role-pill">Corp</span>
-            <span class="role-pill">Nightmare</span>
-            <span class="role-pill">BA</span>
-            <span class="role-pill">Learners</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="how">
-      <div class="wrap steps">
-        <h2>How to get in and start sending.</h2>
-        <p>Peak PvM is supposed to be simple. Join the Discord, verify your RSN, grab your activity roles, and start finding content.</p>
-
-        <div class="step-grid">
-          <article class="step">
-            <div class="step-num">1</div>
-            <h3>Join the Discord</h3>
-            <p>Use the official invite and enter the server. That’s your front door into the community.</p>
-          </article>
-          <article class="step">
-            <div class="step-num">2</div>
-            <h3>Verify your RSN</h3>
-            <p>Run the RSN onboarding command to unlock the server and get connected to the community setup.</p>
-          </article>
-          <article class="step">
-            <div class="step-num">3</div>
-            <h3>Grab roles and PvM</h3>
-            <p>Pick your pings, check the scheduler, and jump into raids, bossing, loot posts, and future events.</p>
+          <article class="feature">
+            <h3>Community PvM Events</h3>
+            <p>
+              Boss of the Week, PvM Bingo, competitions,
+              and more as the server grows.
+            </p>
           </article>
         </div>
       </div>
     </section>
 
-    <section>
-      <div class="wrap">
-        <div class="cta">
-          <h2>Ready to send?</h2>
-          <p>Join Peak PvM, get your RSN set, grab your activity roles, and start finding more people to game with. Clean, subtle, and built for OSRS players.</p>
-          <a class="btn btn-discord" href="https://discord.gg/sg8Pq3whSS" target="_blank" rel="noopener">
-            <svg class="discord-icon" viewBox="0 0 127.14 96.36" aria-hidden="true">
-              <path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.62,85.1a68.42,68.42,0,0,1-10.89-5.19c.91-.66,1.8-1.34,2.66-2,20.87,9.53,43.46,9.53,64.08,0,.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.91,5.2,77,77,0,0,0,6.92,11.25A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,59.93,31,52.84S36.06,40,42.45,40s11.6,5.82,11.49,12.85S48.78,65.69,42.45,65.69Zm42.24,0c-6.27,0-11.4-5.76-11.4-12.85S78.3,40,84.69,40s11.6,5.82,11.49,12.85S91,65.69,84.69,65.69Z"/>
-            </svg>
-            Join Peak PvM Discord
-          </a>
-          <div class="fine">Peak PvM is a community project and is not affiliated with Jagex Ltd. RuneScape and Old School RuneScape are trademarks of Jagex Ltd.</div>
+    <section
+      class="wrap community"
+      id="community"
+      aria-labelledby="community-heading"
+    >
+      <h2 id="community-heading">What we’re about</h2>
+
+      <ul class="community-list">
+        <li>Learners and experienced players both welcome</li>
+        <li>No elitist requirements</li>
+        <li>No weird rank hierarchy</li>
+        <li>No expectation to leave your current clan</li>
+        <li>Discord community first</li>
+        <li>Optional in-game chat channel</li>
+        <li>
+          Small but growing community focused on
+          actually playing together
+        </li>
+      </ul>
+    </section>
+
+    <section
+      class="join"
+      id="join"
+      aria-labelledby="join-heading"
+    >
+      <div class="wrap join-inner">
+        <div>
+          <h2 id="join-heading">
+            Looking for more people to PvM with?
+          </h2>
+          <p>
+            Come chill, find teams, and send some content with us.
+          </p>
         </div>
+
+        <a
+          class="discord-button"
+          href="https://discord.gg/sg8Pq3whSS"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <svg class="discord-icon" aria-hidden="true" focusable="false">
+            <use href="#discord-mark"></use>
+          </svg>
+          <span>Join Peak PvM Discord</span>
+        </a>
       </div>
     </section>
   </main>
 
-  <footer>
-    <div class="wrap">
-      <strong>Peak PvM</strong> · Old School RuneScape PvM Discord community<br />
-      Discord invite: <a href="https://discord.gg/sg8Pq3whSS" target="_blank" rel="noopener">discord.gg/sg8Pq3whSS</a>
-    </div>
+  <footer class="wrap">
+    Peak PvM is not affiliated with Jagex Ltd.
+    RuneScape and Old School RuneScape are trademarks of Jagex Ltd.
   </footer>
 </body>
 </html>
