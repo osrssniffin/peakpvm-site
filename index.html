@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#101112">
   <meta name="description" content="Peak PvM is an Old School RuneScape Discord community for raids, bossing, learners, events, and finding teams.">
@@ -14,11 +13,23 @@
 
   <title>Peak PvM | OSRS PvM Discord</title>
 
-  <link rel="stylesheet" href="https://fonts.cdnfonts.com/css/runescape-uf">
-  <link rel="preconnect" href="https://fonts.cdnfonts.com">
-  <link rel="stylesheet" href="https://fonts.cdnfonts.com/css/runescape-uf">
+  <!-- Browser-tab icon and mobile bookmark icon -->
+  <link rel="icon" type="image/png" href="peakpvm-logo.png?v=2">
+  <link rel="apple-touch-icon" href="peakpvm-logo.png">
 
   <style>
+    /*
+      Embedded RuneScape UF font.
+      No external stylesheet or font download is needed.
+    */
+    @font-face {
+      font-family: "Peak RuneScape";
+      src: url("data:font/woff;base64,d09GRgABAAAAAAyoAAoAAAAANhgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABPUy8yAAAExAAAAEUAAABgYuRUNWNtYXAAAAD0AAAAQgAAAgQCpQPWZ2x5ZgAABSAAAAbEAAAqlEV7TvZoZWFkAAABOAAAACwAAAA28Wbes2hoZWEAAAFkAAAAHAAAACQGAgLiaG10eAAAAYAAAABbAAABhKeAAABsb2NhAAAL5AAAAMQAAADEEWYbpm1heHAAAAHcAAAAGAAAACAAZwBCbmFtZQAAAfQAAALNAAAFjhO+O6Rwb3N0AAAFDAAAABIAAAAgAGkAM3gB5c+xDUBQFEDR899XiNAZwGbCIIZlBonuEWNwq9NeBCpGVaH0Ghc6rRAYzLZMXk+WxyXPPHK3+kx//b4B474ZawAAeAFjYGRgAOGjV/ynxvPbfGVgYGEAgeMrfW8j6P8MzEAIBBwMTCAKAEDoCmJ4AWNgZGBgZvjPACQdgIQDMwNQBBUkAgArBQHseAF9kAEOwCAIAyt+jKf1aXvatmCzhiyYXIRKBd2wdRWLwE4g8OxF6flSeuTRzLNUc/SAYkd3ec3plcoH1F8+tjz/fdHnodB7/GyYm1/cewXMy/kfYHPd6JYy9gB4AWNgZGBgSGRwYGBlAAEmBjQAABFPAKp4AXWTzW7bRhSFP0qOf2rFm7RJ0IVxu+sPTMoKithBgCJwoERdZCHBXnXRETWSGIszynBoWnmA7gr0HYo+Rjfd9h36FH2A2tOBnBgxuPl4cebcy3OHgCS/kAAAX/B95IQOX0VusUUauc0jHkbe4PO15h67EHmTDruRt3ie/BN5m/3kj8g7bPJD5M8AIu/yiJ8jdzhe6+/zXbIfeY80aSI/4Bv+pk2ysQN8y7+REx7ze+QWe/wZuU3Kr5E3+HqtucdDfoy8yWOayFtctn+LvM3z9n7kHTrJduQwf+Rd0mQQuYNb6+9z1lpE3uOn1l+RHzBsfXmmXVVYI4dpd1gbPcrVUh+c9q3xI+/q3Mu6Kqd9GepZvVDuxC5XrpjNvRi1miojve5hlzM0jooCi0E4JKU79375LMuapkmnV6bV3C7T3JYMqTFoRuQolmgOOKUfjnpGeBw1OR75hFaCVhiimVGzQOH6xYWWcTGTd7XKzwszk/d6OV+5St7ahZdyJY26lLGecIJlyQpHwYx5aGJQrJiiMAg9uhzSPXFa+WvbE1uW1lTywntXjGt/HdkbKy+1Ky6Cogo2niXPyMhowpMyjV9UMQ9NU3IsZYwlj/75//apdbNsUeTaVLrKxqsDM8mepN0sqkOAYSsfZflBvbgyya7qTdY77h09Pfpgj0UlSrxTE10qdy52Kv3RQILgykcGxmtn1LWDWsircvyaPgUXIexxyEl4R40i55wCEyrv0SyZhywrhLdYFiHPkhVCg+IyOGiuc3doFJ7oHDZRUmIx4fyLEKKjYEyNX9+lN1iEl2hcOHvjcTv4/FaP/KMOKRbHjIwFBTk6VDUVGWNWHGCYkPGElC7ZLe+bZa6v590rvkNfxEmyqG/I6HFMjyOecnTHL1CEdBQSqooJmhKF4xzBMkXoM2KA3DjEeYRBeNc4TEzGBlogvKJkzOv/AML7D9wAAAB4AWNgYsxhnMDAysDCxMDEwMDwvwFMg7AxwxkGIGBhgANGBiTgFhwSxODAwMtQx8zwH8hnBktDiQamBiClwMAAAIadB8sAAAB4AWNgZoCANAZjBiwAAA3WAJ0AAHgBpZpNjjQ5EYafcOlTa9RCrWE0oE8IsWDFigUrVvhCXGDYeANLuJIvACeYA3ABVqgz0XSkrai3MtpVVEtWpiv9ExGOeOPHzReACxe48MIrP+cXYNd/GP7SYP8r8B/YX4G/hP7f9n/uP+4/wvZfuAD8mR9++p2/+7j5/Ac/APw0ev/X+78vwDsABYBW2gctkwr/FfYGtNDr1mGrFLBmNZtH9ac1A3bgeBbn/WPe78Ee/etO0w5Q/Z0OewWDue/e/an9vR7j8d/2Ntbxvh187mO2N3n30dr3Ju9j7uhfYO/WS/+Q2+8ekoCvMlukmyb9qvzHcZF3l54152ObfPqoINWxahXJjT5jF9fv0j/O+I3v+AN/Anvyryj3kybvb1W+Zc2lkbd2vv6Q1N71i0vAmn/fer57mJM243x94DLl+sq3/PEpmQZaVGfUJqJEx7sR+2OujG16Yj5Kd7bKfN+a2hxqQ3LOYnMiZcepA9++iRJj6DXTMrB2zKzUgBfm51Ia353LnJP9OaVpvJlSqhq83pPbFWj620N7fgG69QPTX3njt/fpGPXaXja1n6p4eI6nBjWerPa3ns8W1DWgFgq8XvMwvAVDXqNfCVQPisf5A83gAtHLDa/mL4Y1q3GMtcgTY17VdZAxVi/wBumZJ1jmtMe219iGvze3h1+Sny6HHDnX7FvNswZb26f92smobdJ78Elpej5RGnG3Wx1+n7Yyefr6mb6CSM6b4lnURsDiLJGE4pG/B3p+BSu7GXY7KMopC0/10Gvq8Odx/r00vvA95KKKmLKr3kVaujEo3uuwqIjaW5BrkI3iWiYTwIb25jI4JBXPb3MOHtb5HMk1InDrd4Q19VPRNhG9+BbOOQ/NOVcLxxj7hP2it4VL4PdFdDDlWpE09fbC/eG969biSHqug49jUJBJQpXrgFO09SgbHblNPilAo1lf5D5NvJHTj3VelygdJRrR/tbT9Bl9mONpqUv8kOhRbDT/1v7f+NRlZt3qrcw8M/Qng5fHeSKnhp59e5onrF/gwq9XEU/E6riDxqV2RiNDKpETI8nPuPYsXGbu/MLXJ+N/zXsjZnpT60kzLLvNDL0xx7qIO1EvK1Ut+NZ77bNvyYlugley3vR3vCjW5Lm1nK7mNI72LXK8tcIJbTjdWxdMVt+XYXHz+WvsLS3B2vv8rSJqRL9j5XCOogdb/E3x/VV2JeOsABt7H5xs6jNlJYZ3DGhtAKxloZmgrnS2yhZpSSKntTQdxdYSDR6UtRyIZ3XNwcH2e5uayH2xtwXrvaV0izJ1+3qDZSwX1tUYbrn+bzKZqywWOVJNKxRBZtTHqnvjpMI5fYFIVdTO95ADlZrnCTlfOYXCT86960S7/ba1IHfFjbWsW0JDsHvfm9C2RsxNLmfaZKmXVQxJtDXi0s90/QyZ9hojy8kL8znqchx49xUWfjf6xraOHGavhtz6nE9/Cq+SbSyRePy+4ttQnV/aaIIJe8tRU2qGghl09dNn9fHUD8QIdvDcJn7OfdxicwwWntRnVp8/npGGBDcn1bqmN+/RJ6bP515jnl1aaQ/nEPm9BxrLBlzzvZ0WZtY+fnfZN8X0pL74cK1T6cvxnSYtuc3Rpt712fMzhq0PWxqRrNrUZ1ErwLpqEKtZRMk1kZTgdKhDV7EVqcnsvfRhJ+s65kLn6l11zJQuJmYzEHL4u2Oe1YVfSyJ/kWdN6hya2Q9bJNR9vR+Qe+QH5vnB9/B8tYZ6jOr+dZdTD37jAd9Iy6pgpUX/QOSr2iLvEf+DSLINun1U5GjwK/vex4/eJbbIT1x7xNBjXVv71X7i05hoOeqlSr/eAVVrhTUGSHQn3o+w6rHnZz6z3tZPd+f5sfpp85bV7JjRhXp0HbndmwNJ/AJRJ6Of9HNc1/7GjFmbc1nUtPbno9K79z16GQqDtzLWvxv3dYc8txly2OSstcWZHHuUdntXVVq0hYI1vkkq2oAhlSZEQli7PR+L6BTiJTvL3SPHLVkx2u0b3G+1inIJ4hTY62r95L6phvUpuraPcL3r1nhZ1yiNPBa6xQlFgOt7lK0b+d3fphFWmXj/klqp3O5JvILVa1uwT321IQhTYUd8VOr5RpPYtJa6jOs0L2kg/jepQYkepxkEUCXCb3P+E3lDctsY49pun+NPXcTg0sLJCNJvqqVd5XT/fcGCd0WJVCdS3ajXftnuv8OsCV0183wzJ0DlkceGILzUTzOBdvcticfarbSn76Py21VBoyy29qaxNe3CrZ8a/+R4P/0ql6gB+d3Ts/QbpVm/N89TNI6rBR97Qqm+x/7/AFi6f9UAAABGAEYARgBGAGIAfgD+AXACHAK2AtgDEgNMA7ID2APqA/wEDgQ+BIIEqATwBT4FfgW4BfwGMAaABsQG4AcQB14HegfICBwItgj6CTYJcAmWCbwJ3AoaCkAKZgqWCu4LBAtSC4wLvAvoDDIMaAzADNwNAg0yDYAN4g4SDlYOcg6iDr4O+A8KD0oPdg+yD94QFBBYEJwQwhDeEQ4RUhFkEZoRuhHqEhoSbhKUEs4S/hMeE04TkhPgFBoUWBSmFLgVBhVK") format("woff");
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+
     :root {
       color-scheme: dark;
       --bg: #101112;
@@ -27,7 +38,7 @@
       --muted: #b6b5ae;
       --gold: #ccb578;
       --line: #2c2d2d;
-      --rune: "RuneScape UF", "Palatino Linotype", fantasy;
+      --rune: "Peak RuneScape", fantasy;
       --body: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
@@ -39,9 +50,7 @@
       margin: 0;
       background: var(--bg);
       color: var(--text);
-      font-family: var(--body);
-      font-size: 1rem;
-      line-height: 1.65;
+      font: 1rem/1.65 var(--body);
     }
 
     a {
@@ -54,19 +63,16 @@
       max-width: 100%;
     }
 
-    h1,
-    h2,
-    h3,
-    p {
+    h1, h2, h3, p {
       margin: 0;
     }
 
-    h1,
-    h2,
-    h3,
-    .brand {
+    h1, h2, h3,
+    .brand-text {
       font-family: var(--rune);
       font-weight: 400;
+      font-style: normal;
+      font-synthesis: none;
     }
 
     h2 {
@@ -130,8 +136,13 @@
       align-items: center;
       gap: 10px;
       color: var(--gold);
-      font-size: 1.75rem;
+    }
+
+    .brand-text {
+      font-size: 2rem;
       line-height: 1.2;
+      white-space: nowrap;
+      text-shadow: 1px 2px 0 #000;
     }
 
     .brand img {
@@ -233,12 +244,15 @@
       letter-spacing: 0.07em;
     }
 
-    h1 {
+    #hero-heading {
       margin: 17px 0 20px;
       color: #e0c787;
+      font-family: "Peak RuneScape", fantasy;
       font-size: clamp(4.5rem, 8vw, 6.5rem);
+      font-weight: 400;
+      font-style: normal;
       line-height: 1.1;
-      text-shadow: 0 3px 2px #000;
+      text-shadow: 2px 3px 0 #000;
     }
 
     .hero-description {
@@ -258,7 +272,7 @@
       font-size: 0.9375rem;
     }
 
-    /* Activity strip */
+    /* Activities */
 
     .activity-strip {
       border-bottom: 1px solid var(--line);
@@ -282,11 +296,11 @@
       color: var(--gold);
     }
 
-    /* About */
-
     section[id] {
       scroll-margin-top: 24px;
     }
+
+    /* About */
 
     .about {
       display: grid;
@@ -453,8 +467,8 @@
         padding-block: 10px 4px;
       }
 
-      .brand {
-        font-size: 1.5rem;
+      .brand-text {
+        font-size: 1.75rem;
       }
 
       .brand img {
@@ -492,7 +506,7 @@
           url("bg.png");
       }
 
-      h1 {
+      #hero-heading {
         margin-block: 14px 18px;
       }
 
@@ -546,14 +560,10 @@
         display: none;
       }
 
-      .brand {
-        font-size: 1.25rem;
+      .brand-text {
+        font-size: 1.5rem;
       }
     }
-    #hero-heading {
-  font-family: "RuneScape UF", fantasy;
-  font-weight: normal;
-}
   </style>
 </head>
 
@@ -574,13 +584,8 @@
   <header class="topbar">
     <div class="wrap header-inner">
       <a class="brand" href="#main" aria-label="Peak PvM home">
-        <img
-          src="peakpvm-logo.png"
-          alt=""
-          width="38"
-          height="38"
-        >
-        <span>Peak PvM</span>
+        <img src="peakpvm-logo.png" alt="" width="38" height="38">
+        <span class="brand-text">Peak PvM</span>
       </a>
 
       <nav aria-label="Main navigation">
@@ -630,11 +635,11 @@
           <span>Join Peak PvM Discord</span>
         </a>
 
-    <p class="hero-note">
-      Learners and end game players are both welcome.
-      Already in a clan? Perfect. We’re a Discord first community
-      with an optional in-game chat channel.
-    </p>
+        <p class="hero-note">
+          Learners and end game players are both welcome.
+          Already in a clan? Perfect. We’re a Discord first community
+          with an optional in-game chat channel.
+        </p>
       </div>
     </section>
 
@@ -711,10 +716,10 @@
 
           <article class="feature">
             <h3>Loot Tracking &amp; OSRS Utilities</h3>
-          <p>
-            Track drops, check game status, catch TL;DR game updates,
-            and use other handy OSRS tools built right into the server.
-          </p>
+            <p>
+              Track drops, check game status, catch TL;DR game updates,
+              and use other handy OSRS tools built right into the server.
+            </p>
           </article>
 
           <article class="feature">
