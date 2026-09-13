@@ -44,6 +44,7 @@ class App {
 
     // Render Exhibits & Eras
     if (window.museumUI) {
+      window.museumUI.renderExhibits(window.dataStore.exhibits, 'home-exhibits-container');
       window.museumUI.renderExhibits(window.dataStore.exhibits, 'museum-exhibits-container');
       window.museumUI.renderEras(window.dataStore.eras, 'eras-grid-container');
     }
@@ -53,11 +54,13 @@ class App {
       window.comparisonUI.renderAllComparisons(window.dataStore.getAllComparisons(), 'comparisons-list-container');
     }
 
-    // Render Entity Browse
+    // Render Home Most Reworked Grid & Codex Grid
+    this.renderHomeReworkedGrid();
     this.renderBrowseGrid();
 
-    // Attach Filter Listeners
+    // Attach Filter Listeners & Codex Search
     this.setupFilterButtons();
+    this.setupCodexSearch();
 
     // Setup Random Warp Button
     this.setupRandomWarp();
@@ -197,13 +200,53 @@ class App {
     }
   }
 
+  renderHomeReworkedGrid() {
+    const container = document.getElementById('home-reworked-grid');
+    if (!container) return;
+
+    const list = window.dataStore.getMostChanged(6);
+    let html = '';
+    list.forEach(item => {
+      html += `
+        <div class="entity-card" data-entity-id="${item.id}">
+          <div class="entity-card-top">
+            <div class="entity-avatar-box">${item.icon || '⚔️'}</div>
+            <div>
+              <div class="entity-category">${item.category}</div>
+              <h3 class="entity-name">${item.name}</h3>
+            </div>
+          </div>
+          <p class="entity-description">${item.shortDescription}</p>
+          <div class="entity-card-bottom">
+            <span>📅 ${item.releaseDate}</span>
+            <span class="volatility-pill">⚡ ${item.changeCount} Updates</span>
+          </div>
+        </div>
+      `;
+    });
+
+    container.innerHTML = html;
+
+    container.querySelectorAll('.entity-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const id = card.dataset.entityId;
+        window.location.hash = `#entity=${id}`;
+        if (window.soundFx) window.soundFx.playClick();
+      });
+    });
+  }
+
   showBrowseView(filterType = 'all') {
     this.activeFilter = filterType;
+    // sync filter chip buttons
+    document.querySelectorAll('.filter-chip').forEach(b => {
+      b.classList.toggle('active', (b.dataset.filter || 'all') === filterType);
+    });
     this.renderBrowseGrid();
     this.showView('browse');
   }
 
-  renderBrowseGrid() {
+  renderBrowseGrid(searchQuery = '') {
     const container = document.getElementById('browse-entities-grid');
     if (!container) return;
 
@@ -215,6 +258,27 @@ class App {
       } else {
         list = list.filter(e => e.type.toLowerCase() === this.activeFilter || e.tags.includes(this.activeFilter));
       }
+    }
+
+    if (searchQuery && searchQuery.trim()) {
+      const q = searchQuery.toLowerCase().trim();
+      list = list.filter(item => {
+        return (
+          item.name.toLowerCase().includes(q) ||
+          item.category.toLowerCase().includes(q) ||
+          item.tags.some(t => t.toLowerCase().includes(q)) ||
+          item.shortDescription.toLowerCase().includes(q)
+        );
+      });
+    }
+
+    if (list.length === 0) {
+      container.innerHTML = `
+        <div class="osrs-card" style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+          <p class="text-secondary">No codex entries found matching your search / filter criteria.</p>
+        </div>
+      `;
+      return;
     }
 
     let html = '';
@@ -248,13 +312,23 @@ class App {
     });
   }
 
+  setupCodexSearch() {
+    const input = document.getElementById('codex-search-input');
+    if (!input) return;
+    input.addEventListener('input', e => {
+      this.renderBrowseGrid(e.target.value);
+    });
+  }
+
   setupFilterButtons() {
     document.querySelectorAll('.filter-chip').forEach(btn => {
       btn.addEventListener('click', () => {
         document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         this.activeFilter = btn.dataset.filter || 'all';
-        this.renderBrowseGrid();
+        const searchInput = document.getElementById('codex-search-input');
+        const q = searchInput ? searchInput.value : '';
+        this.renderBrowseGrid(q);
         if (window.soundFx) window.soundFx.playClick();
       });
     });

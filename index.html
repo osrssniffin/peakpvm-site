@@ -126,7 +126,7 @@
             View All Exhibits ➔
           </a>
         </div>
-        <div id="museum-exhibits-container"></div>
+        <div id="home-exhibits-container"></div>
       </div>
 
       <!-- Most Reworked Content Preview -->
@@ -140,7 +140,7 @@
             Browse All ➔
           </a>
         </div>
-        <div class="entity-grid" id="browse-entities-grid"></div>
+        <div class="entity-grid" id="home-reworked-grid"></div>
       </div>
     </section>
 
@@ -164,6 +164,11 @@
         <p class="text-secondary">Search and filter across weapons, bosses, continents, and legacy mechanics.</p>
       </div>
 
+      <!-- Codex Search Bar -->
+      <div style="margin-bottom: 1rem; position: relative;">
+        <input type="text" id="codex-search-input" class="global-search-input" placeholder="Quick filter codex by name, boss, or tag..." style="width:100%; background:var(--bg-secondary); border:1px solid var(--stone-border); padding:0.85rem 1.25rem; border-radius:var(--radius-sm); font-size:0.95rem;">
+      </div>
+
       <!-- Filter Bar -->
       <div class="filter-bar">
         <button class="filter-chip active" data-filter="all">🌟 All Content</button>
@@ -175,7 +180,7 @@
         <button class="filter-chip" data-filter="most-changed">⚡ Most Reworked</button>
       </div>
 
-      <div id="browse-entities-grid"></div>
+      <div class="entity-grid" id="browse-entities-grid"></div>
     </section>
 
     <!-- ================= VIEW: COMPARISONS ================= -->
