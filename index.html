@@ -1,292 +1,560 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>all 420s | RuneScape's Final Boss</title>
-  <meta name="description" content="The extremely legitimate official website of all 420s, RuneScape's final boss." />
-  <style>
-    :root{
-      --bg:#090906;--panel:#282116;--panel2:#17130d;--gold:#ffd34e;--orange:#ff981f;
-      --red:#ff3b30;--green:#73ff69;--blue:#65b7ff;--cream:#f1e2b3;--muted:#a99e7a;
-      --border:#755f31;--dark:#050403;--chat:#17120b;
-    }
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{
-      margin:0;min-height:100vh;color:var(--cream);font-family:Verdana,"Trebuchet MS",sans-serif;
-      background:
-        radial-gradient(circle at 15% 10%,rgba(255,152,31,.08),transparent 28%),
-        radial-gradient(circle at 80% 75%,rgba(82,255,108,.04),transparent 24%),
-        repeating-linear-gradient(0deg,rgba(255,255,255,.012) 0 1px,transparent 1px 3px),
-        var(--bg);
-      overflow-x:hidden;
-    }
-    body::before{
-      content:"";position:fixed;inset:0;pointer-events:none;z-index:9998;
-      box-shadow:inset 0 0 140px rgba(0,0,0,.85);
-    }
-    .scanline{pointer-events:none;position:fixed;inset:0;z-index:9999;mix-blend-mode:multiply;
-      background:repeating-linear-gradient(0deg,transparent 0 2px,rgba(0,0,0,.09) 3px)}
-    .topbar{
-      position:sticky;top:0;z-index:50;background:#070603;border-bottom:2px solid #4a3b1b;
-      color:#c9bd92;text-align:center;padding:7px 10px;font-size:12px;box-shadow:0 4px 18px #000;
-    }
-    .topbar b{color:var(--orange)}
-    .wrap{width:min(1120px,calc(100% - 22px));margin:auto}
-    header{text-align:center;padding:34px 0 14px;position:relative}
-    .logo{
-      margin:0;font-family:Georgia,"Times New Roman",serif;font-size:clamp(58px,10vw,116px);
-      line-height:.82;text-transform:uppercase;letter-spacing:-3px;color:var(--gold);transform:rotate(-1deg);
-      text-shadow:3px 3px 0 #7c3700,6px 6px 0 #000,0 0 25px rgba(255,152,31,.18);
-    }
-    .subtitle{color:#fff;font-weight:900;letter-spacing:2px;margin-top:18px;text-shadow:2px 2px #000}
-    .certified{display:inline-block;margin-top:11px;padding:6px 11px;border:2px dashed var(--green);color:var(--green);
-      background:#071307;transform:rotate(1.2deg);font-weight:900;box-shadow:3px 3px 0 #000}
-    .tinyline{margin-top:10px;color:#857b60;font-size:11px}
-    .nav{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:18px 0 28px}
-    .btn,.nav a{
-      appearance:none;background:linear-gradient(#5f4e2d,#292114);border:2px solid #8f7641;border-bottom-color:#332713;
-      color:#fff0b3;text-decoration:none;padding:9px 13px;font-weight:900;text-shadow:1px 1px #000;
-      box-shadow:inset 0 0 0 1px #19130b,2px 3px 0 #050403;cursor:pointer;border-radius:2px;font:inherit;
-    }
-    .btn:hover,.nav a:hover{filter:brightness(1.22);transform:translateY(-1px)}
-    .btn:active,.nav a:active{transform:translate(1px,2px);box-shadow:inset 0 0 0 1px #19130b}
-    .btn.red{background:linear-gradient(#84251e,#3d0e0b);border-color:#a75047}
-    .btn.green{background:linear-gradient(#397934,#163914);border-color:#66af5e}
-    .btn.blue{background:linear-gradient(#28577c,#132c40);border-color:#4b85ad}
-    .grid-hero{display:grid;grid-template-columns:1.35fr .65fr;gap:16px}
-    .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:16px}
-    .panel{
-      position:relative;background:linear-gradient(180deg,rgba(51,43,28,.98),rgba(28,24,17,.99));
-      border:3px ridge var(--border);box-shadow:0 0 0 2px var(--dark),7px 8px 0 rgba(0,0,0,.38);padding:18px;
-    }
-    .panel::after{content:"";position:absolute;inset:5px;pointer-events:none;border:1px solid rgba(255,216,119,.06)}
-    .panel h2{margin:0 0 14px;color:var(--orange);font-family:Georgia,serif;font-size:24px;text-shadow:2px 2px #000}
-    .panel h3{margin:0 0 10px;color:var(--gold)}
-    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-    .stat{background:#15120d;border:1px solid #5f4e27;padding:10px;text-align:center;min-height:78px;position:relative;overflow:hidden}
-    .stat:hover{outline:1px solid #a98b42;background:#1c170f}
-    .stat .name{display:block;color:#bcae82;font-size:11px;text-transform:uppercase;letter-spacing:.7px;margin-bottom:4px}
-    .stat .value{display:block;color:#fff;font-weight:900;font-size:23px}
-    .stat .xp{font-size:10px;color:#83d6ff}
-    .stat.cursed .value{color:#ff665e}
-    .combat{text-align:center;display:flex;flex-direction:column;justify-content:center;min-height:100%;gap:9px}
-    .combat-level{font-size:92px;line-height:.86;color:var(--red);font-weight:1000;text-shadow:3px 3px #000;animation:pulse 2.3s ease-in-out infinite}
-    .combat .skull{font-size:56px;filter:drop-shadow(3px 3px 0 #000)}
-    .warning{margin-top:14px;padding:11px;background:#2b120e;border:2px solid #7a3d2b;color:#ffd0c5;font-weight:900}
-    .ticker{margin:16px 0;background:#0b0a07;border:1px solid #544522;padding:8px;overflow:hidden;white-space:nowrap;color:#f0c45d;font-family:monospace}
-    .ticker span{display:inline-block;animation:ticker 20s linear infinite}
-    .list{margin:0;padding-left:19px;line-height:1.8}
-    .good{color:var(--green)}.bad{color:#ff7a70}.blue{color:var(--blue)}.gold{color:var(--gold)}.muted{color:var(--muted)}
-    .bank-value{font-size:40px;margin:6px 0;color:#ffe275;font-weight:1000;text-shadow:2px 2px #000}
-    .news{border-top:1px solid #5b4928;padding:12px 0}.news:first-of-type{border-top:0;padding-top:0}
-    .date{font-size:11px;color:#9b906f}.tiny{font-size:11px;color:#c7bb94}
-    .chatbox{background:#120f0a;border:3px ridge #65532d;box-shadow:0 0 0 2px #060503;margin-top:16px}
-    .chat-tabs{display:flex;gap:3px;background:#231d12;padding:4px;border-bottom:1px solid #5b4b2b;flex-wrap:wrap}
-    .chat-tab{padding:5px 9px;background:#332818;border:1px solid #6d5932;color:#d3c59a;font-size:11px;font-weight:bold}
-    .chat-log{height:180px;overflow:auto;padding:12px 14px;background:linear-gradient(rgba(10,8,5,.8),rgba(18,14,8,.96));font-size:12px;line-height:1.55}
-    .chat-log div{margin:2px 0}.system{color:#9ee6ff}.public{color:#fff}.trade{color:#b988ff}.game{color:#ffdf5b}.clan{color:#60ff92}
-    .chat-input{display:flex;border-top:1px solid #5b4b2b;background:#1f190f;padding:8px;gap:8px}
-    .chat-input input{flex:1;background:#0d0b08;color:#fff;border:1px solid #6a5730;padding:9px;font:inherit;outline:none}
-    .chat-input input:focus{border-color:#b18a43}
-    .terminal{background:#090b08;border:1px solid #425c38;padding:12px;font-family:monospace;color:#9bf58b;min-height:115px;white-space:pre-line}
-    .button-row{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}
-    #trollbox{margin-top:12px;min-height:58px;background:#0d0c08;border:1px solid #594a2a;padding:12px;display:flex;align-items:center;font-weight:900}
-    .fake-login{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:10px}
-    .fake-login input{background:#0c0b08;border:1px solid #69542b;color:#fff;padding:10px;font:inherit;min-width:0}
-    .lootbeam{position:relative;display:inline-block;color:#fff;font-weight:900;text-shadow:0 0 5px #fff,0 0 12px #ff0,0 0 22px #ff5b00;animation:loot 1s ease-in-out infinite alternate}
-    .counter{text-align:center;font-family:monospace;font-size:13px;margin:25px 0 6px;color:#93896a}
-    .counter strong{color:#ffe275;background:#000;border:1px solid #4d4328;padding:2px 7px;letter-spacing:2px}
-    footer{text-align:center;color:#847b62;font-size:11px;padding:25px 0 110px;line-height:1.6}
-    .xpdrop{position:fixed;right:22px;top:88px;color:#fff;font-weight:900;text-shadow:2px 2px #000;z-index:200;pointer-events:none;animation:xpdrop 1.6s ease-out forwards}
-    .overlay{display:none;position:fixed;inset:0;z-index:5000;background:rgba(0,0,0,.92);align-items:center;justify-content:center;text-align:center;padding:20px}
-    .overlay.show{display:flex}.disconnect{font-family:Georgia,serif;color:#ff3b30;font-size:clamp(32px,7vw,72px);font-weight:900;text-shadow:3px 3px #000}
-    .disconnect small{display:block;font:700 14px Verdana;color:#f0dfb0;margin-top:18px}
-    .toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%) translateY(120px);z-index:4000;background:#120f09;border:2px solid #806a38;color:#fff3bf;padding:11px 15px;box-shadow:4px 4px #000;font-weight:900;transition:.22s;max-width:min(520px,calc(100% - 24px));text-align:center}
-    .toast.show{transform:translateX(-50%) translateY(0)}
-    .blink{animation:blink 1.05s steps(2,start) infinite}.shake{animation:shake .12s linear 4}
-    @keyframes blink{50%{opacity:.16}}@keyframes pulse{50%{transform:scale(1.035)}}
-    @keyframes ticker{from{transform:translateX(100%)}to{transform:translateX(-115%)}}
-    @keyframes loot{to{filter:brightness(1.45)}}
-    @keyframes xpdrop{0%{opacity:0;transform:translateY(20px)}20%{opacity:1}100%{opacity:0;transform:translateY(-65px)}}
-    @keyframes shake{0%{transform:translate(0)}25%{transform:translate(3px,-1px)}50%{transform:translate(-2px,2px)}75%{transform:translate(2px,2px)}100%{transform:translate(0)}}
-    @media(max-width:780px){.grid-hero,.grid-2{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}.logo{letter-spacing:-1px}.ticker span{animation-duration:14s}}
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Old School RuneScape™ Definitely Real Website</title>
+<style>
+:root{
+  --bg:#15130f;
+  --panel:#2d261b;
+  --panel2:#3a3122;
+  --gold:#ffcf53;
+  --gold2:#e2b84c;
+  --cream:#e7dcc1;
+  --brown:#6b5433;
+  --dark:#0d0c0a;
+  --green:#50c45e;
+  --red:#e0513d;
+  --blue:#5aa8ff;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:Verdana,Arial,sans-serif;background:#0c0b09;color:var(--cream)}
+body{
+  background:
+    radial-gradient(circle at 15% 20%,rgba(104,75,33,.18),transparent 22%),
+    radial-gradient(circle at 80% 10%,rgba(114,22,17,.15),transparent 30%),
+    linear-gradient(180deg,#12100d,#090807 70%);
+  overflow-x:hidden;
+}
+body:before{
+  content:"";
+  position:fixed;inset:0;pointer-events:none;opacity:.16;
+  background-image:
+    linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);
+  background-size:22px 22px;
+}
+
+.wrap{max-width:1180px;margin:0 auto;padding:22px}
+.top{
+  display:flex;justify-content:space-between;align-items:center;gap:18px;
+  padding:12px 16px;
+  border:3px ridge #6d5838;
+  background:linear-gradient(#2a2319,#17130e);
+  box-shadow:0 0 30px #000;
+  position:sticky;top:0;z-index:20;
+}
+.logo{
+  font-family:Georgia,serif;font-weight:900;font-size:24px;color:var(--gold);
+  text-shadow:2px 2px #000,-1px -1px #4e3310;
+}
+.online{font-size:12px;color:#9e9481}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#45c15c;box-shadow:0 0 10px #45c15c;margin-right:7px}
+
+.hero{
+  margin-top:18px;
+  border:4px ridge #755f3c;
+  background:
+    linear-gradient(rgba(24,20,15,.84),rgba(10,9,7,.92)),
+    radial-gradient(circle at 50% 20%,rgba(255,183,51,.10),transparent 42%);
+  min-height:390px;
+  padding:38px;
+  display:grid;grid-template-columns:1.2fr .8fr;gap:28px;align-items:center;
+  box-shadow:0 18px 50px rgba(0,0,0,.55);
+}
+.hero h1{
+  font-family:Georgia,serif;
+  font-size:clamp(48px,8vw,96px);
+  line-height:.9;margin:0;
+  color:#f2cf6a;text-shadow:4px 4px #000;
+}
+.hero p{font-size:17px;line-height:1.65;color:#cfc2a8;max-width:680px}
+.badge{
+  display:inline-block;background:#231b11;border:2px ridge #6b5635;
+  color:#ffd76b;padding:6px 9px;font-size:11px;margin-bottom:14px;text-transform:uppercase;letter-spacing:.08em
+}
+
+.charbox{
+  border:3px ridge #6b5635;background:#19150f;padding:16px;position:relative;
+}
+.charhead{display:flex;justify-content:space-between;font-size:11px;color:#a89b83;margin-bottom:12px}
+.avatar{
+  height:180px;display:grid;place-items:center;border:2px inset #58492f;
+  background:
+    radial-gradient(circle,#4c3d28 0,#231b12 45%,#0d0b08 100%);
+  font-size:84px;text-shadow:0 4px 12px #000;
+}
+.statsmini{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:10px}
+.statmini{background:#0e0c09;border:1px solid #443722;padding:9px;font-size:12px}
+.statmini b{color:#ffcf53}
+
+.buttons{display:flex;flex-wrap:wrap;gap:9px;margin-top:20px}
+button,.btn{
+  appearance:none;cursor:pointer;text-decoration:none;
+  border:3px ridge #725d3d;
+  background:linear-gradient(#403421,#20190f);
+  color:#f1dfb7;padding:11px 14px;font-weight:bold;font-size:12px;
+  text-shadow:1px 1px #000;
+}
+button:hover,.btn:hover{filter:brightness(1.17)}
+.danger{border-color:#7a382f;background:linear-gradient(#4c1f17,#21100c);color:#ffc8bd}
+.good{border-color:#3d6a40;background:linear-gradient(#254326,#142015);color:#caffcf}
+
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px}
+.card{
+  border:3px ridge #6f5938;background:linear-gradient(#2b2419,#17130e);
+  padding:16px;min-height:170px;position:relative;overflow:hidden;
+  box-shadow:0 10px 25px rgba(0,0,0,.35);
+}
+.card h3{margin:0 0 8px;color:#ffd15c;font-family:Georgia,serif;font-size:22px}
+.card p{color:#b9ad97;line-height:1.5;font-size:13px}
+.card .emoji{font-size:42px;position:absolute;right:12px;bottom:8px;opacity:.22;transform:rotate(-8deg)}
+
+.panel{
+  margin-top:18px;border:3px ridge #6a5637;background:#14110d;padding:14px
+}
+.paneltitle{
+  font-family:Georgia,serif;color:#ffd064;font-size:20px;margin-bottom:10px
+}
+
+.chat{
+  height:215px;overflow:auto;background:#0d0b08;border:2px inset #4d3d28;padding:10px;
+  font-family:Arial,sans-serif;font-size:13px;line-height:1.5
+}
+.chat .sys{color:#83d2ff}
+.chat .npc{color:#ffd45e}
+.chat .player{color:#fff}
+.chat .bad{color:#f36f5c}
+.chat .goodmsg{color:#79dc78}
+
+.inventory{
+  display:grid;grid-template-columns:repeat(4,56px);gap:5px;justify-content:center;
+  padding:14px;background:#1b1711;border:2px inset #4b3b28
+}
+.slot{
+  width:56px;height:56px;background:radial-gradient(circle,#32281b,#16110b);
+  border:2px inset #5c492f;display:grid;place-items:center;font-size:26px;cursor:pointer;
+  position:relative;
+}
+.slot:hover{outline:2px solid #d7b24d}
+.qty{position:absolute;left:3px;top:2px;color:#fff04e;font-size:10px;text-shadow:1px 1px #000}
+
+.questbox{
+  border:2px inset #4d3d28;background:#0f0d0a;padding:12px;font-family:Georgia,serif
+}
+.questname{color:#f0d369;font-size:18px}
+.queststep{margin-top:8px;color:#bdb19a;font-size:13px}
+.progress{height:12px;background:#090806;border:1px solid #4a3a25;margin-top:9px;overflow:hidden}
+.progress > div{height:100%;width:0;background:linear-gradient(90deg,#7e1717,#e1b740);transition:.5s}
+
+.news{
+  margin-top:18px;white-space:nowrap;overflow:hidden;border:3px ridge #6e5938;background:#19150f;padding:10px
+}
+.marquee{display:inline-block;animation:marq 18s linear infinite;color:#ddcda8;font-size:12px}
+@keyframes marq{from{transform:translateX(100vw)}to{transform:translateX(-100%)}}
+
+.modal,.random-event{
+  position:fixed;inset:0;display:none;place-items:center;z-index:99;background:rgba(0,0,0,.72);padding:20px
+}
+.modalbox,.randombox{
+  width:min(520px,92vw);border:4px ridge #806741;background:#211a12;padding:18px;box-shadow:0 20px 70px #000
+}
+.modalbox h2,.randombox h2{color:#ffd560;font-family:Georgia,serif;margin-top:0}
+.close{float:right}
+
+.toast{
+  position:fixed;right:20px;bottom:20px;background:#16120d;border:3px ridge #705b3b;
+  color:#ecdcb9;padding:11px 14px;z-index:200;display:none;max-width:340px;box-shadow:0 10px 35px #000
+}
+
+.xpdrop{
+  position:fixed;color:#ffe75b;font-weight:bold;text-shadow:2px 2px #000;pointer-events:none;z-index:300;
+  animation:xp 1.1s ease forwards
+}
+@keyframes xp{0%{opacity:0;transform:translateY(10px)}20%{opacity:1}100%{opacity:0;transform:translateY(-60px)}}
+
+.damage{
+  position:fixed;color:#fff;background:#bd3128;border:2px solid #5a110e;border-radius:50%;
+  width:40px;height:40px;display:grid;place-items:center;font-weight:bold;z-index:250;
+  animation:dmg .8s ease forwards
+}
+@keyframes dmg{to{opacity:0;transform:translateY(-35px) scale(.8)}}
+
+.bottom{
+  margin:18px 0 30px;text-align:center;color:#756a59;font-size:11px
+}
+
+@media(max-width:850px){
+  .hero{grid-template-columns:1fr}
+  .grid{grid-template-columns:1fr}
+}
+</style>
 </head>
 <body>
-<div class="scanline"></div>
-<div class="topbar"><b>WORLD 420</b> • Players: 1 • Ping: 69 ms • Activity: Bankstanding competitively • <span class="blink">● SYSTEM UPDATE: NEVER</span></div>
-
 <div class="wrap">
-  <header>
-    <h1 class="logo">all 420s</h1>
-    <div class="subtitle">RUNESCAPE'S FINAL BOSS</div>
-    <div class="certified blink">✓ VERIFIED BY A GUY AT THE GRAND EXCHANGE</div>
-    <div class="tinyline">This page has passed 0 security audits and 420 vibe checks.</div>
+
+  <header class="top">
+    <div class="logo">Old School RuneScape™*</div>
+    <div class="online"><span class="dot"></span>World 420 · 18,392 bots online</div>
   </header>
 
-  <nav class="nav">
-    <a href="#stats">Hiscores</a><a href="#achievements">Lore</a><a href="#news">Breaking News</a><a href="#chat">Public Chat</a>
-    <button class="btn red" onclick="claimTbow()">Claim Free Tbow</button>
-  </nav>
-
-  <div class="ticker"><span>⚔ BREAKING: all 420s has completed another successful 8-hour GE bankstanding session • GP gained: -14,832,991 • XP gained: somehow 420 • Ego gained: immeasurable ⚔</span></div>
-
-  <section class="grid-hero" id="stats">
-    <div class="panel">
-      <h2>Official Hiscores</h2>
-      <div class="stats">
-        <div class="stat"><span class="name">Attack</span><span class="value">420</span><span class="xp">69,420,420 XP</span></div>
-        <div class="stat"><span class="name">Strength</span><span class="value">420</span><span class="xp">Can max-hit a JMod</span></div>
-        <div class="stat"><span class="name">Defence</span><span class="value">420</span><span class="xp">Prayer flicks lawyers</span></div>
-        <div class="stat"><span class="name">Hitpoints</span><span class="value">420</span><span class="xp">Still dies at 89 HP</span></div>
-        <div class="stat"><span class="name">Prayer</span><span class="value">420</span><span class="xp">Protect from Employment</span></div>
-        <div class="stat"><span class="name">Magic</span><span class="value">420</span><span class="xp">Teleblocks his own escape</span></div>
-        <div class="stat cursed"><span class="name">Cooking</span><span class="value">1</span><span class="xp bad">Burnt shrimp locked</span></div>
-        <div class="stat cursed"><span class="name">Grass Touching</span><span class="value">0</span><span class="xp bad">Not on Hiscores</span></div>
-        <div class="stat"><span class="name">Bankstanding</span><span class="value">200m</span><span class="xp good">Rank #1 globally</span></div>
-        <div class="stat"><span class="name">Total Level</span><span class="value">9660</span><span class="xp">23 × 420. Do the math.</span></div>
-        <div class="stat"><span class="name">EHP</span><span class="value">-69</span><span class="xp bad">Elite Human Procrastination</span></div>
-        <div class="stat"><span class="name">KC</span><span class="value">∞</span><span class="xp">Source: trust me bro</span></div>
+  <section class="hero">
+    <div>
+      <div class="badge">100% definitely official</div>
+      <h1>Welcome,<br>nerd.</h1>
+      <p>
+        You have entered the most advanced Old School RuneScape interface ever created.
+        Every button is suspicious. Every drop is probably cabbage. Every decision you make here
+        will somehow cost you GP.
+      </p>
+      <div class="buttons">
+        <button class="good" onclick="rollLoot()">Open Mystery Chest</button>
+        <button onclick="startQuest()">Start Quest</button>
+        <button class="danger" onclick="claimTbow()">Claim Free Twisted Bow</button>
+        <button onclick="spawnEvent()">Summon Random Event</button>
       </div>
-      <div class="warning">⚠ Jagex investigated this account and decided it was easier to just leave it alone.</div>
     </div>
 
-    <div class="panel combat">
-      <div class="skull">☠</div>
-      <h3>Combat Level</h3>
-      <div class="combat-level">420</div>
-      <div class="gold"><b>Skull:</b> permanent</div>
-      <div class="tiny">Last seen at GE saying “sit” after losing a friendly risk fight.</div>
-      <button class="btn" onclick="gainXp()">Train +1 XP</button>
-    </div>
-  </section>
-
-  <section class="grid-2" id="achievements">
-    <div class="panel">
-      <h2>Elite Achievements</h2>
-      <ul class="list">
-        <li><span class="good">✓</span> Completed Inferno with bronze dagger <span class="tiny">(source unavailable)</span></li>
-        <li><span class="good">✓</span> Soloed Nex while disconnected</li>
-        <li><span class="good">✓</span> 17 pets from one Hespori kill</li>
-        <li><span class="good">✓</span> 0-tick manipulated the Sandwich Lady</li>
-        <li><span class="good">✓</span> Survived one entire raid without saying “lag”</li>
-        <li><span class="good">✓</span> Reported Mod Ash for XP waste</li>
-        <li><span class="bad">✗</span> Still cannot find Lumbridge Castle staircase</li>
-      </ul>
-    </div>
-
-    <div class="panel">
-      <h2>Bank Value</h2>
-      <div class="bank-value">420 gp</div>
-      <div class="tiny">Price checker may be inaccurate due to catastrophic financial decisions.</div>
-      <ul class="list">
-        <li>1x burnt shrimp</li><li>37x noted cabbage</li><li>2x rope <span class="tiny">(raid supplies)</span></li>
-        <li>1x <span class="lootbeam">Tumeken's Shadow*</span></li><li>14,000x empty beer glass</li><li>1x apology to the team</li>
-      </ul>
-      <div class="tiny" style="margin-top:10px">*currently “borrowed” until the lender remembers.</div>
-    </div>
-  </section>
-
-  <section class="grid-2">
-    <div class="panel" id="news">
-      <h2>Breaking News</h2>
-      <div class="news"><div class="date">Today, 4:20 PM</div><b>all 420s announces retirement from PvM</b><div class="tiny">Returned 11 minutes later after hearing “free split.”</div></div>
-      <div class="news"><div class="date">Today, 6:09 PM</div><b>Historic 0 EHP session completed</b><div class="tiny">Analysts called the pace “sustainable indefinitely.”</div></div>
-      <div class="news"><div class="date">Yesterday</div><b>Grand Exchange economy briefly collapses</b><div class="tiny">Cause traced to all 420s panic-selling one rune platebody.</div></div>
-      <div class="news"><div class="date">Last week</div><b>GE witnesses unexplained “sit” epidemic</b><div class="tiny">Authorities believe Vengeance may have been cast once.</div></div>
-    </div>
-
-    <div class="panel">
-      <h2>Account Security Center</h2>
-      <div class="terminal" id="terminal">[SECURITY] Authenticator: disabled for convenience
-[SECURITY] Bank PIN: 0420
-[SECURITY] Password strength: "bro trust me"
-[SECURITY] Recovery questions: forgotten
-[SECURITY] Overall rating: absolutely cooked</div>
-      <div class="button-row">
-        <button class="btn blue" onclick="secureAccount()">Secure Account</button>
-        <button class="btn red" onclick="hackMe()">Definitely Not Phishing</button>
+    <div class="charbox">
+      <div class="charhead">
+        <span>PLAYER INSPECT</span>
+        <span id="combatText">Combat 126</span>
+      </div>
+      <div class="avatar" id="avatar">🧙</div>
+      <div class="statsmini">
+        <div class="statmini">Total level <b>2277</b></div>
+        <div class="statmini">Bank value <b id="bankVal">2,147,483,647 gp</b></div>
+        <div class="statmini">Grass touched <b>0</b></div>
+        <div class="statmini">EHP today <b>-4.2</b></div>
       </div>
     </div>
   </section>
 
-  <section class="grid-2">
-    <div class="panel">
-      <h2>Request a Carry</h2>
-      <p>all 420s is currently accepting exactly <b class="gold">zero</b> applications.</p>
-      <div class="button-row"><button class="btn green" onclick="rollTroll()">Request Carry</button><button class="btn red" onclick="panicButton()">I Died at Jad</button></div>
-      <div id="trollbox">Choose wisely.</div>
+  <div class="news">
+    <div class="marquee">
+      BREAKING: Local maxed player has spent 47 minutes reorganizing bank tabs instead of doing PvM •
+      GE tax blamed for everything • Mod Ash seen pretending not to read Twitter •
+      Player receives 14 noted cabbages, immediately posts "spooned" •
+      New meta discovered: clicking boss until it dies
     </div>
+  </div>
 
-    <div class="panel">
-      <h2>Hiscore Lookup</h2>
-      <p class="tiny">Enter any RuneScape name to receive an extremely accurate professional assessment.</p>
-      <div class="fake-login"><input id="rsn" maxlength="12" placeholder="RuneScape name" /><button class="btn" onclick="lookupRsn()">Lookup</button></div>
-      <div id="lookupResult" class="warning" style="display:none"></div>
+  <section class="grid">
+    <article class="card" onclick="fakeHiscores()">
+      <h3>Hiscores</h3>
+      <p>Check your ranking among 4 actual players and several million suspicious woodcutters.</p>
+      <div class="emoji">📜</div>
+    </article>
+
+    <article class="card" onclick="bankStand()">
+      <h3>Bankstanding Simulator</h3>
+      <p>Gain absolutely nothing while staring at your gear and debating a 0.4% DPS upgrade.</p>
+      <div class="emoji">🏦</div>
+    </article>
+
+    <article class="card" onclick="deathFee()">
+      <h3>Death's Office</h3>
+      <p>Pay an unnecessary amount of GP because you looked at Discord during a mechanic.</p>
+      <div class="emoji">☠️</div>
+    </article>
+  </section>
+
+  <section class="panel">
+    <div class="paneltitle">Public Chat</div>
+    <div class="chat" id="chat">
+      <div class="sys">Welcome to RuneScape.</div>
+      <div class="npc">Goblin: Wanna buy gf 10k?</div>
+      <div class="player">You: reported</div>
+      <div class="npc">Wise Old Man: I have been standing here since 2004.</div>
+      <div class="sys">A player has logged in.</div>
+    </div>
+    <div class="buttons">
+      <button onclick="talk()">Say something</button>
+      <button onclick="muteEveryone()">Mute Everyone</button>
+      <button onclick="addGoblin()">Add Goblin</button>
     </div>
   </section>
 
-  <section class="chatbox" id="chat">
-    <div class="chat-tabs"><div class="chat-tab">All</div><div class="chat-tab">Game</div><div class="chat-tab">Public: On</div><div class="chat-tab">Private: Friends</div><div class="chat-tab">Clan</div><div class="chat-tab">Trade: On</div></div>
-    <div class="chat-log" id="chatLog">
-      <div class="system">Welcome to World 420.</div>
-      <div class="game">You have 420 days of membership remaining.</div>
-      <div class="public"><span class="gold">all 420s:</span> anyone need carry</div>
-      <div class="public"><span class="gold">Goblin:</span> no</div>
-      <div class="clan">[Peak PvM] Gnome Child: your event starts in 10 minutes.</div>
-      <div class="public"><span class="gold">all 420s:</span> cancel it</div>
-      <div class="game">You have been standing still for 6 hours.</div>
-      <div class="trade">Trade request from: TotallyRealJMod</div>
-    </div>
-    <div class="chat-input"><input id="chatInput" placeholder="Press enter to embarrass yourself publicly..." onkeydown="chatKey(event)" /><button class="btn" onclick="sendChat()">Send</button></div>
+  <section class="grid">
+    <article class="panel">
+      <div class="paneltitle">Inventory</div>
+      <div class="inventory">
+        <div class="slot" onclick="useItem('Rock')">🪨<span class="qty">1</span></div>
+        <div class="slot" onclick="useItem('Cabbage')">🥬<span class="qty">28</span></div>
+        <div class="slot" onclick="useItem('Burnt shrimp')">🍤<span class="qty">3</span></div>
+        <div class="slot" onclick="useItem('Suspicious potion')">🧪<span class="qty">1</span></div>
+        <div class="slot" onclick="useItem('Monkey nuts')">🥜<span class="qty">420</span></div>
+        <div class="slot" onclick="useItem('Fake partyhat')">🎉<span class="qty">1</span></div>
+        <div class="slot" onclick="useItem('Clue scroll')">📜<span class="qty">1</span></div>
+        <div class="slot" onclick="useItem('Air rune')">💨<span class="qty">13</span></div>
+      </div>
+    </article>
+
+    <article class="panel">
+      <div class="paneltitle">Quest List</div>
+      <div class="questbox">
+        <div class="questname">One Small Favor II</div>
+        <div class="queststep" id="questStep">Not started. Life is still good.</div>
+        <div class="progress"><div id="questBar"></div></div>
+        <div class="buttons">
+          <button onclick="advanceQuest()">Advance Quest</button>
+        </div>
+      </div>
+    </article>
+
+    <article class="panel">
+      <div class="paneltitle">Collection Log</div>
+      <div class="questbox">
+        <div class="questname">Boss: Existential Dread</div>
+        <div class="queststep" id="logText">0 / 1 unique obtained.</div>
+        <div class="buttons">
+          <button onclick="rollCollection()">Roll Collection Log</button>
+        </div>
+      </div>
+    </article>
   </section>
 
-  <div class="counter">You are visitor <strong id="visitor">000420</strong> since this website was last hacked by goblins.</div>
-  <footer>Fan-made parody. Not affiliated with Jagex. No GP was doubled. No armour was trimmed. No cousins were trusted with the bank.<br>© 2007–2026 all 420s International Holdings, Cabbage Logistics & Questionable Services LLC</footer>
+  <div class="bottom">
+    *Not affiliated with Jagex, the King, Guthix, Mod Ash, or whichever goblin owns this server.
+  </div>
 </div>
 
-<div class="overlay" id="overlay"><div class="disconnect">CONNECTION LOST<small>Please wait - attempting to reestablish.<br><br>Just kidding. You clicked “Claim Free Tbow.” What did you expect?</small></div></div>
+<div class="modal" id="modal">
+  <div class="modalbox">
+    <button class="close" onclick="closeModal()">X</button>
+    <h2 id="modalTitle">Title</h2>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<div class="random-event" id="randomEvent">
+  <div class="randombox">
+    <h2>⚠ RANDOM EVENT</h2>
+    <p id="randomText">A mysterious old man demands your attention.</p>
+    <div class="buttons">
+      <button class="good" onclick="solveEvent()">Do random event</button>
+      <button class="danger" onclick="ignoreEvent()">Ignore him</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
-  const carryResponses=[
-    "Application denied: KC too low and vibes suspicious.",
-    "all 420s is bankstanding. Estimated wait: 6–8 business months.",
-    "You have been assigned role: +1 who forgets DDS at Wardens.",
-    "Carry approved. Payment: one burnt shrimp and public humiliation.",
-    "Error 420: gamer too elite to join your party.",
-    "Complete the elite diary task: touch grass for 15 consecutive minutes.",
-    "Your request was forwarded to Wise Old Man. He laughed.",
-    "Denied: said ‘I know mechanics’ before instantly planking.",
-    "Congratulations. You are now tanking Bandos in graceful.",
-    "Accepted. all 420s will arrive after finishing a clue scroll from 2019."
+const chat = document.getElementById('chat');
+const modal = document.getElementById('modal');
+const toast = document.getElementById('toast');
+
+function addChat(text, cls='sys'){
+  const d=document.createElement('div');
+  d.className=cls;
+  d.textContent=text;
+  chat.appendChild(d);
+  chat.scrollTop=chat.scrollHeight;
+}
+
+function showToast(msg){
+  toast.textContent=msg;
+  toast.style.display='block';
+  clearTimeout(window.toastTimer);
+  window.toastTimer=setTimeout(()=>toast.style.display='none',2800);
+}
+
+function xpDrop(text='+420 xp'){
+  const e=document.createElement('div');
+  e.className='xpdrop';
+  e.textContent=text;
+  e.style.left=(window.innerWidth*.55+Math.random()*160-80)+'px';
+  e.style.top=(window.innerHeight*.25+Math.random()*180)+'px';
+  document.body.appendChild(e);
+  setTimeout(()=>e.remove(),1100);
+}
+
+function damage(n){
+  const e=document.createElement('div');
+  e.className='damage';
+  e.textContent=n;
+  e.style.left=(window.innerWidth*.5+Math.random()*100-50)+'px';
+  e.style.top=(window.innerHeight*.25+Math.random()*80)+'px';
+  document.body.appendChild(e);
+  setTimeout(()=>e.remove(),800);
+}
+
+const loot = [
+  ['🥬 Cabbage','You receive 1 cabbage. This changes everything.'],
+  ['🪨 Rock','You receive a rock. Estimated value: emotionally priceless.'],
+  ['💰 37 coins','A life-changing amount of wealth has entered your account.'],
+  ['🗡 Bronze dagger','Best-in-slot if you are level 3 and very optimistic.'],
+  ['🐟 Burnt shrimp','Somebody cooked this using Prayer.'],
+  ['👑 Nothing','The chest was empty. Skill issue.'],
+  ['🌈 Purple!','It is a purple sweet. Sit down.']
+];
+
+function rollLoot(){
+  const r=loot[Math.floor(Math.random()*loot.length)];
+  openModal('Mystery Chest',`<p style="font-size:42px;margin:4px 0">${r[0]}</p><p>${r[1]}</p>`);
+  addChat('You open the chest and receive: '+r[0].replace(/^[^\s]+\s/,'')+'.','goodmsg');
+  xpDrop('+'+(Math.floor(Math.random()*8000)+420)+' xp');
+}
+
+function claimTbow(){
+  damage(99);
+  document.getElementById('bankVal').textContent='0 gp';
+  addChat('You have traded away your entire bank.','bad');
+  addChat('Stranger: ty','npc');
+  openModal('Congratulations!',`
+    <p>You have successfully claimed your free Twisted Bow.</p>
+    <p><b>Unfortunately, it was on a different account.</b></p>
+    <p>Your bank has been converted into a valuable lesson.</p>`);
+}
+
+function fakeHiscores(){
+  openModal('Hiscores Lookup',`
+    <p><b>Rank #1:</b> Lynx Titan</p>
+    <p><b>Rank #2:</b> Some guy named "xX_vape420_Xx"</p>
+    <p><b>Your rank:</b> 8,942,177</p>
+    <p><b>Reason:</b> spent 3 hours choosing bank tab icons.</p>`);
+}
+
+function bankStand(){
+  xpDrop('+0 xp');
+  addChat('You stand at the Grand Exchange doing nothing.','sys');
+  showToast('Bankstanding XP gained: absolutely 0.');
+}
+
+function deathFee(){
+  const fee=(Math.floor(Math.random()*900000)+100000).toLocaleString();
+  addChat('Death takes '+fee+' coins from you.','bad');
+  openModal("Death's Office",`<p>Death fee: <b>${fee} gp</b></p><p>Cause of death: checking Discord mid-fight.</p>`);
+}
+
+function talk(){
+  const lines=[
+    'You: anyone wanna raid',
+    'You: surely next kc',
+    'You: lag',
+    'You: bro i clicked that',
+    'You: this game is terrible',
+    'You: see you tomorrow'
   ];
-  const lookupResponses=[
-    "Combat assessment: dangerous near banks, harmless near bosses.",
-    "Account status: 99% confidence, 1% mechanics.",
-    "PvM rating: has watched at least two guides.",
-    "Hiscores flag: suspicious amount of bankstanding detected.",
-    "Raid readiness: inventory contains 11 brews and no restore.",
-    "Threat level: will say ‘lag’ within 30 seconds of death.",
-    "Verified gamer. Unfortunately."
-  ];
-  const npcReplies=["reported","bro what","nty","skill issue","meet me w420 ge","you forgot your dds again","sit","buying gf 10k","touch grass","that was not a mechanic"];
-  function shake(el){el.classList.remove('shake');void el.offsetWidth;el.classList.add('shake')}
-  function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>t.classList.remove('show'),2400)}
-  function rollTroll(){const b=document.getElementById('trollbox');shake(b);b.textContent=carryResponses[Math.floor(Math.random()*carryResponses.length)]}
-  function panicButton(){const b=document.getElementById('trollbox');shake(b);b.innerHTML='<span class="bad">Skill issue detected.</span>&nbsp; Report to Falador and think about what you did.'}
-  function gainXp(){const d=document.createElement('div');d.className='xpdrop';d.textContent='+1 Bankstanding XP';document.body.appendChild(d);setTimeout(()=>d.remove(),1700);toast('Congratulations, you just wasted 4.2 seconds.')}
-  function claimTbow(){const o=document.getElementById('overlay');o.classList.add('show');setTimeout(()=>o.classList.remove('show'),1800)}
-  function secureAccount(){document.getElementById('terminal').textContent='[SECURITY] Attempting to enable common sense...\n[ERROR] Feature not found.\n[SECURITY] Bank PIN changed from 0420 to 0420.\n[SUCCESS] Nothing improved.';toast('Account security increased by 0%.')}
-  function hackMe(){document.getElementById('terminal').textContent='[NOTICE] Congratulations!\nYour account has been transferred to Cow31337.\nPlease meet him behind Lumbridge Castle with your bank.';toast('Absolutely elite decision-making.')}
-  function lookupRsn(){const i=document.getElementById('rsn');const r=document.getElementById('lookupResult');const name=i.value.trim()||'that account';r.style.display='block';r.innerHTML='<b>'+escapeHtml(name)+'</b>: '+lookupResponses[Math.floor(Math.random()*lookupResponses.length)];shake(r)}
-  function escapeHtml(s){return s.replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
-  function chatKey(e){if(e.key==='Enter')sendChat()}
-  function sendChat(){const i=document.getElementById('chatInput');const text=i.value.trim();if(!text)return;const log=document.getElementById('chatLog');const me=document.createElement('div');me.className='public';me.innerHTML='<span class="gold">all 420s:</span> '+escapeHtml(text);log.appendChild(me);i.value='';log.scrollTop=log.scrollHeight;setTimeout(()=>{const npc=document.createElement('div');npc.className='public';npc.innerHTML='<span class="gold">Goblin:</span> '+npcReplies[Math.floor(Math.random()*npcReplies.length)];log.appendChild(npc);log.scrollTop=log.scrollHeight},450)}
-  document.getElementById('visitor').textContent=String(420+Math.floor(Math.random()*4200)).padStart(6,'0');
-  setInterval(()=>{if(Math.random()<.35){const d=document.createElement('div');d.className='xpdrop';d.textContent=['+420 Ego XP','+0 EHP','+69 Bankstanding XP','-14m GP'][Math.floor(Math.random()*4)];document.body.appendChild(d);setTimeout(()=>d.remove(),1700)}},6000);
+  addChat(lines[Math.floor(Math.random()*lines.length)],'player');
+}
+
+function muteEveryone(){
+  addChat('You have muted everyone.','sys');
+  setTimeout(()=>addChat('Goblin: I am somehow still talking.','npc'),450);
+}
+
+function addGoblin(){
+  addChat('Goblin: Wot you looking at?','npc');
+  showToast('Goblin added to friends list. Huge networking opportunity.');
+}
+
+function useItem(item){
+  const msgs={
+    'Rock':'You use the rock. Nothing interesting happens.',
+    'Cabbage':'You eat the cabbage. Somehow you feel worse.',
+    'Burnt shrimp':'You attempt to eat it. The game says no.',
+    'Suspicious potion':'Your stats have been rearranged alphabetically.',
+    'Monkey nuts':'The monkey economy has collapsed.',
+    'Fake partyhat':'Everyone at the GE knows it is fake.',
+    'Clue scroll':'Step 1: go somewhere annoying.',
+    'Air rune':'You cast Wind Strike on your remaining self-respect.'
+  };
+  showToast(msgs[item]);
+  xpDrop('+1 '+item+' xp');
+}
+
+let quest=0;
+const questSteps=[
+  'Not started. Life is still good.',
+  'Talk to a man in Rimmington.',
+  'He needs a bucket from Ardougne.',
+  'The bucket seller needs a rope.',
+  'The rope seller wants a kebab.',
+  'The kebab seller wants 14 trout.',
+  'You are now in Morytania somehow.',
+  'Quest complete. Reward: 1 cabbage.'
+];
+
+function startQuest(){
+  quest=1;
+  updateQuest();
+  showToast('Quest started. Terrible decision.');
+}
+function advanceQuest(){
+  if(quest===0) quest=1;
+  else quest=Math.min(quest+1,questSteps.length-1);
+  updateQuest();
+  if(quest===questSteps.length-1){
+    addChat('Quest complete: One Small Favor II','goodmsg');
+    xpDrop('+1 quest point');
+  }
+}
+function updateQuest(){
+  document.getElementById('questStep').textContent=questSteps[quest];
+  document.getElementById('questBar').style.width=((quest/(questSteps.length-1))*100)+'%';
+}
+
+function rollCollection(){
+  const n=Math.random();
+  if(n<.92){
+    document.getElementById('logText').textContent='0 / 1 unique obtained. KC increased. Hope decreased.';
+    addChat('Collection log: nothing.','bad');
+  } else {
+    document.getElementById('logText').textContent='1 / 1 unique obtained. You are now insufferable.';
+    addChat('Collection log slot completed!','goodmsg');
+    xpDrop('COLLECTION LOG!');
+  }
+}
+
+const randoms=[
+  'A mysterious old man appears and asks whether you have considered logging off.',
+  'The Sandwich Lady has arrived. You chose the wrong sandwich. Prepare for exile.',
+  'A Genie appears and offers 130 XP. This is the best thing to happen all day.',
+  'A Drunken Dwarf hands you a kebab. You immediately distrust it.',
+  'Evil Bob wants you to fish. Nobody knows why Evil Bob has this authority.'
+];
+
+function spawnEvent(){
+  document.getElementById('randomText').textContent=randoms[Math.floor(Math.random()*randoms.length)];
+  document.getElementById('randomEvent').style.display='grid';
+}
+function solveEvent(){
+  document.getElementById('randomEvent').style.display='none';
+  addChat('Random event completed. Reward: 13 coins.','goodmsg');
+  xpDrop('+13 xp');
+}
+function ignoreEvent(){
+  document.getElementById('randomEvent').style.display='none';
+  addChat('You ignored the random event and were teleported to somewhere annoying.','bad');
+  damage(1);
+}
+
+function openModal(title,body){
+  document.getElementById('modalTitle').textContent=title;
+  document.getElementById('modalBody').innerHTML=body;
+  modal.style.display='grid';
+}
+function closeModal(){modal.style.display='none'}
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){closeModal();document.getElementById('randomEvent').style.display='none'}
+});
+
+setInterval(()=>{
+  if(Math.random()<.22){
+    const idle=[
+      'System update in 999 minutes.',
+      'A bot has chopped 14,000 yew logs.',
+      'Someone at the GE says "doubling money".',
+      'Your stamina potion has expired spiritually.',
+      'You feel like you are being followed.'
+    ];
+    addChat(idle[Math.floor(Math.random()*idle.length)],'sys');
+  }
+},8000);
 </script>
 </body>
 </html>
