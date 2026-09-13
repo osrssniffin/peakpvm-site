@@ -3,558 +3,85 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Old School RuneScape™ Definitely Real Website</title>
+<title>Old School RuneScape: One File Edition</title>
 <style>
-:root{
-  --bg:#15130f;
-  --panel:#2d261b;
-  --panel2:#3a3122;
-  --gold:#ffcf53;
-  --gold2:#e2b84c;
-  --cream:#e7dcc1;
-  --brown:#6b5433;
-  --dark:#0d0c0a;
-  --green:#50c45e;
-  --red:#e0513d;
-  --blue:#5aa8ff;
-}
-*{box-sizing:border-box}
-html,body{margin:0;min-height:100%;font-family:Verdana,Arial,sans-serif;background:#0c0b09;color:var(--cream)}
-body{
-  background:
-    radial-gradient(circle at 15% 20%,rgba(104,75,33,.18),transparent 22%),
-    radial-gradient(circle at 80% 10%,rgba(114,22,17,.15),transparent 30%),
-    linear-gradient(180deg,#12100d,#090807 70%);
-  overflow-x:hidden;
-}
-body:before{
-  content:"";
-  position:fixed;inset:0;pointer-events:none;opacity:.16;
-  background-image:
-    linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);
-  background-size:22px 22px;
-}
-
-.wrap{max-width:1180px;margin:0 auto;padding:22px}
-.top{
-  display:flex;justify-content:space-between;align-items:center;gap:18px;
-  padding:12px 16px;
-  border:3px ridge #6d5838;
-  background:linear-gradient(#2a2319,#17130e);
-  box-shadow:0 0 30px #000;
-  position:sticky;top:0;z-index:20;
-}
-.logo{
-  font-family:Georgia,serif;font-weight:900;font-size:24px;color:var(--gold);
-  text-shadow:2px 2px #000,-1px -1px #4e3310;
-}
-.online{font-size:12px;color:#9e9481}
-.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#45c15c;box-shadow:0 0 10px #45c15c;margin-right:7px}
-
-.hero{
-  margin-top:18px;
-  border:4px ridge #755f3c;
-  background:
-    linear-gradient(rgba(24,20,15,.84),rgba(10,9,7,.92)),
-    radial-gradient(circle at 50% 20%,rgba(255,183,51,.10),transparent 42%);
-  min-height:390px;
-  padding:38px;
-  display:grid;grid-template-columns:1.2fr .8fr;gap:28px;align-items:center;
-  box-shadow:0 18px 50px rgba(0,0,0,.55);
-}
-.hero h1{
-  font-family:Georgia,serif;
-  font-size:clamp(48px,8vw,96px);
-  line-height:.9;margin:0;
-  color:#f2cf6a;text-shadow:4px 4px #000;
-}
-.hero p{font-size:17px;line-height:1.65;color:#cfc2a8;max-width:680px}
-.badge{
-  display:inline-block;background:#231b11;border:2px ridge #6b5635;
-  color:#ffd76b;padding:6px 9px;font-size:11px;margin-bottom:14px;text-transform:uppercase;letter-spacing:.08em
-}
-
-.charbox{
-  border:3px ridge #6b5635;background:#19150f;padding:16px;position:relative;
-}
-.charhead{display:flex;justify-content:space-between;font-size:11px;color:#a89b83;margin-bottom:12px}
-.avatar{
-  height:180px;display:grid;place-items:center;border:2px inset #58492f;
-  background:
-    radial-gradient(circle,#4c3d28 0,#231b12 45%,#0d0b08 100%);
-  font-size:84px;text-shadow:0 4px 12px #000;
-}
-.statsmini{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:10px}
-.statmini{background:#0e0c09;border:1px solid #443722;padding:9px;font-size:12px}
-.statmini b{color:#ffcf53}
-
-.buttons{display:flex;flex-wrap:wrap;gap:9px;margin-top:20px}
-button,.btn{
-  appearance:none;cursor:pointer;text-decoration:none;
-  border:3px ridge #725d3d;
-  background:linear-gradient(#403421,#20190f);
-  color:#f1dfb7;padding:11px 14px;font-weight:bold;font-size:12px;
-  text-shadow:1px 1px #000;
-}
-button:hover,.btn:hover{filter:brightness(1.17)}
-.danger{border-color:#7a382f;background:linear-gradient(#4c1f17,#21100c);color:#ffc8bd}
-.good{border-color:#3d6a40;background:linear-gradient(#254326,#142015);color:#caffcf}
-
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px}
-.card{
-  border:3px ridge #6f5938;background:linear-gradient(#2b2419,#17130e);
-  padding:16px;min-height:170px;position:relative;overflow:hidden;
-  box-shadow:0 10px 25px rgba(0,0,0,.35);
-}
-.card h3{margin:0 0 8px;color:#ffd15c;font-family:Georgia,serif;font-size:22px}
-.card p{color:#b9ad97;line-height:1.5;font-size:13px}
-.card .emoji{font-size:42px;position:absolute;right:12px;bottom:8px;opacity:.22;transform:rotate(-8deg)}
-
-.panel{
-  margin-top:18px;border:3px ridge #6a5637;background:#14110d;padding:14px
-}
-.paneltitle{
-  font-family:Georgia,serif;color:#ffd064;font-size:20px;margin-bottom:10px
-}
-
-.chat{
-  height:215px;overflow:auto;background:#0d0b08;border:2px inset #4d3d28;padding:10px;
-  font-family:Arial,sans-serif;font-size:13px;line-height:1.5
-}
-.chat .sys{color:#83d2ff}
-.chat .npc{color:#ffd45e}
-.chat .player{color:#fff}
-.chat .bad{color:#f36f5c}
-.chat .goodmsg{color:#79dc78}
-
-.inventory{
-  display:grid;grid-template-columns:repeat(4,56px);gap:5px;justify-content:center;
-  padding:14px;background:#1b1711;border:2px inset #4b3b28
-}
-.slot{
-  width:56px;height:56px;background:radial-gradient(circle,#32281b,#16110b);
-  border:2px inset #5c492f;display:grid;place-items:center;font-size:26px;cursor:pointer;
-  position:relative;
-}
-.slot:hover{outline:2px solid #d7b24d}
-.qty{position:absolute;left:3px;top:2px;color:#fff04e;font-size:10px;text-shadow:1px 1px #000}
-
-.questbox{
-  border:2px inset #4d3d28;background:#0f0d0a;padding:12px;font-family:Georgia,serif
-}
-.questname{color:#f0d369;font-size:18px}
-.queststep{margin-top:8px;color:#bdb19a;font-size:13px}
-.progress{height:12px;background:#090806;border:1px solid #4a3a25;margin-top:9px;overflow:hidden}
-.progress > div{height:100%;width:0;background:linear-gradient(90deg,#7e1717,#e1b740);transition:.5s}
-
-.news{
-  margin-top:18px;white-space:nowrap;overflow:hidden;border:3px ridge #6e5938;background:#19150f;padding:10px
-}
-.marquee{display:inline-block;animation:marq 18s linear infinite;color:#ddcda8;font-size:12px}
-@keyframes marq{from{transform:translateX(100vw)}to{transform:translateX(-100%)}}
-
-.modal,.random-event{
-  position:fixed;inset:0;display:none;place-items:center;z-index:99;background:rgba(0,0,0,.72);padding:20px
-}
-.modalbox,.randombox{
-  width:min(520px,92vw);border:4px ridge #806741;background:#211a12;padding:18px;box-shadow:0 20px 70px #000
-}
-.modalbox h2,.randombox h2{color:#ffd560;font-family:Georgia,serif;margin-top:0}
-.close{float:right}
-
-.toast{
-  position:fixed;right:20px;bottom:20px;background:#16120d;border:3px ridge #705b3b;
-  color:#ecdcb9;padding:11px 14px;z-index:200;display:none;max-width:340px;box-shadow:0 10px 35px #000
-}
-
-.xpdrop{
-  position:fixed;color:#ffe75b;font-weight:bold;text-shadow:2px 2px #000;pointer-events:none;z-index:300;
-  animation:xp 1.1s ease forwards
-}
-@keyframes xp{0%{opacity:0;transform:translateY(10px)}20%{opacity:1}100%{opacity:0;transform:translateY(-60px)}}
-
-.damage{
-  position:fixed;color:#fff;background:#bd3128;border:2px solid #5a110e;border-radius:50%;
-  width:40px;height:40px;display:grid;place-items:center;font-weight:bold;z-index:250;
-  animation:dmg .8s ease forwards
-}
-@keyframes dmg{to{opacity:0;transform:translateY(-35px) scale(.8)}}
-
-.bottom{
-  margin:18px 0 30px;text-align:center;color:#756a59;font-size:11px
-}
-
-@media(max-width:850px){
-  .hero{grid-template-columns:1fr}
-  .grid{grid-template-columns:1fr}
-}
+:root{--bg:#0b0a08;--panel:#2f281c;--panel2:#1c1710;--edge:#715b39;--gold:#ffd35d;--cream:#e6d8b8;--red:#d54834;--green:#64ce6b;--blue:#6fb1ff}
+*{box-sizing:border-box;user-select:none}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#050504;color:var(--cream);font-family:Verdana,Arial,sans-serif}button,input{font:inherit}
+body{background:radial-gradient(circle at 20% 15%,rgba(98,70,30,.12),transparent 22%),radial-gradient(circle at 80% 8%,rgba(120,25,20,.11),transparent 24%),linear-gradient(#0b0a08,#050504)}
+#app{width:100vw;height:100vh;display:flex;flex-direction:column}.topbar{height:42px;display:flex;align-items:center;justify-content:space-between;padding:0 10px;background:linear-gradient(#312819,#17120d);border-bottom:3px ridge #665137;z-index:20}.logo{font-family:Georgia,serif;color:var(--gold);font-weight:900;text-shadow:2px 2px #000}.topbtns{display:flex;gap:6px}.rsbtn{border:3px ridge #705a39;background:linear-gradient(#463820,#21180f);color:#f0deb8;padding:5px 9px;cursor:pointer;font-weight:bold;font-size:11px;text-shadow:1px 1px #000}.rsbtn:hover{filter:brightness(1.15)}.rsbtn.red{border-color:#7b382d;background:linear-gradient(#4a1f16,#1e0f0b)}.rsbtn.green{border-color:#467244;background:linear-gradient(#274a26,#132014)}
+.client{flex:1;display:grid;grid-template-columns:minmax(0,1fr) 330px;min-height:0}.game{position:relative;overflow:hidden;background:linear-gradient(rgba(14,13,11,.2),rgba(7,7,6,.34)),radial-gradient(circle at 50% 60%,#3f4a2e 0 14%,#304029 15% 33%,#2a3021 34% 54%,#1d251a 55% 75%,#12150f 76%)}#worldCanvas{position:absolute;inset:0;width:100%;height:100%}
+.minimap{position:absolute;top:12px;right:12px;width:168px;height:168px;border-radius:50%;border:7px ridge #6f5a3a;background:radial-gradient(circle,#8b9570,#3a4b2f 68%,#1a1d16 69%);box-shadow:0 8px 25px #000;overflow:hidden}.minimap:before{content:"";position:absolute;inset:9px;border-radius:50%;opacity:.5;background:radial-gradient(circle at 32% 40%,#e0d864 0 2px,transparent 3px),radial-gradient(circle at 65% 25%,#e0d864 0 2px,transparent 3px),radial-gradient(circle at 54% 69%,#e0d864 0 2px,transparent 3px),linear-gradient(25deg,transparent 47%,rgba(88,65,38,.5) 48% 51%,transparent 52%)}.minimap .you{position:absolute;left:50%;top:50%;width:7px;height:7px;background:#fff;border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 0 8px #fff}.orbs{position:absolute;top:186px;right:18px;display:grid;gap:6px}.orb{width:52px;height:52px;border-radius:50%;border:4px ridge #6b5636;background:#211a12;display:grid;place-items:center;font-weight:bold;font-size:12px;box-shadow:0 5px 15px #000}.orb.hp{color:#ff8276}.orb.pray{color:#7cc2ff}.orb.run{color:#f6d96d}
+.player{position:absolute;left:48%;top:52%;transform:translate(-50%,-50%);font-size:64px;filter:drop-shadow(0 6px 4px #000);transition:.2s}.boss{position:absolute;left:28%;top:32%;transform:translate(-50%,-50%);font-size:78px;filter:drop-shadow(0 8px 6px #000);cursor:pointer;transition:.12s}.boss:hover{transform:translate(-50%,-50%) scale(1.05)}.tile-marker{position:absolute;width:46px;height:46px;border:2px solid rgba(80,255,90,.65);background:rgba(80,255,90,.07);transform:rotate(45deg);display:none}
+.lootbeam{position:absolute;width:10px;height:0;background:linear-gradient(to top,#ffdd47,rgba(255,221,71,0));box-shadow:0 0 18px #ffcc2a;pointer-events:none;transform:translateX(-50%);z-index:9;animation:beam .8s ease forwards}@keyframes beam{0%{height:0;opacity:0}30%{height:140px;opacity:1}100%{height:100px;opacity:.7}}.hit{position:absolute;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:bold;text-shadow:1px 1px #000;z-index:11;animation:hit .75s ease forwards}.hit.red{background:#b9392c;border:3px solid #5d160f}.hit.blue{background:#2466b8;border:3px solid #0e315d}@keyframes hit{0%{opacity:0;transform:scale(.6)}25%{opacity:1;transform:scale(1)}100%{opacity:0;transform:translateY(-30px)}}.xpdrop{position:absolute;right:198px;top:16px;color:#ffe55b;font-weight:bold;text-shadow:2px 2px #000;z-index:12;animation:xpdrop 1.3s ease forwards}@keyframes xpdrop{0%{opacity:0;transform:translateY(20px)}15%{opacity:1}100%{opacity:0;transform:translateY(-35px)}}
+.overhead{position:absolute;left:48%;top:39%;transform:translateX(-50%);font-size:32px;z-index:8;display:none}.bossbar{position:absolute;top:14px;left:50%;transform:translateX(-50%);width:min(470px,60%);background:#140f0a;border:3px ridge #695336;padding:7px;box-shadow:0 6px 18px #000}.bossname{display:flex;justify-content:space-between;font-size:11px;color:#cfbea0;margin-bottom:5px}.bar{height:16px;background:#080706;border:1px solid #3e2e1c;overflow:hidden}.bar>div{height:100%;transition:.25s}#bossHpFill{width:100%;background:linear-gradient(90deg,#6d1111,#d84936)}
+.side{background:linear-gradient(#292117,#15110d);border-left:4px ridge #6c5636;display:flex;flex-direction:column;min-height:0}.tabs{display:grid;grid-template-columns:repeat(7,1fr);border-bottom:3px ridge #5f4c32}.tab{height:43px;display:grid;place-items:center;background:#211a12;border:2px outset #4f402b;cursor:pointer;font-size:18px}.tab.active{background:#3b2f20;box-shadow:inset 0 0 12px rgba(255,211,93,.08)}.panel{flex:1;min-height:0;overflow:auto;padding:10px;display:none}.panel.active{display:block}.paneltitle{font-family:Georgia,serif;color:var(--gold);font-size:20px;margin:2px 0 10px}
+.invgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.slot{aspect-ratio:1;background:radial-gradient(circle,#302618,#16110b);border:2px inset #5d4a30;display:grid;place-items:center;font-size:25px;position:relative;cursor:grab}.slot.dragging{opacity:.35}.qty{position:absolute;left:3px;top:2px;font-size:9px;color:#fff05d;text-shadow:1px 1px #000}.itemname{position:absolute;bottom:2px;left:3px;right:3px;font-size:8px;color:#c6baa5;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.prayers{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.prayer{aspect-ratio:1;border:2px outset #52412a;background:#15110c;display:grid;place-items:center;font-size:26px;cursor:pointer;position:relative}.prayer.active{outline:2px solid #e7d46e;box-shadow:inset 0 0 16px rgba(255,226,94,.3),0 0 10px rgba(255,225,70,.25)}.prayer small{position:absolute;bottom:2px;font-size:7px;color:#a99b81}.skillgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}.skill{border:2px inset #57452c;background:#17120c;padding:7px 4px;text-align:center;font-size:11px}.skill b{display:block;color:#ffdc6c;font-size:15px}
+.chatbox{position:absolute;left:10px;bottom:10px;width:min(650px,calc(100% - 360px));height:176px;background:rgba(16,13,9,.88);border:3px ridge #665137;box-shadow:0 8px 25px #000;z-index:14}.chatlog{height:132px;overflow:auto;padding:7px 9px;font-size:12px;line-height:1.45}.chatline.sys{color:#74c1ff}.chatline.npc{color:#ffd562}.chatline.you{color:#fff}.chatline.red{color:#f66d5d}.chatline.green{color:#74d97b}.chatinput{height:38px;display:flex;border-top:2px ridge #4b3b27}.chatinput input{flex:1;background:#0d0b08;border:0;color:#eee0bd;padding:0 10px;outline:none}.chatinput button{width:68px}
+.context{position:fixed;z-index:500;min-width:185px;background:#120f0b;border:2px solid #ded6c2;display:none;box-shadow:0 8px 25px #000}.context div{padding:5px 8px;font-size:11px;color:#fff;cursor:pointer}.context div:hover{background:#51412a}.context b{color:#ffb72b}.window{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(620px,92vw);max-height:82vh;background:#211a12;border:4px ridge #755d3a;z-index:300;display:none;box-shadow:0 20px 80px #000;overflow:hidden}.wtitle{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:#352918;border-bottom:3px ridge #665137;font-family:Georgia,serif;color:#ffd25a;font-weight:bold}.wbody{padding:14px;overflow:auto;max-height:70vh}.closex{cursor:pointer;color:#ff9b8e}.gegrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.geitem{border:2px inset #59472f;background:#15110c;padding:9px;cursor:pointer}.geitem:hover{filter:brightness(1.15)}.geitem .price{color:#ffd95e;font-size:11px}.banktabs{display:flex;gap:5px;margin-bottom:8px}.banktab{padding:6px 9px;border:2px outset #59472f;background:#21190f;cursor:pointer}.bankgrid{display:grid;grid-template-columns:repeat(8,1fr);gap:5px}.bankitem{aspect-ratio:1;border:2px inset #58472f;background:#15110b;display:grid;place-items:center;font-size:24px;position:relative}.worlds{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.world{border:2px outset #5e4b30;background:#16110b;padding:9px;text-align:center;cursor:pointer}.world:hover{background:#2c2216}.world.active{outline:2px solid #76d67b}
+.achievement{position:fixed;right:18px;top:55px;width:300px;background:#211a12;border:3px ridge #755d3a;padding:12px;z-index:450;box-shadow:0 12px 35px #000;transform:translateX(340px);transition:.35s}.achievement.show{transform:translateX(0)}.achievement b{color:#ffd45f}.random{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:420;background:#211a12;border:4px ridge #7b633f;padding:18px;width:min(450px,88vw);display:none;box-shadow:0 20px 70px #000}.random h2{color:#ffd260;font-family:Georgia,serif;margin-top:0}.dialogue{position:absolute;left:50%;bottom:198px;transform:translateX(-50%);width:min(620px,70%);background:rgba(20,16,11,.96);border:3px ridge #6b5738;padding:12px;z-index:18;display:none;box-shadow:0 8px 25px #000}.dialogue .speaker{color:#ffd65d;font-weight:bold;margin-bottom:6px}.dialogue .choices{display:grid;gap:5px;margin-top:9px}.dialogue button{text-align:left}.toast{position:fixed;left:50%;top:60px;transform:translateX(-50%);z-index:600;background:#17120d;border:3px ridge #705a3a;padding:9px 14px;display:none;box-shadow:0 10px 30px #000}.flash{animation:flash .24s linear 2}@keyframes flash{50%{filter:brightness(2)}}.shake{animation:shake .24s linear 2}@keyframes shake{25%{transform:translate(-48%,-50%)}75%{transform:translate(-52%,-50%)}}.scanlines{position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.05;background:repeating-linear-gradient(0deg,#fff 0 1px,transparent 1px 3px)}
+@media(max-width:900px){.client{grid-template-columns:1fr 280px}.chatbox{width:calc(100% - 300px)}.minimap{width:135px;height:135px}.orbs{top:150px}}
 </style>
 </head>
 <body>
-<div class="wrap">
-
-  <header class="top">
-    <div class="logo">Old School RuneScape™*</div>
-    <div class="online"><span class="dot"></span>World 420 · 18,392 bots online</div>
-  </header>
-
-  <section class="hero">
-    <div>
-      <div class="badge">100% definitely official</div>
-      <h1>Welcome,<br>nerd.</h1>
-      <p>
-        You have entered the most advanced Old School RuneScape interface ever created.
-        Every button is suspicious. Every drop is probably cabbage. Every decision you make here
-        will somehow cost you GP.
-      </p>
-      <div class="buttons">
-        <button class="good" onclick="rollLoot()">Open Mystery Chest</button>
-        <button onclick="startQuest()">Start Quest</button>
-        <button class="danger" onclick="claimTbow()">Claim Free Twisted Bow</button>
-        <button onclick="spawnEvent()">Summon Random Event</button>
-      </div>
-    </div>
-
-    <div class="charbox">
-      <div class="charhead">
-        <span>PLAYER INSPECT</span>
-        <span id="combatText">Combat 126</span>
-      </div>
-      <div class="avatar" id="avatar">🧙</div>
-      <div class="statsmini">
-        <div class="statmini">Total level <b>2277</b></div>
-        <div class="statmini">Bank value <b id="bankVal">2,147,483,647 gp</b></div>
-        <div class="statmini">Grass touched <b>0</b></div>
-        <div class="statmini">EHP today <b>-4.2</b></div>
-      </div>
-    </div>
-  </section>
-
-  <div class="news">
-    <div class="marquee">
-      BREAKING: Local maxed player has spent 47 minutes reorganizing bank tabs instead of doing PvM •
-      GE tax blamed for everything • Mod Ash seen pretending not to read Twitter •
-      Player receives 14 noted cabbages, immediately posts "spooned" •
-      New meta discovered: clicking boss until it dies
-    </div>
-  </div>
-
-  <section class="grid">
-    <article class="card" onclick="fakeHiscores()">
-      <h3>Hiscores</h3>
-      <p>Check your ranking among 4 actual players and several million suspicious woodcutters.</p>
-      <div class="emoji">📜</div>
-    </article>
-
-    <article class="card" onclick="bankStand()">
-      <h3>Bankstanding Simulator</h3>
-      <p>Gain absolutely nothing while staring at your gear and debating a 0.4% DPS upgrade.</p>
-      <div class="emoji">🏦</div>
-    </article>
-
-    <article class="card" onclick="deathFee()">
-      <h3>Death's Office</h3>
-      <p>Pay an unnecessary amount of GP because you looked at Discord during a mechanic.</p>
-      <div class="emoji">☠️</div>
-    </article>
-  </section>
-
-  <section class="panel">
-    <div class="paneltitle">Public Chat</div>
-    <div class="chat" id="chat">
-      <div class="sys">Welcome to RuneScape.</div>
-      <div class="npc">Goblin: Wanna buy gf 10k?</div>
-      <div class="player">You: reported</div>
-      <div class="npc">Wise Old Man: I have been standing here since 2004.</div>
-      <div class="sys">A player has logged in.</div>
-    </div>
-    <div class="buttons">
-      <button onclick="talk()">Say something</button>
-      <button onclick="muteEveryone()">Mute Everyone</button>
-      <button onclick="addGoblin()">Add Goblin</button>
-    </div>
-  </section>
-
-  <section class="grid">
-    <article class="panel">
-      <div class="paneltitle">Inventory</div>
-      <div class="inventory">
-        <div class="slot" onclick="useItem('Rock')">🪨<span class="qty">1</span></div>
-        <div class="slot" onclick="useItem('Cabbage')">🥬<span class="qty">28</span></div>
-        <div class="slot" onclick="useItem('Burnt shrimp')">🍤<span class="qty">3</span></div>
-        <div class="slot" onclick="useItem('Suspicious potion')">🧪<span class="qty">1</span></div>
-        <div class="slot" onclick="useItem('Monkey nuts')">🥜<span class="qty">420</span></div>
-        <div class="slot" onclick="useItem('Fake partyhat')">🎉<span class="qty">1</span></div>
-        <div class="slot" onclick="useItem('Clue scroll')">📜<span class="qty">1</span></div>
-        <div class="slot" onclick="useItem('Air rune')">💨<span class="qty">13</span></div>
-      </div>
-    </article>
-
-    <article class="panel">
-      <div class="paneltitle">Quest List</div>
-      <div class="questbox">
-        <div class="questname">One Small Favor II</div>
-        <div class="queststep" id="questStep">Not started. Life is still good.</div>
-        <div class="progress"><div id="questBar"></div></div>
-        <div class="buttons">
-          <button onclick="advanceQuest()">Advance Quest</button>
-        </div>
-      </div>
-    </article>
-
-    <article class="panel">
-      <div class="paneltitle">Collection Log</div>
-      <div class="questbox">
-        <div class="questname">Boss: Existential Dread</div>
-        <div class="queststep" id="logText">0 / 1 unique obtained.</div>
-        <div class="buttons">
-          <button onclick="rollCollection()">Roll Collection Log</button>
-        </div>
-      </div>
-    </article>
-  </section>
-
-  <div class="bottom">
-    *Not affiliated with Jagex, the King, Guthix, Mod Ash, or whichever goblin owns this server.
-  </div>
+<div class="scanlines"></div>
+<div id="app">
+<div class="topbar"><div class="logo">Old School RuneScape: One File Edition</div><div class="topbtns"><button class="rsbtn" onclick="openWindow('geWin')">GE</button><button class="rsbtn" onclick="openWindow('bankWin')">Bank</button><button class="rsbtn" onclick="openWindow('worldWin')">World Hop</button><button class="rsbtn red" onclick="hardReset()">Delete Account</button></div></div>
+<div class="client">
+<div class="game" id="game">
+<canvas id="worldCanvas"></canvas>
+<div class="bossbar"><div class="bossname"><span>Goblin Warlord</span><span id="bossHpText">250 / 250</span></div><div class="bar"><div id="bossHpFill"></div></div></div>
+<div class="player" id="player">🧙‍♂️</div><div class="overhead" id="overhead">🙏</div><div class="boss" id="boss">👹</div><div class="tile-marker" id="tileMarker"></div>
+<div class="minimap"><div class="you"></div></div><div class="orbs"><div class="orb hp" id="hpOrb">99</div><div class="orb pray" id="prayOrb">99</div><div class="orb run" id="runOrb">100</div></div>
+<div class="dialogue" id="dialogue"><div class="speaker" id="speaker">Wise Old Man</div><div id="dialogueText"></div><div class="choices" id="dialogueChoices"></div></div>
+<div class="chatbox"><div class="chatlog" id="chatlog"><div class="chatline sys">Welcome to RuneScape. No login screen. We are not getting phished today.</div><div class="chatline npc">Goblin: oi</div><div class="chatline sys">Tip: right-click things. This was a terrible idea.</div></div><div class="chatinput"><input id="chatInput" placeholder="Press Enter to chat..."/><button class="rsbtn" onclick="sendChat()">Send</button></div></div>
 </div>
-
-<div class="modal" id="modal">
-  <div class="modalbox">
-    <button class="close" onclick="closeModal()">X</button>
-    <h2 id="modalTitle">Title</h2>
-    <div id="modalBody"></div>
-  </div>
+<aside class="side"><div class="tabs"><div class="tab active" data-panel="inventory">🎒</div><div class="tab" data-panel="prayer">🙏</div><div class="tab" data-panel="skills">⚔️</div><div class="tab" data-panel="quest">📜</div><div class="tab" data-panel="clog">🏆</div><div class="tab" data-panel="settings">⚙️</div><div class="tab" data-panel="music">🎵</div></div>
+<div class="panel active" id="inventory"><div class="paneltitle">Inventory</div><div class="invgrid" id="invgrid"></div></div>
+<div class="panel" id="prayer"><div class="paneltitle">Prayer</div><div class="prayers"><div class="prayer" data-prayer="melee">🛡️<small>Protect Melee</small></div><div class="prayer" data-prayer="range">🏹<small>Protect Range</small></div><div class="prayer" data-prayer="mage">✨<small>Protect Mage</small></div><div class="prayer" data-prayer="piety">⚔️<small>Piety-ish</small></div><div class="prayer" data-prayer="redemption">❤️<small>Redemption</small></div><div class="prayer" data-prayer="smite">💧<small>Smite Yourself</small></div><div class="prayer" data-prayer="preserve">🥫<small>Preserve</small></div><div class="prayer" data-prayer="thick">🧠<small>Thick Skin</small></div></div></div>
+<div class="panel" id="skills"><div class="paneltitle">Skills</div><div class="skillgrid" id="skillgrid"></div></div>
+<div class="panel" id="quest"><div class="paneltitle">Quest List</div><div id="questText"></div><button class="rsbtn green" style="margin-top:10px" onclick="questAction()">Continue Quest</button></div>
+<div class="panel" id="clog"><div class="paneltitle">Collection Log</div><div id="clogText"></div></div>
+<div class="panel" id="settings"><div class="paneltitle">Settings</div><button class="rsbtn" onclick="toggleScanlines()">Toggle RuneLite CRT nonsense</button><button class="rsbtn" onclick="spawnRandom()" style="margin-top:7px">Force Random Event</button><button class="rsbtn red" onclick="fakeBan()" style="margin-top:7px">Check Account Status</button></div>
+<div class="panel" id="music"><div class="paneltitle">Music Player</div><button class="rsbtn green" onclick="playJingle('victory')">Play Victory Jingle</button><button class="rsbtn" onclick="playJingle('sad')" style="margin-top:7px">Play Sad Jingle</button><div style="margin-top:12px;color:#948771;font-size:11px">All sound is synthesized in-browser because this entire disaster is one file.</div></div>
+</aside>
+</div></div>
+<div class="context" id="context"></div>
+<div class="window" id="geWin"><div class="wtitle">Grand Exchange <span class="closex" onclick="closeWindow('geWin')">✕</span></div><div class="wbody"><div style="margin-bottom:10px;color:#a99b82">Buy highly reputable items from totally real players.</div><div class="gegrid" id="gegrid"></div></div></div>
+<div class="window" id="bankWin"><div class="wtitle">Bank of Gielinor <span class="closex" onclick="closeWindow('bankWin')">✕</span></div><div class="wbody"><div class="banktabs"><div class="banktab">∞</div><div class="banktab">⚔️</div><div class="banktab">🍖</div><div class="banktab">???</div></div><div class="bankgrid" id="bankgrid"></div></div></div>
+<div class="window" id="worldWin"><div class="wtitle">World Switcher <span class="closex" onclick="closeWindow('worldWin')">✕</span></div><div class="wbody"><div class="worlds" id="worlds"></div></div></div>
+<div class="window" id="clueWin"><div class="wtitle">Clue Scroll <span class="closex" onclick="closeWindow('clueWin')">✕</span></div><div class="wbody" id="clueBody"></div></div>
+<div class="random" id="randomWin"><h2 id="randomTitle">Random Event</h2><div id="randomBody"></div><div style="display:flex;gap:7px;margin-top:12px"><button class="rsbtn green" onclick="solveRandom()">Do it</button><button class="rsbtn red" onclick="ignoreRandom()">Ignore</button></div></div>
+<div class="achievement" id="achievement"><b id="achTitle">Achievement Unlocked</b><div id="achText" style="margin-top:4px;font-size:12px;color:#bcae94"></div></div><div class="toast" id="toast"></div>
 </div>
-
-<div class="random-event" id="randomEvent">
-  <div class="randombox">
-    <h2>⚠ RANDOM EVENT</h2>
-    <p id="randomText">A mysterious old man demands your attention.</p>
-    <div class="buttons">
-      <button class="good" onclick="solveEvent()">Do random event</button>
-      <button class="danger" onclick="ignoreEvent()">Ignore him</button>
-    </div>
-  </div>
-</div>
-
-<div class="toast" id="toast"></div>
-
 <script>
-const chat = document.getElementById('chat');
-const modal = document.getElementById('modal');
-const toast = document.getElementById('toast');
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)],game=$('#game'),canvas=$('#worldCanvas'),ctx=canvas.getContext('2d');
+const defaults={name:'Noob',world:420,hp:99,maxHp:99,pray:99,run:100,bossHp:250,bossMax:250,bossKills:0,gp:1337,quest:0,clue:0,randoms:0,clog:[],achievements:[],prayers:[],inventory:[{name:'Shark',icon:'🐟',qty:4,type:'food'},{name:'Prayer potion',icon:'🧪',qty:2,type:'pray'},{name:'Dragon dagger',icon:'🗡️',qty:1,type:'weapon'},{name:'Cabbage',icon:'🥬',qty:28,type:'food'},{name:'Clue scroll',icon:'📜',qty:1,type:'clue'},{name:'Burnt shrimp',icon:'🍤',qty:7,type:'junk'},{name:'Monkey nuts',icon:'🥜',qty:420,type:'junk'},{name:'Air rune',icon:'💨',qty:69,type:'rune'}],bank:[['Coins','🪙',2147483647],['Twisted bow','🏹',0],['Elysian','🛡️',1],['Cabbage','🥬',100000],['Bronze dagger','🗡️',888],['Burnt lobster','🦞',420],['Pet rock','🪨',1],['Bucket','🪣',73],['Rotten potato','🥔',1],['Partyhat','🎉',1],['Bones','🦴',9999],['Mind rune','🔵',1337],['Mystery item','❓',1],['Ugthanki dung','💩',28],['Beer','🍺',420],['Spade','⛏️',12]]};
+function clone(o){return JSON.parse(JSON.stringify(o))}function loadState(){try{const v=JSON.parse(localStorage.getItem('oneFileOSRS'));return v?Object.assign(clone(defaults),v):clone(defaults)}catch(e){return clone(defaults)}}let state=loadState();function save(){localStorage.setItem('oneFileOSRS',JSON.stringify(state))}function hardReset(){if(confirm('Delete the entire fake account?')){localStorage.removeItem('oneFileOSRS');location.reload()}}
+function resize(){canvas.width=game.clientWidth;canvas.height=game.clientHeight;drawWorld()}window.addEventListener('resize',resize);function drawWorld(){const w=canvas.width,h=canvas.height;ctx.clearRect(0,0,w,h);ctx.strokeStyle='rgba(255,255,255,.045)';const s=44;for(let x=0;x<w;x+=s){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,h);ctx.stroke()}for(let y=0;y<h;y+=s){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke()}ctx.fillStyle='rgba(103,78,39,.22)';for(let i=0;i<20;i++){let x=(i*131)%w,y=(i*79)%h;ctx.fillRect(x,y,18+(i%4)*6,8+(i%3)*4)}}resize();
+function addChat(text,cls='sys'){const d=document.createElement('div');d.className='chatline '+cls;d.textContent=text;$('#chatlog').appendChild(d);$('#chatlog').scrollTop=$('#chatlog').scrollHeight}function toast(t){const el=$('#toast');el.textContent=t;el.style.display='block';clearTimeout(window.__toast);window.__toast=setTimeout(()=>el.style.display='none',2200)}function achievement(title,text){if(state.achievements.includes(title))return;state.achievements.push(title);save();$('#achTitle').textContent=title;$('#achText').textContent=text;$('#achievement').classList.add('show');playJingle('victory');setTimeout(()=>$('#achievement').classList.remove('show'),3500)}function xp(a,s='Attack'){const el=document.createElement('div');el.className='xpdrop';el.textContent=`+${a} ${s} xp`;game.appendChild(el);setTimeout(()=>el.remove(),1300)}function hitsplat(target,n,blue=false){const r=target.getBoundingClientRect(),g=game.getBoundingClientRect(),e=document.createElement('div');e.className='hit '+(blue?'blue':'red');e.textContent=n;e.style.left=(r.left-g.left+r.width/2+Math.random()*28-14)+'px';e.style.top=(r.top-g.top+Math.random()*15)+'px';game.appendChild(e);setTimeout(()=>e.remove(),800)}function beamAt(target){const r=target.getBoundingClientRect(),g=game.getBoundingClientRect(),e=document.createElement('div');e.className='lootbeam';e.style.left=(r.left-g.left+r.width/2)+'px';e.style.top=(r.top-g.top-50)+'px';game.appendChild(e);setTimeout(()=>e.remove(),1500)}
+function updateHUD(){$('#hpOrb').textContent=state.hp;$('#prayOrb').textContent=Math.floor(state.pray);$('#runOrb').textContent=Math.floor(state.run);$('#bossHpText').textContent=`${Math.max(0,state.bossHp)} / ${state.bossMax}`;$('#bossHpFill').style.width=(Math.max(0,state.bossHp)/state.bossMax*100)+'%';renderQuest();renderClog();save()}updateHUD();
+const skills=['Attack','Strength','Defence','Ranged','Prayer','Magic','Runecraft','Construction','Hitpoints','Agility','Herblore','Thieving','Crafting','Fletching','Slayer','Hunter','Mining','Smithing','Fishing','Cooking','Firemaking','Woodcutting','Farming'];$('#skillgrid').innerHTML=skills.map((s,i)=>`<div class="skill">${s}<b>${i===6?1:99}</b></div>`).join('');
+function renderInventory(){const box=$('#invgrid');box.innerHTML='';state.inventory.forEach((it,i)=>{const s=document.createElement('div');s.className='slot';s.draggable=true;s.dataset.i=i;s.innerHTML=`<span class="qty">${it.qty}</span>${it.icon}<span class="itemname">${it.name}</span>`;s.addEventListener('dragstart',()=>s.classList.add('dragging'));s.addEventListener('dragend',()=>s.classList.remove('dragging'));s.addEventListener('dragover',e=>e.preventDefault());s.addEventListener('drop',e=>{e.preventDefault();const d=document.querySelector('.slot.dragging');if(!d)return;const from=+d.dataset.i;[state.inventory[from],state.inventory[i]]=[state.inventory[i],state.inventory[from]];renderInventory();save()});s.onclick=()=>useItem(i);s.oncontextmenu=e=>showItemContext(e,i);box.appendChild(s)})}renderInventory();
+function useItem(i){const it=state.inventory[i];if(!it)return;if(it.type==='food'){const heal=it.name==='Shark'?20:2;state.hp=Math.min(99,state.hp+heal);it.qty--;addChat(`You eat the ${it.name.toLowerCase()}.`,'you');xp(heal,'Hitpoints');beep(440,.05)}else if(it.type==='pray'){state.pray=Math.min(99,state.pray+28);it.qty--;addChat('You drink some of your prayer potion.','you');beep(650,.07)}else if(it.type==='clue')openClue();else if(it.name==='Dragon dagger')specAttack();else{addChat(`You use the ${it.name.toLowerCase()}. Nothing interesting happens.`,'sys');xp(1,it.name)}if(it.qty<=0)state.inventory.splice(i,1);renderInventory();updateHUD()}
+function showItemContext(e,i){e.preventDefault();const it=state.inventory[i];showContext(e.clientX,e.clientY,[[`Use <b>${it.name}</b>`,()=>useItem(i)],[`Examine <b>${it.name}</b>`,()=>toast(examine(it.name))],[`Drop <b>${it.name}</b>`,()=>{addChat(`You drop the ${it.name.toLowerCase()}.`,'sys');state.inventory.splice(i,1);renderInventory();save()}],['Cancel',()=>{}]])}function examine(n){return {'Cabbage':'A vegetable. Somehow still more useful than you.','Dragon dagger':'For when one bad decision needs four hit splats.','Clue scroll':'A professionally designed inconvenience.','Monkey nuts':'Currency in certain deeply unserious economies.','Burnt shrimp':'It has seen things.'}[n]||`It is a ${n.toLowerCase()}. Groundbreaking.`}
+function showContext(x,y,items){const c=$('#context');c.innerHTML='';items.forEach(([h,f])=>{const d=document.createElement('div');d.innerHTML=h;d.onclick=()=>{hideContext();f()};c.appendChild(d)});c.style.left=Math.min(x,innerWidth-210)+'px';c.style.top=Math.min(y,innerHeight-180)+'px';c.style.display='block'}function hideContext(){$('#context').style.display='none'}document.addEventListener('click',e=>{if(!e.target.closest('#context'))hideContext()});
+$('#boss').onclick=attackBoss;$('#boss').oncontextmenu=e=>{e.preventDefault();showContext(e.clientX,e.clientY,[['Attack <b>Goblin Warlord</b>',attackBoss],['Talk-to <b>Goblin Warlord</b>',()=>startDialogue('Goblin Warlord','Stop clicking me, nerd.',[['Sorry.',endDialogue],['No.',()=>{addChat('Goblin Warlord: fair enough','npc');endDialogue()}]])],['Examine <b>Goblin Warlord</b>',()=>toast('A goblin with middle-management energy.')],['Cancel',()=>{}]])};
+let bossTimer=null;function attackBoss(){if(state.bossHp<=0)return toast('He is already extremely dead.');const dmg=Math.floor(Math.random()*26);state.bossHp=Math.max(0,state.bossHp-dmg);hitsplat($('#boss'),dmg);xp(dmg*4,'Strength');beep(180+Math.random()*80,.03);addChat(`You hit the Goblin Warlord for ${dmg}.`,'you');if(!bossTimer)bossTimer=setInterval(bossAttack,1400);if(state.bossHp<=0)bossDeath();updateHUD()}function specAttack(){if(state.bossHp<=0)return toast('There is nothing left to spec.');addChat('You perform a needlessly dramatic special attack.','green');for(let i=0;i<4;i++)setTimeout(()=>{const dmg=Math.floor(Math.random()*18)+4;state.bossHp=Math.max(0,state.bossHp-dmg);hitsplat($('#boss'),dmg);if(state.bossHp<=0)bossDeath();updateHUD()},i*120);playJingle('spec')}
+function bossAttack(){if(state.bossHp<=0||state.hp<=0){clearInterval(bossTimer);bossTimer=null;return}const styles=['melee','range','mage'],style=styles[Math.floor(Math.random()*3)],ok=state.prayers.includes(style),dmg=ok?0:Math.floor(Math.random()*16)+1;if(dmg){state.hp=Math.max(0,state.hp-dmg);hitsplat($('#player'),dmg);$('#player').classList.add('shake');setTimeout(()=>$('#player').classList.remove('shake'),300)}else hitsplat($('#player'),0,true);addChat(`Goblin Warlord attacks with ${style}. ${ok?'You protect correctly.':'You get slapped.'}`,ok?'green':'red');if(state.hp<=0)playerDeath();updateHUD()}function bossDeath(){clearInterval(bossTimer);bossTimer=null;state.bossKills++;beamAt($('#boss'));playJingle('victory');addChat('Goblin Warlord has been defeated.','green');if(Math.random()<.18){state.inventory.push({name:'Goblin USB stick',icon:'💾',qty:1,type:'junk'});if(!state.clog.includes('Goblin USB stick'))state.clog.push('Goblin USB stick');achievement('Collection Log Slot','Goblin USB stick obtained. It contains 14 yew logs and malware.');toast('Rare drop: Goblin USB stick!')}else toast('Drop: 420 coins');renderInventory();setTimeout(()=>{state.bossHp=state.bossMax;addChat('The Goblin Warlord respawns because content must be farmable.','sys');updateHUD()},2600)}function playerDeath(){clearInterval(bossTimer);bossTimer=null;playJingle('sad');addChat('Oh dear, you are dead!','red');toast('Death has invoiced you 69,420 gp.');setTimeout(()=>{state.hp=99;state.bossHp=state.bossMax;updateHUD()},1800)}
+$$('.prayer').forEach(p=>p.onclick=()=>{const pr=p.dataset.prayer;if(['melee','range','mage'].includes(pr))state.prayers=state.prayers.filter(x=>!['melee','range','mage'].includes(x));if(state.prayers.includes(pr))state.prayers=state.prayers.filter(x=>x!==pr);else state.prayers.push(pr);$$('.prayer').forEach(x=>x.classList.toggle('active',state.prayers.includes(x.dataset.prayer)));const protect=state.prayers.find(x=>['melee','range','mage'].includes(x));$('#overhead').style.display=protect?'block':'none';$('#overhead').textContent=protect==='melee'?'🛡️':protect==='range'?'🏹':protect==='mage'?'✨':'🙏';beep(740,.035);save()});setInterval(()=>{if(state.prayers.length&&state.pray>0){state.pray=Math.max(0,state.pray-.35);if(state.pray<=0){state.prayers=[];$$('.prayer').forEach(x=>x.classList.remove('active'));$('#overhead').style.display='none';addChat('You have run out of Prayer points.','red')}updateHUD()}},1000);
+const geItems=[['Twisted bow','🏹',1742000000],['Bronze dagger','🗡️',16],['Cabbage','🥬',4],['Rotten potato','🥔',2147483647],['Monkey nuts','🥜',420],['GF','💃',10000],['Prayer potion','🧪',13421],['Mystery box','📦',69],['Bucket','🪣',2]];$('#gegrid').innerHTML=geItems.map(([n,ic,p],i)=>`<div class="geitem" onclick="buyGE(${i})"><div style="font-size:34px">${ic}</div><b>${n}</b><div class="price">${p.toLocaleString()} gp</div></div>`).join('');function buyGE(i){const[n,ic]=geItems[i];if(n==='GF'){addChat('Grand Exchange: Offer completed.','sys');addChat('Stranger: lol','npc');return toast('You have been ignored.')}if(n==='Twisted bow'){toast('Offer placed: +5%... +10%... +20%...');setTimeout(()=>toast('Still buying. Maybe try +50%.'),1200);return}state.inventory.push({name:n,icon:ic,qty:1,type:n.includes('potion')?'pray':'junk'});renderInventory();addChat(`Grand Exchange: Bought 1 x ${n}.`,'green');save()}
+function renderBank(){$('#bankgrid').innerHTML=state.bank.map(([n,ic,q])=>`<div class="bankitem" title="${n}">${ic}<span class="qty">${q}</span></div>`).join('')}function renderWorlds(){const worlds=[301,302,303,304,305,330,420,421,444,477,492,524,535,573,580,666];$('#worlds').innerHTML=worlds.map(w=>`<div class="world ${state.world===w?'active':''}" onclick="hopWorld(${w})">World ${w}<div style="font-size:9px;color:#92846f;margin-top:3px">${w===420?'2,000 goblins':w===666?'PvP but spiritually':'Players: '+(Math.floor(Math.random()*1600)+120)}</div></div>`).join('')}renderBank();renderWorlds();function hopWorld(w){state.world=w;save();renderWorlds();closeWindow('worldWin');game.classList.add('flash');setTimeout(()=>game.classList.remove('flash'),500);addChat(`Loading - please wait. You are now in World ${w}.`,'sys');if(w===420)achievement('Nice.','You voluntarily entered World 420.');if(w===666)spawnRandom('Demonic Customer Support')}
+function openWindow(id){$('#'+id).style.display='block';if(id==='bankWin')renderBank();if(id==='worldWin')renderWorlds()}function closeWindow(id){$('#'+id).style.display='none'}
+const questSteps=[['One Small Favor III','Not started. Your evening is still salvageable.'],['One Small Favor III','Talk to the Wise Old Man about a bucket.'],['One Small Favor III','Acquire one cabbage from literally anywhere.'],['One Small Favor III','Bring the cabbage to a goblin who refuses to eat vegetables.'],['One Small Favor III','Travel to World 420 for no explained reason.'],['One Small Favor III','Defeat the Goblin Warlord once.'],['One Small Favor III','Quest complete. Reward: 1 Runecraft XP and severe resentment.']];function renderQuest(){const[n,s]=questSteps[Math.min(state.quest,questSteps.length-1)];$('#questText').innerHTML=`<div style="color:#ffd45f;font-family:Georgia,serif;font-size:18px">${n}</div><div style="margin-top:8px;color:#b8aa92;font-size:12px;line-height:1.5">${s}</div><div style="height:11px;background:#0d0a07;border:1px solid #4d3b25;margin-top:10px"><div style="height:100%;width:${state.quest/(questSteps.length-1)*100}%;background:linear-gradient(90deg,#7b1913,#d7aa32)"></div></div>`}function questAction(){if(state.quest===0){startDialogue('Wise Old Man','I need one tiny favor. It will take no more than several geological eras.',[['Fine.',()=>{state.quest=1;save();renderQuest();endDialogue();achievement('Bad Decision','Started One Small Favor III.')}],['Absolutely not.',()=>{addChat('Wise Old Man: coward','npc');endDialogue()}]]);return}if(state.quest===1){state.quest=2;toast('The Wise Old Man has decided the bucket was metaphorical.')}else if(state.quest===2){if(!state.inventory.some(x=>x.name==='Cabbage'))return toast('You somehow do not have a cabbage.');state.quest=3}else if(state.quest===3){state.quest=4;toast('Goblin: disgusting. take it away.')}else if(state.quest===4){if(state.world!==420)return toast('Requirement: World 420.');state.quest=5}else if(state.quest===5){if(state.bossKills<1)return toast('Requirement: kill the Goblin Warlord.');state.quest=6;achievement('Quest Complete','One Small Favor III complete. Reward: +1 Runecraft XP.');xp(1,'Runecraft');playJingle('victory')}else toast('You already completed this terrible quest.');save();renderQuest()}
+function startDialogue(s,t,ch){$('#speaker').textContent=s;$('#dialogueText').textContent=t;const c=$('#dialogueChoices');c.innerHTML='';ch.forEach(([a,f])=>{const b=document.createElement('button');b.className='rsbtn';b.textContent=a;b.onclick=f;c.appendChild(b)});$('#dialogue').style.display='block'}function endDialogue(){$('#dialogue').style.display='none'}
+const clogItems=['Goblin USB stick','Jar of disappointment','Pet rock (alive)','Golden cabbage','Untradeable debt'];function renderClog(){$('#clogText').innerHTML=clogItems.map(x=>`<div style="padding:7px;border-bottom:1px solid #392d1d;color:${state.clog.includes(x)?'#7add7b':'#7c7261'}">${state.clog.includes(x)?'✓':'?'} ${state.clog.includes(x)?x:'Unknown'}</div>`).join('')}renderClog();
+function openClue(){openWindow('clueWin');renderClue()}function renderClue(){const steps=[`<h3 style="color:#ffd45f">An easy clue scroll</h3><p>Speak to the man who has stood in Draynor Village since the Bush administration.</p><button class="rsbtn" onclick="advanceClue()">Talk to Wise Old Man</button>`,`<h3 style="color:#ffd45f">Cryptic clue</h3><p>"Where merchants scream and fashions die, search beneath a taxman's eye."</p><button class="rsbtn" onclick="advanceClue()">Dig at Grand Exchange</button>`,`<h3 style="color:#ffd45f">Emote clue</h3><p>Perform the "regret subscription" emote while wearing absolutely nothing useful.</p><button class="rsbtn" onclick="advanceClue()">Perform emote</button>`,`<h3 style="color:#ffd45f">Casket</h3><p>You have found the reward casket.</p><button class="rsbtn green" onclick="finishClue()">Open casket</button>`];$('#clueBody').innerHTML=steps[Math.min(state.clue,3)]}function advanceClue(){state.clue=Math.min(3,state.clue+1);save();renderClue();playJingle('click')}function finishClue(){if(Math.random()<.08){if(!state.clog.includes('Golden cabbage'))state.clog.push('Golden cabbage');achievement('Mega-Rare Reward','Golden cabbage. Estimated street value: one confused stare.');toast('You receive a GOLDEN CABBAGE.')}else toast('Reward: 12 purple sweets, 3 firelighters, 1 emotional wound.');state.clue=0;save();renderClog();closeWindow('clueWin')}
+const randomEvents=[['Sandwich Lady','Choose the correct sandwich. There is no correct sandwich.'],['Mysterious Old Man','He wants to talk about your extended account warranty.'],['Genie','He offers you 130 XP. This is currently your best drop.'],['Drunken Dwarf','He hands you a kebab with legally concerning confidence.'],['Evil Bob','He demands unpaid fishing labor.'],['Demonic Customer Support','Your ticket has been escalated to Zamorak. Expected response time: 6-8 business ages.']];let currentRandom=0;function spawnRandom(force){currentRandom=force?randomEvents.findIndex(x=>x[0]===force):Math.floor(Math.random()*randomEvents.length);if(currentRandom<0)currentRandom=0;$('#randomTitle').textContent=randomEvents[currentRandom][0];$('#randomBody').textContent=randomEvents[currentRandom][1];$('#randomWin').style.display='block';playJingle('random')}function solveRandom(){$('#randomWin').style.display='none';state.randoms++;xp(130,'Random Event');addChat('Random event complete. Reward: 13 coins.','green');if(state.randoms>=3)achievement('Easily Distracted','Completed 3 random events instead of doing anything useful.');save()}function ignoreRandom(){$('#randomWin').style.display='none';addChat('You ignore the random event and are teleported somewhere deeply inconvenient.','red');state.run=Math.max(0,state.run-30);game.classList.add('flash');setTimeout(()=>game.classList.remove('flash'),500);updateHUD()}setInterval(()=>{if(Math.random()<.08)spawnRandom()},30000);
+function fakeBan(){toast('Account status: not banned. Suspiciously.');setTimeout(()=>achievement('Clean Record','Jagex has chosen not to ban you today.'),900)}function toggleScanlines(){const e=$('.scanlines');e.style.display=e.style.display==='none'?'block':'none'}function sendChat(){const i=$('#chatInput'),t=i.value.trim();if(!t)return;addChat(`${state.name}: ${t}`,'you');i.value='';const r=['Goblin: reported','Banker: interesting. anyway','Wise Old Man: skill issue','Stranger: buying gf 10k','Mod Ash: no','Man: hello there'];setTimeout(()=>addChat(r[Math.floor(Math.random()*r.length)],'npc'),450)}$('#chatInput').addEventListener('keydown',e=>{if(e.key==='Enter')sendChat()});
+game.addEventListener('click',e=>{if(e.target!==game&&e.target!==canvas)return;const r=game.getBoundingClientRect(),m=$('#tileMarker');m.style.left=(e.clientX-r.left-23)+'px';m.style.top=(e.clientY-r.top-23)+'px';m.style.display='block';const p=$('#player');p.style.left=(e.clientX-r.left)+'px';p.style.top=(e.clientY-r.top)+'px';state.run=Math.max(0,state.run-.8);setTimeout(()=>m.style.display='none',420);updateHUD()});game.addEventListener('contextmenu',e=>{if(e.target===game||e.target===canvas){e.preventDefault();showContext(e.clientX,e.clientY,[['Walk here',()=>{}],['Mark tile',()=>toast('Tile marked. RuneLite users everywhere rejoice.')],['Examine floor',()=>toast('It is a floor.')],['Cancel',()=>{}]])}});
 
-function addChat(text, cls='sys'){
-  const d=document.createElement('div');
-  d.className=cls;
-  d.textContent=text;
-  chat.appendChild(d);
-  chat.scrollTop=chat.scrollHeight;
-}
-
-function showToast(msg){
-  toast.textContent=msg;
-  toast.style.display='block';
-  clearTimeout(window.toastTimer);
-  window.toastTimer=setTimeout(()=>toast.style.display='none',2800);
-}
-
-function xpDrop(text='+420 xp'){
-  const e=document.createElement('div');
-  e.className='xpdrop';
-  e.textContent=text;
-  e.style.left=(window.innerWidth*.55+Math.random()*160-80)+'px';
-  e.style.top=(window.innerHeight*.25+Math.random()*180)+'px';
-  document.body.appendChild(e);
-  setTimeout(()=>e.remove(),1100);
-}
-
-function damage(n){
-  const e=document.createElement('div');
-  e.className='damage';
-  e.textContent=n;
-  e.style.left=(window.innerWidth*.5+Math.random()*100-50)+'px';
-  e.style.top=(window.innerHeight*.25+Math.random()*80)+'px';
-  document.body.appendChild(e);
-  setTimeout(()=>e.remove(),800);
-}
-
-const loot = [
-  ['🥬 Cabbage','You receive 1 cabbage. This changes everything.'],
-  ['🪨 Rock','You receive a rock. Estimated value: emotionally priceless.'],
-  ['💰 37 coins','A life-changing amount of wealth has entered your account.'],
-  ['🗡 Bronze dagger','Best-in-slot if you are level 3 and very optimistic.'],
-  ['🐟 Burnt shrimp','Somebody cooked this using Prayer.'],
-  ['👑 Nothing','The chest was empty. Skill issue.'],
-  ['🌈 Purple!','It is a purple sweet. Sit down.']
-];
-
-function rollLoot(){
-  const r=loot[Math.floor(Math.random()*loot.length)];
-  openModal('Mystery Chest',`<p style="font-size:42px;margin:4px 0">${r[0]}</p><p>${r[1]}</p>`);
-  addChat('You open the chest and receive: '+r[0].replace(/^[^\s]+\s/,'')+'.','goodmsg');
-  xpDrop('+'+(Math.floor(Math.random()*8000)+420)+' xp');
-}
-
-function claimTbow(){
-  damage(99);
-  document.getElementById('bankVal').textContent='0 gp';
-  addChat('You have traded away your entire bank.','bad');
-  addChat('Stranger: ty','npc');
-  openModal('Congratulations!',`
-    <p>You have successfully claimed your free Twisted Bow.</p>
-    <p><b>Unfortunately, it was on a different account.</b></p>
-    <p>Your bank has been converted into a valuable lesson.</p>`);
-}
-
-function fakeHiscores(){
-  openModal('Hiscores Lookup',`
-    <p><b>Rank #1:</b> Lynx Titan</p>
-    <p><b>Rank #2:</b> Some guy named "xX_vape420_Xx"</p>
-    <p><b>Your rank:</b> 8,942,177</p>
-    <p><b>Reason:</b> spent 3 hours choosing bank tab icons.</p>`);
-}
-
-function bankStand(){
-  xpDrop('+0 xp');
-  addChat('You stand at the Grand Exchange doing nothing.','sys');
-  showToast('Bankstanding XP gained: absolutely 0.');
-}
-
-function deathFee(){
-  const fee=(Math.floor(Math.random()*900000)+100000).toLocaleString();
-  addChat('Death takes '+fee+' coins from you.','bad');
-  openModal("Death's Office",`<p>Death fee: <b>${fee} gp</b></p><p>Cause of death: checking Discord mid-fight.</p>`);
-}
-
-function talk(){
-  const lines=[
-    'You: anyone wanna raid',
-    'You: surely next kc',
-    'You: lag',
-    'You: bro i clicked that',
-    'You: this game is terrible',
-    'You: see you tomorrow'
-  ];
-  addChat(lines[Math.floor(Math.random()*lines.length)],'player');
-}
-
-function muteEveryone(){
-  addChat('You have muted everyone.','sys');
-  setTimeout(()=>addChat('Goblin: I am somehow still talking.','npc'),450);
-}
-
-function addGoblin(){
-  addChat('Goblin: Wot you looking at?','npc');
-  showToast('Goblin added to friends list. Huge networking opportunity.');
-}
-
-function useItem(item){
-  const msgs={
-    'Rock':'You use the rock. Nothing interesting happens.',
-    'Cabbage':'You eat the cabbage. Somehow you feel worse.',
-    'Burnt shrimp':'You attempt to eat it. The game says no.',
-    'Suspicious potion':'Your stats have been rearranged alphabetically.',
-    'Monkey nuts':'The monkey economy has collapsed.',
-    'Fake partyhat':'Everyone at the GE knows it is fake.',
-    'Clue scroll':'Step 1: go somewhere annoying.',
-    'Air rune':'You cast Wind Strike on your remaining self-respect.'
-  };
-  showToast(msgs[item]);
-  xpDrop('+1 '+item+' xp');
-}
-
-let quest=0;
-const questSteps=[
-  'Not started. Life is still good.',
-  'Talk to a man in Rimmington.',
-  'He needs a bucket from Ardougne.',
-  'The bucket seller needs a rope.',
-  'The rope seller wants a kebab.',
-  'The kebab seller wants 14 trout.',
-  'You are now in Morytania somehow.',
-  'Quest complete. Reward: 1 cabbage.'
-];
-
-function startQuest(){
-  quest=1;
-  updateQuest();
-  showToast('Quest started. Terrible decision.');
-}
-function advanceQuest(){
-  if(quest===0) quest=1;
-  else quest=Math.min(quest+1,questSteps.length-1);
-  updateQuest();
-  if(quest===questSteps.length-1){
-    addChat('Quest complete: One Small Favor II','goodmsg');
-    xpDrop('+1 quest point');
-  }
-}
-function updateQuest(){
-  document.getElementById('questStep').textContent=questSteps[quest];
-  document.getElementById('questBar').style.width=((quest/(questSteps.length-1))*100)+'%';
-}
-
-function rollCollection(){
-  const n=Math.random();
-  if(n<.92){
-    document.getElementById('logText').textContent='0 / 1 unique obtained. KC increased. Hope decreased.';
-    addChat('Collection log: nothing.','bad');
-  } else {
-    document.getElementById('logText').textContent='1 / 1 unique obtained. You are now insufferable.';
-    addChat('Collection log slot completed!','goodmsg');
-    xpDrop('COLLECTION LOG!');
-  }
-}
-
-const randoms=[
-  'A mysterious old man appears and asks whether you have considered logging off.',
-  'The Sandwich Lady has arrived. You chose the wrong sandwich. Prepare for exile.',
-  'A Genie appears and offers 130 XP. This is the best thing to happen all day.',
-  'A Drunken Dwarf hands you a kebab. You immediately distrust it.',
-  'Evil Bob wants you to fish. Nobody knows why Evil Bob has this authority.'
-];
-
-function spawnEvent(){
-  document.getElementById('randomText').textContent=randoms[Math.floor(Math.random()*randoms.length)];
-  document.getElementById('randomEvent').style.display='grid';
-}
-function solveEvent(){
-  document.getElementById('randomEvent').style.display='none';
-  addChat('Random event completed. Reward: 13 coins.','goodmsg');
-  xpDrop('+13 xp');
-}
-function ignoreEvent(){
-  document.getElementById('randomEvent').style.display='none';
-  addChat('You ignored the random event and were teleported to somewhere annoying.','bad');
-  damage(1);
-}
-
-function openModal(title,body){
-  document.getElementById('modalTitle').textContent=title;
-  document.getElementById('modalBody').innerHTML=body;
-  modal.style.display='grid';
-}
-function closeModal(){modal.style.display='none'}
-
-document.addEventListener('keydown',e=>{
-  if(e.key==='Escape'){closeModal();document.getElementById('randomEvent').style.display='none'}
-});
-
-setInterval(()=>{
-  if(Math.random()<.22){
-    const idle=[
-      'System update in 999 minutes.',
-      'A bot has chopped 14,000 yew logs.',
-      'Someone at the GE says "doubling money".',
-      'Your stamina potion has expired spiritually.',
-      'You feel like you are being followed.'
-    ];
-    addChat(idle[Math.floor(Math.random()*idle.length)],'sys');
-  }
-},8000);
+function beep(freq=440,dur=.07,vol=.035,type='square'){try{const AC=window.AudioContext||window.webkitAudioContext;window.__ac=window.__ac||new AC();const o=window.__ac.createOscillator(),g=window.__ac.createGain();o.type=type;o.frequency.value=freq;g.gain.value=vol;o.connect(g);g.connect(window.__ac.destination);o.start();g.gain.exponentialRampToValueAtTime(.0001,window.__ac.currentTime+dur);o.stop(window.__ac.currentTime+dur)}catch(e){}}function playJingle(type){const p={victory:[[523,.06],[659,.07],[784,.09],[1046,.18]],sad:[[440,.08],[392,.09],[330,.12],[220,.2]],spec:[[220,.04],[330,.04],[440,.04],[660,.08]],random:[[740,.05],[520,.05],[820,.09]],click:[[320,.03]]};(p[type]||p.click).forEach(([f,d],i)=>setTimeout(()=>beep(f,d,.03,'square'),i*75))}
+function openTab(id){$$('.tab').forEach(t=>t.classList.toggle('active',t.dataset.panel===id));$$('.panel').forEach(p=>p.classList.toggle('active',p.id===id))}$$('.tab').forEach(t=>t.onclick=()=>openTab(t.dataset.panel));document.addEventListener('keydown',e=>{if(e.key==='Escape'){$$('.window').forEach(w=>w.style.display='none');$('#randomWin').style.display='none';endDialogue();hideContext()}if(e.key==='1')openTab('inventory');if(e.key==='2')openTab('prayer');if(e.key==='3')openTab('skills');if(e.key.toLowerCase()==='b')openWindow('bankWin');if(e.key.toLowerCase()==='g')openWindow('geWin');if(e.key.toLowerCase()==='r')spawnRandom()});setInterval(()=>{if(state.run<100){state.run=Math.min(100,state.run+.25);updateHUD()}},1000);setInterval(()=>{const c=[['Goblin: selling trout 9b','npc'],['System update in 999 minutes.','sys'],['A suspicious player has logged out.','sys'],['Man: nice cape','npc'],['Stranger: surely next kc','npc'],['Wise Old Man: please stop moving my chair','npc']];if(Math.random()<.35)addChat(...c[Math.floor(Math.random()*c.length)])},9000);renderQuest();renderClog();updateHUD();
 </script>
 </body>
 </html>
