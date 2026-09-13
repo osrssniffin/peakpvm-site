@@ -1,783 +1,292 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#101112">
-  <meta name="description" content="Peak PvM is an Old School RuneScape Discord community for raids, bossing, learners, events, and finding teams.">
-
-  <meta property="og:title" content="Peak PvM | OSRS PvM Discord">
-  <meta property="og:description" content="Find teams, learn content, and send some PvM with us.">
-  <meta property="og:type" content="website">
-  <meta property="og:image" content="peakpvm-banner.png">
-
-  <title>Peak PvM | OSRS PvM Discord</title>
-
-  <!-- Browser-tab icon and mobile bookmark icon -->
-  <link rel="icon" type="image/png" href="peakpvm-logo.png?v=2">
-  <link rel="apple-touch-icon" href="peakpvm-logo.png">
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>all 420s | RuneScape's Final Boss</title>
+  <meta name="description" content="The extremely legitimate official website of all 420s, RuneScape's final boss." />
   <style>
-    /*
-      Embedded RuneScape UF font.
-      No external stylesheet or font download is needed.
-    */
-    @font-face {
-      font-family: "Peak RuneScape";
-      src: url("data:font/woff;base64,d09GRgABAAAAAAyoAAoAAAAANhgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABPUy8yAAAExAAAAEUAAABgYuRUNWNtYXAAAAD0AAAAQgAAAgQCpQPWZ2x5ZgAABSAAAAbEAAAqlEV7TvZoZWFkAAABOAAAACwAAAA28Wbes2hoZWEAAAFkAAAAHAAAACQGAgLiaG10eAAAAYAAAABbAAABhKeAAABsb2NhAAAL5AAAAMQAAADEEWYbpm1heHAAAAHcAAAAGAAAACAAZwBCbmFtZQAAAfQAAALNAAAFjhO+O6Rwb3N0AAAFDAAAABIAAAAgAGkAM3gB5c+xDUBQFEDR899XiNAZwGbCIIZlBonuEWNwq9NeBCpGVaH0Ghc6rRAYzLZMXk+WxyXPPHK3+kx//b4B474ZawAAeAFjYGRgAOGjV/ynxvPbfGVgYGEAgeMrfW8j6P8MzEAIBBwMTCAKAEDoCmJ4AWNgZGBgZvjPACQdgIQDMwNQBBUkAgArBQHseAF9kAEOwCAIAyt+jKf1aXvatmCzhiyYXIRKBd2wdRWLwE4g8OxF6flSeuTRzLNUc/SAYkd3ec3plcoH1F8+tjz/fdHnodB7/GyYm1/cewXMy/kfYHPd6JYy9gB4AWNgZGBgSGRwYGBlAAEmBjQAABFPAKp4AXWTzW7bRhSFP0qOf2rFm7RJ0IVxu+sPTMoKithBgCJwoERdZCHBXnXRETWSGIszynBoWnmA7gr0HYo+Rjfd9h36FH2A2tOBnBgxuPl4cebcy3OHgCS/kAAAX/B95IQOX0VusUUauc0jHkbe4PO15h67EHmTDruRt3ie/BN5m/3kj8g7bPJD5M8AIu/yiJ8jdzhe6+/zXbIfeY80aSI/4Bv+pk2ysQN8y7+REx7ze+QWe/wZuU3Kr5E3+HqtucdDfoy8yWOayFtctn+LvM3z9n7kHTrJduQwf+Rd0mQQuYNb6+9z1lpE3uOn1l+RHzBsfXmmXVVYI4dpd1gbPcrVUh+c9q3xI+/q3Mu6Kqd9GepZvVDuxC5XrpjNvRi1miojve5hlzM0jooCi0E4JKU79375LMuapkmnV6bV3C7T3JYMqTFoRuQolmgOOKUfjnpGeBw1OR75hFaCVhiimVGzQOH6xYWWcTGTd7XKzwszk/d6OV+5St7ahZdyJY26lLGecIJlyQpHwYx5aGJQrJiiMAg9uhzSPXFa+WvbE1uW1lTywntXjGt/HdkbKy+1Ky6Cogo2niXPyMhowpMyjV9UMQ9NU3IsZYwlj/75//apdbNsUeTaVLrKxqsDM8mepN0sqkOAYSsfZflBvbgyya7qTdY77h09Pfpgj0UlSrxTE10qdy52Kv3RQILgykcGxmtn1LWDWsircvyaPgUXIexxyEl4R40i55wCEyrv0SyZhywrhLdYFiHPkhVCg+IyOGiuc3doFJ7oHDZRUmIx4fyLEKKjYEyNX9+lN1iEl2hcOHvjcTv4/FaP/KMOKRbHjIwFBTk6VDUVGWNWHGCYkPGElC7ZLe+bZa6v590rvkNfxEmyqG/I6HFMjyOecnTHL1CEdBQSqooJmhKF4xzBMkXoM2KA3DjEeYRBeNc4TEzGBlogvKJkzOv/AML7D9wAAAB4AWNgYsxhnMDAysDCxMDEwMDwvwFMg7AxwxkGIGBhgANGBiTgFhwSxODAwMtQx8zwH8hnBktDiQamBiClwMAAAIadB8sAAAB4AWNgZoCANAZjBiwAAA3WAJ0AAHgBpZpNjjQ5EYafcOlTa9RCrWE0oE8IsWDFigUrVvhCXGDYeANLuJIvACeYA3ABVqgz0XSkrai3MtpVVEtWpiv9ExGOeOPHzReACxe48MIrP+cXYNd/GP7SYP8r8B/YX4G/hP7f9n/uP+4/wvZfuAD8mR9++p2/+7j5/Ac/APw0ev/X+78vwDsABYBW2gctkwr/FfYGtNDr1mGrFLBmNZtH9ac1A3bgeBbn/WPe78Ee/etO0w5Q/Z0OewWDue/e/an9vR7j8d/2Ntbxvh187mO2N3n30dr3Ju9j7uhfYO/WS/+Q2+8ekoCvMlukmyb9qvzHcZF3l54152ObfPqoINWxahXJjT5jF9fv0j/O+I3v+AN/Anvyryj3kybvb1W+Zc2lkbd2vv6Q1N71i0vAmn/fer57mJM243x94DLl+sq3/PEpmQZaVGfUJqJEx7sR+2OujG16Yj5Kd7bKfN+a2hxqQ3LOYnMiZcepA9++iRJj6DXTMrB2zKzUgBfm51Ia353LnJP9OaVpvJlSqhq83pPbFWj620N7fgG69QPTX3njt/fpGPXaXja1n6p4eI6nBjWerPa3ns8W1DWgFgq8XvMwvAVDXqNfCVQPisf5A83gAtHLDa/mL4Y1q3GMtcgTY17VdZAxVi/wBumZJ1jmtMe219iGvze3h1+Sny6HHDnX7FvNswZb26f92smobdJ78Elpej5RGnG3Wx1+n7Yyefr6mb6CSM6b4lnURsDiLJGE4pG/B3p+BSu7GXY7KMopC0/10Gvq8Odx/r00vvA95KKKmLKr3kVaujEo3uuwqIjaW5BrkI3iWiYTwIb25jI4JBXPb3MOHtb5HMk1InDrd4Q19VPRNhG9+BbOOQ/NOVcLxxj7hP2it4VL4PdFdDDlWpE09fbC/eG969biSHqug49jUJBJQpXrgFO09SgbHblNPilAo1lf5D5NvJHTj3VelygdJRrR/tbT9Bl9mONpqUv8kOhRbDT/1v7f+NRlZt3qrcw8M/Qng5fHeSKnhp59e5onrF/gwq9XEU/E6riDxqV2RiNDKpETI8nPuPYsXGbu/MLXJ+N/zXsjZnpT60kzLLvNDL0xx7qIO1EvK1Ut+NZ77bNvyYlugley3vR3vCjW5Lm1nK7mNI72LXK8tcIJbTjdWxdMVt+XYXHz+WvsLS3B2vv8rSJqRL9j5XCOogdb/E3x/VV2JeOsABt7H5xs6jNlJYZ3DGhtAKxloZmgrnS2yhZpSSKntTQdxdYSDR6UtRyIZ3XNwcH2e5uayH2xtwXrvaV0izJ1+3qDZSwX1tUYbrn+bzKZqywWOVJNKxRBZtTHqnvjpMI5fYFIVdTO95ADlZrnCTlfOYXCT86960S7/ba1IHfFjbWsW0JDsHvfm9C2RsxNLmfaZKmXVQxJtDXi0s90/QyZ9hojy8kL8znqchx49xUWfjf6xraOHGavhtz6nE9/Cq+SbSyRePy+4ttQnV/aaIIJe8tRU2qGghl09dNn9fHUD8QIdvDcJn7OfdxicwwWntRnVp8/npGGBDcn1bqmN+/RJ6bP515jnl1aaQ/nEPm9BxrLBlzzvZ0WZtY+fnfZN8X0pL74cK1T6cvxnSYtuc3Rpt712fMzhq0PWxqRrNrUZ1ErwLpqEKtZRMk1kZTgdKhDV7EVqcnsvfRhJ+s65kLn6l11zJQuJmYzEHL4u2Oe1YVfSyJ/kWdN6hya2Q9bJNR9vR+Qe+QH5vnB9/B8tYZ6jOr+dZdTD37jAd9Iy6pgpUX/QOSr2iLvEf+DSLINun1U5GjwK/vex4/eJbbIT1x7xNBjXVv71X7i05hoOeqlSr/eAVVrhTUGSHQn3o+w6rHnZz6z3tZPd+f5sfpp85bV7JjRhXp0HbndmwNJ/AJRJ6Of9HNc1/7GjFmbc1nUtPbno9K79z16GQqDtzLWvxv3dYc8txly2OSstcWZHHuUdntXVVq0hYI1vkkq2oAhlSZEQli7PR+L6BTiJTvL3SPHLVkx2u0b3G+1inIJ4hTY62r95L6phvUpuraPcL3r1nhZ1yiNPBa6xQlFgOt7lK0b+d3fphFWmXj/klqp3O5JvILVa1uwT321IQhTYUd8VOr5RpPYtJa6jOs0L2kg/jepQYkepxkEUCXCb3P+E3lDctsY49pun+NPXcTg0sLJCNJvqqVd5XT/fcGCd0WJVCdS3ajXftnuv8OsCV0183wzJ0DlkceGILzUTzOBdvcticfarbSn76Py21VBoyy29qaxNe3CrZ8a/+R4P/0ql6gB+d3Ts/QbpVm/N89TNI6rBR97Qqm+x/7/AFi6f9UAAABGAEYARgBGAGIAfgD+AXACHAK2AtgDEgNMA7ID2APqA/wEDgQ+BIIEqATwBT4FfgW4BfwGMAaABsQG4AcQB14HegfICBwItgj6CTYJcAmWCbwJ3AoaCkAKZgqWCu4LBAtSC4wLvAvoDDIMaAzADNwNAg0yDYAN4g4SDlYOcg6iDr4O+A8KD0oPdg+yD94QFBBYEJwQwhDeEQ4RUhFkEZoRuhHqEhoSbhKUEs4S/hMeE04TkhPgFBoUWBSmFLgVBhVK") format("woff");
-      font-weight: 400;
-      font-style: normal;
-      font-display: swap;
+    :root{
+      --bg:#090906;--panel:#282116;--panel2:#17130d;--gold:#ffd34e;--orange:#ff981f;
+      --red:#ff3b30;--green:#73ff69;--blue:#65b7ff;--cream:#f1e2b3;--muted:#a99e7a;
+      --border:#755f31;--dark:#050403;--chat:#17120b;
     }
-
-    :root {
-      color-scheme: dark;
-      --bg: #101112;
-      --panel: #151617;
-      --text: #eeede7;
-      --muted: #b6b5ae;
-      --gold: #ccb578;
-      --line: #2c2d2d;
-      --rune: "Peak RuneScape", fantasy;
-      --body: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;min-height:100vh;color:var(--cream);font-family:Verdana,"Trebuchet MS",sans-serif;
+      background:
+        radial-gradient(circle at 15% 10%,rgba(255,152,31,.08),transparent 28%),
+        radial-gradient(circle at 80% 75%,rgba(82,255,108,.04),transparent 24%),
+        repeating-linear-gradient(0deg,rgba(255,255,255,.012) 0 1px,transparent 1px 3px),
+        var(--bg);
+      overflow-x:hidden;
     }
-
-    * {
-      box-sizing: border-box;
+    body::before{
+      content:"";position:fixed;inset:0;pointer-events:none;z-index:9998;
+      box-shadow:inset 0 0 140px rgba(0,0,0,.85);
     }
-
-    body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--text);
-      font: 1rem/1.65 var(--body);
+    .scanline{pointer-events:none;position:fixed;inset:0;z-index:9999;mix-blend-mode:multiply;
+      background:repeating-linear-gradient(0deg,transparent 0 2px,rgba(0,0,0,.09) 3px)}
+    .topbar{
+      position:sticky;top:0;z-index:50;background:#070603;border-bottom:2px solid #4a3b1b;
+      color:#c9bd92;text-align:center;padding:7px 10px;font-size:12px;box-shadow:0 4px 18px #000;
     }
-
-    a {
-      color: inherit;
-      text-decoration: none;
+    .topbar b{color:var(--orange)}
+    .wrap{width:min(1120px,calc(100% - 22px));margin:auto}
+    header{text-align:center;padding:34px 0 14px;position:relative}
+    .logo{
+      margin:0;font-family:Georgia,"Times New Roman",serif;font-size:clamp(58px,10vw,116px);
+      line-height:.82;text-transform:uppercase;letter-spacing:-3px;color:var(--gold);transform:rotate(-1deg);
+      text-shadow:3px 3px 0 #7c3700,6px 6px 0 #000,0 0 25px rgba(255,152,31,.18);
     }
-
-    img {
-      display: block;
-      max-width: 100%;
+    .subtitle{color:#fff;font-weight:900;letter-spacing:2px;margin-top:18px;text-shadow:2px 2px #000}
+    .certified{display:inline-block;margin-top:11px;padding:6px 11px;border:2px dashed var(--green);color:var(--green);
+      background:#071307;transform:rotate(1.2deg);font-weight:900;box-shadow:3px 3px 0 #000}
+    .tinyline{margin-top:10px;color:#857b60;font-size:11px}
+    .nav{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:18px 0 28px}
+    .btn,.nav a{
+      appearance:none;background:linear-gradient(#5f4e2d,#292114);border:2px solid #8f7641;border-bottom-color:#332713;
+      color:#fff0b3;text-decoration:none;padding:9px 13px;font-weight:900;text-shadow:1px 1px #000;
+      box-shadow:inset 0 0 0 1px #19130b,2px 3px 0 #050403;cursor:pointer;border-radius:2px;font:inherit;
     }
-
-    h1, h2, h3, p {
-      margin: 0;
+    .btn:hover,.nav a:hover{filter:brightness(1.22);transform:translateY(-1px)}
+    .btn:active,.nav a:active{transform:translate(1px,2px);box-shadow:inset 0 0 0 1px #19130b}
+    .btn.red{background:linear-gradient(#84251e,#3d0e0b);border-color:#a75047}
+    .btn.green{background:linear-gradient(#397934,#163914);border-color:#66af5e}
+    .btn.blue{background:linear-gradient(#28577c,#132c40);border-color:#4b85ad}
+    .grid-hero{display:grid;grid-template-columns:1.35fr .65fr;gap:16px}
+    .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:16px}
+    .panel{
+      position:relative;background:linear-gradient(180deg,rgba(51,43,28,.98),rgba(28,24,17,.99));
+      border:3px ridge var(--border);box-shadow:0 0 0 2px var(--dark),7px 8px 0 rgba(0,0,0,.38);padding:18px;
     }
-
-    h1, h2, h3,
-    .brand-text {
-      font-family: var(--rune);
-      font-weight: 400;
-      font-style: normal;
-      font-synthesis: none;
-    }
-
-    h2 {
-      color: var(--gold);
-      font-size: clamp(2rem, 3.4vw, 2.75rem);
-      line-height: 1.2;
-      text-wrap: balance;
-    }
-
-    p {
-      color: var(--muted);
-    }
-
-    a:focus-visible {
-      outline: 3px solid var(--gold);
-      outline-offset: 5px;
-    }
-
-    .wrap {
-      width: min(1120px, calc(100% - 64px));
-      margin-inline: auto;
-    }
-
-    .skip-link {
-      position: absolute;
-      top: -100px;
-      left: 16px;
-      z-index: 10;
-      padding: 12px;
-      background: var(--bg);
-    }
-
-    .skip-link:focus {
-      top: 12px;
-    }
-
-    .icon-definitions {
-      position: absolute;
-      width: 0;
-      height: 0;
-      overflow: hidden;
-    }
-
-    /* Header */
-
-    .topbar {
-      background: #111213;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .header-inner {
-      display: flex;
-      align-items: center;
-      gap: 32px;
-      min-height: 76px;
-      padding-block: 12px;
-    }
-
-    .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      color: var(--gold);
-    }
-
-    .brand-text {
-      font-size: 2rem;
-      line-height: 1.2;
-      white-space: nowrap;
-      text-shadow: 1px 2px 0 #000;
-    }
-
-    .brand img {
-      width: 38px;
-      height: 38px;
-      object-fit: contain;
-    }
-
-    nav {
-      display: flex;
-      gap: 28px;
-      margin-left: auto;
-      font-size: 0.875rem;
-    }
-
-    nav a {
-      display: inline-flex;
-      align-items: center;
-      min-height: 44px;
-      color: var(--muted);
-    }
-
-    nav a:hover {
-      color: var(--text);
-    }
-
-    /* Discord buttons */
-
-    .discord-button {
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
-      min-height: 54px;
-      padding: 12px 22px;
-      border: 1px solid #7380ff;
-      border-radius: 6px;
-      background: #5865f2;
-      color: #fff;
-      font-family: var(--body);
-      font-size: 1rem;
-      font-weight: 600;
-      line-height: 1.4;
-      text-align: center;
-    }
-
-    .discord-button:hover {
-      background: #4752c4;
-      border-color: #6672e6;
-    }
-
-    .discord-icon {
-      width: 23px;
-      height: 20px;
-      fill: currentColor;
-      flex-shrink: 0;
-    }
-
-    .header-inner > .discord-button {
-      min-height: 42px;
-      padding: 10px 15px;
-      font-size: 0.875rem;
-    }
-
-    .header-inner > .discord-button .discord-icon {
-      width: 18px;
-      height: 16px;
-    }
-
-    /* Hero */
-
-    .hero {
-      background-color: #191411;
-      background-image:
-        linear-gradient(
-          0deg,
-          var(--bg) 0%,
-          transparent 45%
-        ),
-        linear-gradient(
-          90deg,
-          rgba(10, 11, 12, 0.94) 0%,
-          rgba(10, 11, 12, 0.83) 40%,
-          rgba(10, 11, 12, 0.28) 100%
-        ),
-        url("bg.png");
-      background-size: cover;
-      background-position: center;
-    }
-
-    .hero-inner {
-      padding-block: 66px 74px;
-    }
-
-    .eyebrow {
-      color: var(--gold);
-      font-size: 0.875rem;
-      line-height: 1.6;
-      letter-spacing: 0.07em;
-    }
-
-    #hero-heading {
-      margin: 17px 0 20px;
-      color: #e0c787;
-      font-family: "Peak RuneScape", fantasy;
-      font-size: clamp(4.5rem, 8vw, 6.5rem);
-      font-weight: 400;
-      font-style: normal;
-      line-height: 1.1;
-      text-shadow: 2px 3px 0 #000;
-    }
-
-    .hero-description {
-      max-width: 610px;
-      color: #e1e0d9;
-      font-size: 1.125rem;
-      line-height: 1.7;
-    }
-
-    .hero .discord-button {
-      margin-top: 26px;
-    }
-
-    .hero-note {
-      max-width: 565px;
-      margin-top: 20px;
-      font-size: 0.9375rem;
-    }
-
-    /* Activities */
-
-    .activity-strip {
-      border-bottom: 1px solid var(--line);
-    }
-
-    .activities {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px 24px;
-      margin: 0;
-      padding: 19px 0;
-      list-style: none;
-      color: #c9c5b7;
-      font-size: 0.875rem;
-      font-weight: 500;
-    }
-
-    .activities li:last-child {
-      color: var(--gold);
-    }
-
-    section[id] {
-      scroll-margin-top: 24px;
-    }
-
-    /* About */
-
-    .about {
-      display: grid;
-      grid-template-columns: 1fr 1.65fr;
-      align-items: start;
-      gap: 48px;
-      padding-block: 54px;
-    }
-
-    .about p {
-      max-width: 680px;
-    }
-
-    /* Features */
-
-    .features {
-      padding-block: 44px 48px;
-      border-block: 1px solid var(--line);
-      background: var(--panel);
-    }
-
-    .feature-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 0 34px;
-      margin-top: 18px;
-    }
-
-    .feature {
-      padding-block: 24px;
-      border-top: 1px solid var(--line);
-    }
-
-    .feature:nth-child(-n+3) {
-      border-top: 0;
-    }
-
-    .feature h3 {
-      margin-bottom: 8px;
-      color: #ded2b0;
-      font-size: 1.625rem;
-      line-height: 1.25;
-    }
-
-    .feature p {
-      font-size: 0.9375rem;
-    }
-
-    /* Community */
-
-    .community {
-      display: grid;
-      grid-template-columns: 1fr 1.65fr;
-      gap: 48px;
-      padding-block: 52px;
-    }
-
-    .community-list {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px 28px;
-      margin: 0;
-      padding: 0;
-      list-style: none;
-      color: #cfcec6;
-      font-size: 0.9375rem;
-    }
-
-    .community-list li {
-      position: relative;
-      padding-left: 20px;
-    }
-
-    .community-list li::before {
-      content: "✓";
-      position: absolute;
-      left: 0;
-      color: var(--gold);
-    }
-
-    .community-list li:last-child {
-      grid-column: 1 / -1;
-    }
-
-    /* Final invite */
-
-    .join {
-      border-block: 1px solid #3a3329;
-      background: #191817;
-    }
-
-    .join-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 32px;
-      padding-block: 40px;
-    }
-
-    .join h2 {
-      font-size: clamp(2rem, 3vw, 2.5rem);
-    }
-
-    .join p {
-      margin-top: 10px;
-    }
-
-    .join .discord-button {
-      flex-shrink: 0;
-    }
-
-    footer {
-      padding-block: 25px;
-      color: #9f9f99;
-      font-size: 0.8125rem;
-    }
-
-    /* Tablet */
-
-    @media (max-width: 800px) {
-      .header-inner {
-        gap: 20px;
-      }
-
-      nav {
-        gap: 20px;
-      }
-
-      .about,
-      .community {
-        grid-template-columns: 1fr;
-        gap: 22px;
-      }
-
-      .feature-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .feature:nth-child(3) {
-        border-top: 1px solid var(--line);
-      }
-
-      .join-inner {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 22px;
-      }
-
-      .hero {
-        background-position: 60% center;
-      }
-    }
-
-    /* Mobile */
-
-    @media (max-width: 540px) {
-      .wrap {
-        width: calc(100% - 40px);
-      }
-
-      .header-inner {
-        flex-wrap: wrap;
-        gap: 4px 12px;
-        padding-block: 10px 4px;
-      }
-
-      .brand-text {
-        font-size: 1.75rem;
-      }
-
-      .brand img {
-        width: 32px;
-        height: 32px;
-      }
-
-      .header-inner > .discord-button {
-        margin-left: auto;
-      }
-
-      nav {
-        order: 3;
-        justify-content: center;
-        gap: 36px;
-        width: 100%;
-      }
-
-      .hero-inner {
-        padding-block: 38px 46px;
-      }
-
-      .hero {
-        background-image:
-          linear-gradient(
-            0deg,
-            var(--bg),
-            transparent 70%
-          ),
-          linear-gradient(
-            90deg,
-            rgba(10, 11, 12, 0.91),
-            rgba(10, 11, 12, 0.62)
-          ),
-          url("bg.png");
-      }
-
-      #hero-heading {
-        margin-block: 14px 18px;
-      }
-
-      .hero-description {
-        font-size: 1rem;
-      }
-
-      .activities {
-        justify-content: flex-start;
-        gap: 10px 23px;
-      }
-
-      .about,
-      .community {
-        padding-block: 36px;
-      }
-
-      .features {
-        padding-block: 32px 16px;
-      }
-
-      .feature-grid,
-      .community-list {
-        grid-template-columns: 1fr;
-      }
-
-      .feature:nth-child(2) {
-        border-top: 1px solid var(--line);
-      }
-
-      .feature {
-        padding-block: 19px;
-      }
-
-      .join-inner {
-        padding-block: 32px;
-      }
-
-      .hero .discord-button,
-      .join .discord-button {
-        width: 100%;
-      }
-    }
-
-    @media (max-width: 340px) {
-      .header-inner > .discord-button {
-        padding-inline: 9px;
-      }
-
-      .header-inner > .discord-button .discord-icon {
-        display: none;
-      }
-
-      .brand-text {
-        font-size: 1.5rem;
-      }
-    }
-    @font-face {
-  font-family: "OSRS Local";
-  src: url("./runescape.ttf") format("truetype");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-#hero-heading,
-.brand-text {
-  font-family: "OSRS Local", monospace !important;
-  font-weight: 400 !important;
-  font-style: normal;
-  font-synthesis: none;
-}
-    #hero-heading {
-  color: #ffff00;
-}
+    .panel::after{content:"";position:absolute;inset:5px;pointer-events:none;border:1px solid rgba(255,216,119,.06)}
+    .panel h2{margin:0 0 14px;color:var(--orange);font-family:Georgia,serif;font-size:24px;text-shadow:2px 2px #000}
+    .panel h3{margin:0 0 10px;color:var(--gold)}
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+    .stat{background:#15120d;border:1px solid #5f4e27;padding:10px;text-align:center;min-height:78px;position:relative;overflow:hidden}
+    .stat:hover{outline:1px solid #a98b42;background:#1c170f}
+    .stat .name{display:block;color:#bcae82;font-size:11px;text-transform:uppercase;letter-spacing:.7px;margin-bottom:4px}
+    .stat .value{display:block;color:#fff;font-weight:900;font-size:23px}
+    .stat .xp{font-size:10px;color:#83d6ff}
+    .stat.cursed .value{color:#ff665e}
+    .combat{text-align:center;display:flex;flex-direction:column;justify-content:center;min-height:100%;gap:9px}
+    .combat-level{font-size:92px;line-height:.86;color:var(--red);font-weight:1000;text-shadow:3px 3px #000;animation:pulse 2.3s ease-in-out infinite}
+    .combat .skull{font-size:56px;filter:drop-shadow(3px 3px 0 #000)}
+    .warning{margin-top:14px;padding:11px;background:#2b120e;border:2px solid #7a3d2b;color:#ffd0c5;font-weight:900}
+    .ticker{margin:16px 0;background:#0b0a07;border:1px solid #544522;padding:8px;overflow:hidden;white-space:nowrap;color:#f0c45d;font-family:monospace}
+    .ticker span{display:inline-block;animation:ticker 20s linear infinite}
+    .list{margin:0;padding-left:19px;line-height:1.8}
+    .good{color:var(--green)}.bad{color:#ff7a70}.blue{color:var(--blue)}.gold{color:var(--gold)}.muted{color:var(--muted)}
+    .bank-value{font-size:40px;margin:6px 0;color:#ffe275;font-weight:1000;text-shadow:2px 2px #000}
+    .news{border-top:1px solid #5b4928;padding:12px 0}.news:first-of-type{border-top:0;padding-top:0}
+    .date{font-size:11px;color:#9b906f}.tiny{font-size:11px;color:#c7bb94}
+    .chatbox{background:#120f0a;border:3px ridge #65532d;box-shadow:0 0 0 2px #060503;margin-top:16px}
+    .chat-tabs{display:flex;gap:3px;background:#231d12;padding:4px;border-bottom:1px solid #5b4b2b;flex-wrap:wrap}
+    .chat-tab{padding:5px 9px;background:#332818;border:1px solid #6d5932;color:#d3c59a;font-size:11px;font-weight:bold}
+    .chat-log{height:180px;overflow:auto;padding:12px 14px;background:linear-gradient(rgba(10,8,5,.8),rgba(18,14,8,.96));font-size:12px;line-height:1.55}
+    .chat-log div{margin:2px 0}.system{color:#9ee6ff}.public{color:#fff}.trade{color:#b988ff}.game{color:#ffdf5b}.clan{color:#60ff92}
+    .chat-input{display:flex;border-top:1px solid #5b4b2b;background:#1f190f;padding:8px;gap:8px}
+    .chat-input input{flex:1;background:#0d0b08;color:#fff;border:1px solid #6a5730;padding:9px;font:inherit;outline:none}
+    .chat-input input:focus{border-color:#b18a43}
+    .terminal{background:#090b08;border:1px solid #425c38;padding:12px;font-family:monospace;color:#9bf58b;min-height:115px;white-space:pre-line}
+    .button-row{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}
+    #trollbox{margin-top:12px;min-height:58px;background:#0d0c08;border:1px solid #594a2a;padding:12px;display:flex;align-items:center;font-weight:900}
+    .fake-login{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:10px}
+    .fake-login input{background:#0c0b08;border:1px solid #69542b;color:#fff;padding:10px;font:inherit;min-width:0}
+    .lootbeam{position:relative;display:inline-block;color:#fff;font-weight:900;text-shadow:0 0 5px #fff,0 0 12px #ff0,0 0 22px #ff5b00;animation:loot 1s ease-in-out infinite alternate}
+    .counter{text-align:center;font-family:monospace;font-size:13px;margin:25px 0 6px;color:#93896a}
+    .counter strong{color:#ffe275;background:#000;border:1px solid #4d4328;padding:2px 7px;letter-spacing:2px}
+    footer{text-align:center;color:#847b62;font-size:11px;padding:25px 0 110px;line-height:1.6}
+    .xpdrop{position:fixed;right:22px;top:88px;color:#fff;font-weight:900;text-shadow:2px 2px #000;z-index:200;pointer-events:none;animation:xpdrop 1.6s ease-out forwards}
+    .overlay{display:none;position:fixed;inset:0;z-index:5000;background:rgba(0,0,0,.92);align-items:center;justify-content:center;text-align:center;padding:20px}
+    .overlay.show{display:flex}.disconnect{font-family:Georgia,serif;color:#ff3b30;font-size:clamp(32px,7vw,72px);font-weight:900;text-shadow:3px 3px #000}
+    .disconnect small{display:block;font:700 14px Verdana;color:#f0dfb0;margin-top:18px}
+    .toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%) translateY(120px);z-index:4000;background:#120f09;border:2px solid #806a38;color:#fff3bf;padding:11px 15px;box-shadow:4px 4px #000;font-weight:900;transition:.22s;max-width:min(520px,calc(100% - 24px));text-align:center}
+    .toast.show{transform:translateX(-50%) translateY(0)}
+    .blink{animation:blink 1.05s steps(2,start) infinite}.shake{animation:shake .12s linear 4}
+    @keyframes blink{50%{opacity:.16}}@keyframes pulse{50%{transform:scale(1.035)}}
+    @keyframes ticker{from{transform:translateX(100%)}to{transform:translateX(-115%)}}
+    @keyframes loot{to{filter:brightness(1.45)}}
+    @keyframes xpdrop{0%{opacity:0;transform:translateY(20px)}20%{opacity:1}100%{opacity:0;transform:translateY(-65px)}}
+    @keyframes shake{0%{transform:translate(0)}25%{transform:translate(3px,-1px)}50%{transform:translate(-2px,2px)}75%{transform:translate(2px,2px)}100%{transform:translate(0)}}
+    @media(max-width:780px){.grid-hero,.grid-2{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}.logo{letter-spacing:-1px}.ticker span{animation-duration:14s}}
   </style>
 </head>
-
 <body>
-  <a class="skip-link" href="#main">Skip to content</a>
+<div class="scanline"></div>
+<div class="topbar"><b>WORLD 420</b> • Players: 1 • Ping: 69 ms • Activity: Bankstanding competitively • <span class="blink">● SYSTEM UPDATE: NEVER</span></div>
 
-  <svg
-    class="icon-definitions"
-    xmlns="http://www.w3.org/2000/svg"
-    aria-hidden="true"
-    focusable="false"
-  >
-    <symbol id="discord-mark" viewBox="0 0 127.14 96.36">
-      <path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.62,85.1a68.42,68.42,0,0,1-10.89-5.19c.91-.66,1.8-1.34,2.66-2,20.87,9.53,43.46,9.53,64.08,0,.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.91,5.2,77,77,0,0,0,6.92,11.25A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,59.93,31,52.84S36.06,40,42.45,40s11.6,5.82,11.49,12.85S48.78,65.69,42.45,65.69Zm42.24,0c-6.27,0-11.4-5.76-11.4-12.85S78.3,40,84.69,40s11.6,5.82,11.49,12.85S91,65.69,84.69,65.69Z"/>
-    </symbol>
-  </svg>
-  
-  <main id="main">
-    <section class="hero" aria-labelledby="hero-heading">
-      <div class="wrap hero-inner">
-        <p class="eyebrow">
-          Old School RuneScape PvM Discord Community
-        </p>
+<div class="wrap">
+  <header>
+    <h1 class="logo">all 420s</h1>
+    <div class="subtitle">RUNESCAPE'S FINAL BOSS</div>
+    <div class="certified blink">✓ VERIFIED BY A GUY AT THE GRAND EXCHANGE</div>
+    <div class="tinyline">This page has passed 0 security audits and 420 vibe checks.</div>
+  </header>
 
-        <h1 id="hero-heading">Peak PvM</h1>
+  <nav class="nav">
+    <a href="#stats">Hiscores</a><a href="#achievements">Lore</a><a href="#news">Breaking News</a><a href="#chat">Public Chat</a>
+    <button class="btn red" onclick="claimTbow()">Claim Free Tbow</button>
+  </nav>
 
-        <p class="hero-description">
-          A PvM focused OSRS Discord community for people who want
-          more homies to raid, boss, learn content, join events,
-          and play the game with.
-        </p>
+  <div class="ticker"><span>⚔ BREAKING: all 420s has completed another successful 8-hour GE bankstanding session • GP gained: -14,832,991 • XP gained: somehow 420 • Ego gained: immeasurable ⚔</span></div>
 
-        <a
-          class="discord-button"
-          href="https://discord.gg/sg8Pq3whSS"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <svg class="discord-icon" aria-hidden="true" focusable="false">
-            <use href="#discord-mark"></use>
-          </svg>
-          <span>Join Peak PvM Discord</span>
-        </a>
-
-        <p class="hero-note">
-          Learners and end game players are both welcome.
-          Already in a clan? Perfect. We’re a Discord community
-          with an optional in-game chat channel.
-        </p>
+  <section class="grid-hero" id="stats">
+    <div class="panel">
+      <h2>Official Hiscores</h2>
+      <div class="stats">
+        <div class="stat"><span class="name">Attack</span><span class="value">420</span><span class="xp">69,420,420 XP</span></div>
+        <div class="stat"><span class="name">Strength</span><span class="value">420</span><span class="xp">Can max-hit a JMod</span></div>
+        <div class="stat"><span class="name">Defence</span><span class="value">420</span><span class="xp">Prayer flicks lawyers</span></div>
+        <div class="stat"><span class="name">Hitpoints</span><span class="value">420</span><span class="xp">Still dies at 89 HP</span></div>
+        <div class="stat"><span class="name">Prayer</span><span class="value">420</span><span class="xp">Protect from Employment</span></div>
+        <div class="stat"><span class="name">Magic</span><span class="value">420</span><span class="xp">Teleblocks his own escape</span></div>
+        <div class="stat cursed"><span class="name">Cooking</span><span class="value">1</span><span class="xp bad">Burnt shrimp locked</span></div>
+        <div class="stat cursed"><span class="name">Grass Touching</span><span class="value">0</span><span class="xp bad">Not on Hiscores</span></div>
+        <div class="stat"><span class="name">Bankstanding</span><span class="value">200m</span><span class="xp good">Rank #1 globally</span></div>
+        <div class="stat"><span class="name">Total Level</span><span class="value">9660</span><span class="xp">23 × 420. Do the math.</span></div>
+        <div class="stat"><span class="name">EHP</span><span class="value">-69</span><span class="xp bad">Elite Human Procrastination</span></div>
+        <div class="stat"><span class="name">KC</span><span class="value">∞</span><span class="xp">Source: trust me bro</span></div>
       </div>
-    </section>
-
-    <div class="activity-strip">
-      <div class="wrap">
-        <ul class="activities" aria-label="Community activities">
-          <li>ToA</li>
-          <li>CoX</li>
-          <li>ToB</li>
-          <li>Nex</li>
-          <li>Yama</li>
-          <li>Corp</li>
-          <li>Nightmare</li>
-          <li>Learners</li>
-          <li>Raids 4 waiting room...</li>
-        </ul>
-      </div>
+      <div class="warning">⚠ Jagex investigated this account and decided it was easier to just leave it alone.</div>
     </div>
 
-    <section
-      class="wrap about"
-      id="about"
-      aria-labelledby="about-heading"
-    >
-      <h2 id="about-heading">What is Peak PvM?</h2>
+    <div class="panel combat">
+      <div class="skull">☠</div>
+      <h3>Combat Level</h3>
+      <div class="combat-level">420</div>
+      <div class="gold"><b>Skull:</b> permanent</div>
+      <div class="tiny">Last seen at GE saying “sit” after losing a friendly risk fight.</div>
+      <button class="btn" onclick="gainXp()">Train +1 XP</button>
+    </div>
+  </section>
 
-      <p>
-        Peak PvM is a Discord first OSRS PvM community built around
-        finding teams, learning content, organizing runs, and having
-        more people to play with. We focus on raids, bossing, events,
-        and community without elitist requirements or unnecessary hierarchy.
-      </p>
-    </section>
-
-    <section
-      class="features"
-      id="features"
-      aria-labelledby="features-heading"
-    >
-      <div class="wrap">
-        <h2 id="features-heading">Features</h2>
-
-        <div class="feature-grid">
-          <article class="feature">
-            <h3>PvM Party Finder</h3>
-            <p>
-              Role pings for ToA, CoX, ToB, Nex, Yama, Corp,
-              Nightmare, BA, Learners, and more.
-            </p>
-          </article>
-
-          <article class="feature">
-            <h3>PvM Scheduler</h3>
-            <p>
-              Set up raids and bossing runs now or later.
-            </p>
-          </article>
-
-          <article class="feature">
-            <h3>Community Hiscores</h3>
-            <p>
-              Synced with Wise Old Man to follow the
-              community’s progress.
-            </p>
-          </article>
-
-          <article class="feature">
-            <h3>Easy RSN Sync / Onboarding</h3>
-            <p>
-              Sync your RuneScape name and get settled
-              into the server.
-            </p>
-          </article>
-
-          <article class="feature">
-            <h3>Loot Tracking &amp; OSRS Utilities</h3>
-            <p>
-              Track drops, check game status, catch TL;DR game updates,
-              and use other handy OSRS tools built right into the server.
-            </p>
-          </article>
-
-          <article class="feature">
-            <h3>Community PvM Events</h3>
-            <p>
-              Boss of the Week, PvM Bingo, competitions,
-              and more as the server grows.
-            </p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section
-      class="wrap community"
-      id="community"
-      aria-labelledby="community-heading"
-    >
-      <h2 id="community-heading">What we’re about</h2>
-
-      <ul class="community-list">
-        <li>Learners and experienced players both welcome</li>
-        <li>No elitist requirements</li>
-        <li>No weird rank hierarchy</li>
-        <li>No expectation to leave your current clan</li>
-        <li>Discord community first</li>
-        <li>Optional in-game chat channel</li>
-        <li>
-          Small but growing community focused on
-          actually playing together
-        </li>
+  <section class="grid-2" id="achievements">
+    <div class="panel">
+      <h2>Elite Achievements</h2>
+      <ul class="list">
+        <li><span class="good">✓</span> Completed Inferno with bronze dagger <span class="tiny">(source unavailable)</span></li>
+        <li><span class="good">✓</span> Soloed Nex while disconnected</li>
+        <li><span class="good">✓</span> 17 pets from one Hespori kill</li>
+        <li><span class="good">✓</span> 0-tick manipulated the Sandwich Lady</li>
+        <li><span class="good">✓</span> Survived one entire raid without saying “lag”</li>
+        <li><span class="good">✓</span> Reported Mod Ash for XP waste</li>
+        <li><span class="bad">✗</span> Still cannot find Lumbridge Castle staircase</li>
       </ul>
-    </section>
+    </div>
 
-    <section
-      class="join"
-      id="join"
-      aria-labelledby="join-heading"
-    >
-      <div class="wrap join-inner">
-        <div>
-          <h2 id="join-heading">
-            Looking for more people to PvM with?
-          </h2>
-          <p>
-            Come chill, find teams, and send some content with us.
-          </p>
-        </div>
+    <div class="panel">
+      <h2>Bank Value</h2>
+      <div class="bank-value">420 gp</div>
+      <div class="tiny">Price checker may be inaccurate due to catastrophic financial decisions.</div>
+      <ul class="list">
+        <li>1x burnt shrimp</li><li>37x noted cabbage</li><li>2x rope <span class="tiny">(raid supplies)</span></li>
+        <li>1x <span class="lootbeam">Tumeken's Shadow*</span></li><li>14,000x empty beer glass</li><li>1x apology to the team</li>
+      </ul>
+      <div class="tiny" style="margin-top:10px">*currently “borrowed” until the lender remembers.</div>
+    </div>
+  </section>
 
-        <a
-          class="discord-button"
-          href="https://discord.gg/sg8Pq3whSS"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <svg class="discord-icon" aria-hidden="true" focusable="false">
-            <use href="#discord-mark"></use>
-          </svg>
-          <span>Join Peak PvM Discord</span>
-        </a>
+  <section class="grid-2">
+    <div class="panel" id="news">
+      <h2>Breaking News</h2>
+      <div class="news"><div class="date">Today, 4:20 PM</div><b>all 420s announces retirement from PvM</b><div class="tiny">Returned 11 minutes later after hearing “free split.”</div></div>
+      <div class="news"><div class="date">Today, 6:09 PM</div><b>Historic 0 EHP session completed</b><div class="tiny">Analysts called the pace “sustainable indefinitely.”</div></div>
+      <div class="news"><div class="date">Yesterday</div><b>Grand Exchange economy briefly collapses</b><div class="tiny">Cause traced to all 420s panic-selling one rune platebody.</div></div>
+      <div class="news"><div class="date">Last week</div><b>GE witnesses unexplained “sit” epidemic</b><div class="tiny">Authorities believe Vengeance may have been cast once.</div></div>
+    </div>
+
+    <div class="panel">
+      <h2>Account Security Center</h2>
+      <div class="terminal" id="terminal">[SECURITY] Authenticator: disabled for convenience
+[SECURITY] Bank PIN: 0420
+[SECURITY] Password strength: "bro trust me"
+[SECURITY] Recovery questions: forgotten
+[SECURITY] Overall rating: absolutely cooked</div>
+      <div class="button-row">
+        <button class="btn blue" onclick="secureAccount()">Secure Account</button>
+        <button class="btn red" onclick="hackMe()">Definitely Not Phishing</button>
       </div>
-    </section>
-  </main>
+    </div>
+  </section>
 
-  <footer class="wrap">
-    Peak PvM is not affiliated with Jagex Ltd.
-    RuneScape and Old School RuneScape are trademarks of Jagex Ltd.
-  </footer>
+  <section class="grid-2">
+    <div class="panel">
+      <h2>Request a Carry</h2>
+      <p>all 420s is currently accepting exactly <b class="gold">zero</b> applications.</p>
+      <div class="button-row"><button class="btn green" onclick="rollTroll()">Request Carry</button><button class="btn red" onclick="panicButton()">I Died at Jad</button></div>
+      <div id="trollbox">Choose wisely.</div>
+    </div>
+
+    <div class="panel">
+      <h2>Hiscore Lookup</h2>
+      <p class="tiny">Enter any RuneScape name to receive an extremely accurate professional assessment.</p>
+      <div class="fake-login"><input id="rsn" maxlength="12" placeholder="RuneScape name" /><button class="btn" onclick="lookupRsn()">Lookup</button></div>
+      <div id="lookupResult" class="warning" style="display:none"></div>
+    </div>
+  </section>
+
+  <section class="chatbox" id="chat">
+    <div class="chat-tabs"><div class="chat-tab">All</div><div class="chat-tab">Game</div><div class="chat-tab">Public: On</div><div class="chat-tab">Private: Friends</div><div class="chat-tab">Clan</div><div class="chat-tab">Trade: On</div></div>
+    <div class="chat-log" id="chatLog">
+      <div class="system">Welcome to World 420.</div>
+      <div class="game">You have 420 days of membership remaining.</div>
+      <div class="public"><span class="gold">all 420s:</span> anyone need carry</div>
+      <div class="public"><span class="gold">Goblin:</span> no</div>
+      <div class="clan">[Peak PvM] Gnome Child: your event starts in 10 minutes.</div>
+      <div class="public"><span class="gold">all 420s:</span> cancel it</div>
+      <div class="game">You have been standing still for 6 hours.</div>
+      <div class="trade">Trade request from: TotallyRealJMod</div>
+    </div>
+    <div class="chat-input"><input id="chatInput" placeholder="Press enter to embarrass yourself publicly..." onkeydown="chatKey(event)" /><button class="btn" onclick="sendChat()">Send</button></div>
+  </section>
+
+  <div class="counter">You are visitor <strong id="visitor">000420</strong> since this website was last hacked by goblins.</div>
+  <footer>Fan-made parody. Not affiliated with Jagex. No GP was doubled. No armour was trimmed. No cousins were trusted with the bank.<br>© 2007–2026 all 420s International Holdings, Cabbage Logistics & Questionable Services LLC</footer>
+</div>
+
+<div class="overlay" id="overlay"><div class="disconnect">CONNECTION LOST<small>Please wait - attempting to reestablish.<br><br>Just kidding. You clicked “Claim Free Tbow.” What did you expect?</small></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+  const carryResponses=[
+    "Application denied: KC too low and vibes suspicious.",
+    "all 420s is bankstanding. Estimated wait: 6–8 business months.",
+    "You have been assigned role: +1 who forgets DDS at Wardens.",
+    "Carry approved. Payment: one burnt shrimp and public humiliation.",
+    "Error 420: gamer too elite to join your party.",
+    "Complete the elite diary task: touch grass for 15 consecutive minutes.",
+    "Your request was forwarded to Wise Old Man. He laughed.",
+    "Denied: said ‘I know mechanics’ before instantly planking.",
+    "Congratulations. You are now tanking Bandos in graceful.",
+    "Accepted. all 420s will arrive after finishing a clue scroll from 2019."
+  ];
+  const lookupResponses=[
+    "Combat assessment: dangerous near banks, harmless near bosses.",
+    "Account status: 99% confidence, 1% mechanics.",
+    "PvM rating: has watched at least two guides.",
+    "Hiscores flag: suspicious amount of bankstanding detected.",
+    "Raid readiness: inventory contains 11 brews and no restore.",
+    "Threat level: will say ‘lag’ within 30 seconds of death.",
+    "Verified gamer. Unfortunately."
+  ];
+  const npcReplies=["reported","bro what","nty","skill issue","meet me w420 ge","you forgot your dds again","sit","buying gf 10k","touch grass","that was not a mechanic"];
+  function shake(el){el.classList.remove('shake');void el.offsetWidth;el.classList.add('shake')}
+  function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>t.classList.remove('show'),2400)}
+  function rollTroll(){const b=document.getElementById('trollbox');shake(b);b.textContent=carryResponses[Math.floor(Math.random()*carryResponses.length)]}
+  function panicButton(){const b=document.getElementById('trollbox');shake(b);b.innerHTML='<span class="bad">Skill issue detected.</span>&nbsp; Report to Falador and think about what you did.'}
+  function gainXp(){const d=document.createElement('div');d.className='xpdrop';d.textContent='+1 Bankstanding XP';document.body.appendChild(d);setTimeout(()=>d.remove(),1700);toast('Congratulations, you just wasted 4.2 seconds.')}
+  function claimTbow(){const o=document.getElementById('overlay');o.classList.add('show');setTimeout(()=>o.classList.remove('show'),1800)}
+  function secureAccount(){document.getElementById('terminal').textContent='[SECURITY] Attempting to enable common sense...\n[ERROR] Feature not found.\n[SECURITY] Bank PIN changed from 0420 to 0420.\n[SUCCESS] Nothing improved.';toast('Account security increased by 0%.')}
+  function hackMe(){document.getElementById('terminal').textContent='[NOTICE] Congratulations!\nYour account has been transferred to Cow31337.\nPlease meet him behind Lumbridge Castle with your bank.';toast('Absolutely elite decision-making.')}
+  function lookupRsn(){const i=document.getElementById('rsn');const r=document.getElementById('lookupResult');const name=i.value.trim()||'that account';r.style.display='block';r.innerHTML='<b>'+escapeHtml(name)+'</b>: '+lookupResponses[Math.floor(Math.random()*lookupResponses.length)];shake(r)}
+  function escapeHtml(s){return s.replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+  function chatKey(e){if(e.key==='Enter')sendChat()}
+  function sendChat(){const i=document.getElementById('chatInput');const text=i.value.trim();if(!text)return;const log=document.getElementById('chatLog');const me=document.createElement('div');me.className='public';me.innerHTML='<span class="gold">all 420s:</span> '+escapeHtml(text);log.appendChild(me);i.value='';log.scrollTop=log.scrollHeight;setTimeout(()=>{const npc=document.createElement('div');npc.className='public';npc.innerHTML='<span class="gold">Goblin:</span> '+npcReplies[Math.floor(Math.random()*npcReplies.length)];log.appendChild(npc);log.scrollTop=log.scrollHeight},450)}
+  document.getElementById('visitor').textContent=String(420+Math.floor(Math.random()*4200)).padStart(6,'0');
+  setInterval(()=>{if(Math.random()<.35){const d=document.createElement('div');d.className='xpdrop';d.textContent=['+420 Ego XP','+0 EHP','+69 Bankstanding XP','-14m GP'][Math.floor(Math.random()*4)];document.body.appendChild(d);setTimeout(()=>d.remove(),1700)}},6000);
+</script>
 </body>
 </html>
