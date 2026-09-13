@@ -1,1143 +1,209 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OSRS Nexus — The Grand Account Scrying Engine</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#17130c">
+<title>OSRS Omniscape — One RSN. Every useful public trail.</title>
 <style>
-
 :root{
-  --void:#050504; --night:#090a07; --stone0:#0f100d; --stone1:#181812; --stone2:#242318;
-  --stone3:#393624; --bronze:#6d5127; --bronze2:#aa7a32; --gold:#d8ae52; --gold2:#ffe29a;
-  --parch:#c9b88d; --moss:#53613b; --moss2:#79904f; --blood:#7d211b; --red:#e26e58;
-  --green:#7fd286; --blue:#82bfe9; --purple:#bfa0ed; --orange:#efac5d;
-  --text:#eee6d1; --muted:#aaa18c; --dim:#756f60; --line:#403b29; --line2:#6c5b36;
-  --shadow:0 18px 55px rgba(0,0,0,.50); --inner:inset 0 0 0 1px rgba(255,255,255,.025);
+  --black:#080705;--void:#0c0a07;--stone:#1b1812;--stone2:#282216;--stone3:#3a3020;
+  --edge:#6b5635;--edge2:#9c7839;--gold:#d3a94e;--gold2:#f2d277;--parch:#d9c89f;
+  --text:#eee1bf;--muted:#a49678;--dim:#6f6757;--green:#64c875;--red:#dc6757;--blue:#74b4df;
+  --purple:#b391d5;--temple:#e2b662;--shadow:0 20px 60px rgba(0,0,0,.5)
 }
-*{box-sizing:border-box}
-html{scroll-behavior:smooth;background:#050504}
-body{
-  margin:0; min-height:100vh; color:var(--text); overflow-x:hidden;
-  font-family:Trebuchet MS,Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;
-  background:
-    radial-gradient(ellipse at 50% -12%,rgba(142,105,47,.18),transparent 31%),
-    radial-gradient(circle at 12% 12%,rgba(85,111,57,.14),transparent 24%),
-    radial-gradient(circle at 90% 22%,rgba(91,43,35,.16),transparent 28%),
-    linear-gradient(180deg,#090a07 0%,#080906 48%,#050504 100%);
-}
-body:before{
-  content:""; position:fixed; inset:0; pointer-events:none; z-index:-1; opacity:.20;
-  background:
-    repeating-linear-gradient(115deg,rgba(255,255,255,.018) 0 1px,transparent 1px 7px),
-    repeating-linear-gradient(35deg,rgba(0,0,0,.12) 0 1px,transparent 1px 11px);
-}
-body:after{
-  content:"";position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:.035;
-  background:repeating-linear-gradient(0deg,#fff 0 1px,transparent 1px 4px);
-  mix-blend-mode:overlay;
-}
-button,input,select{font:inherit}
-button{color:inherit}
-a{color:inherit}
-#ambientCanvas{position:fixed;inset:0;width:100%;height:100%;z-index:-2;pointer-events:none}
-.worldscape{
-  position:fixed;left:0;right:0;top:0;height:420px;z-index:-3;overflow:hidden;pointer-events:none;
-  background:
-    radial-gradient(ellipse at 50% 0%,rgba(250,195,89,.13),transparent 38%),
-    linear-gradient(180deg,#11130d 0%,#0e120c 47%,transparent 100%);
-}
-.worldscape:before{
-  content:"";position:absolute;left:-5%;right:-5%;bottom:65px;height:190px;
-  background:linear-gradient(180deg,#222919,#11160f);
-  clip-path:polygon(0 82%,7% 49%,13% 66%,22% 25%,30% 62%,39% 18%,47% 60%,58% 30%,67% 64%,77% 24%,84% 58%,92% 36%,100% 78%,100% 100%,0 100%);
-  filter:drop-shadow(0 -10px 18px rgba(0,0,0,.28));
-}
-.worldscape:after{
-  content:"";position:absolute;left:-4%;right:-4%;bottom:0;height:130px;
-  background:
-    radial-gradient(ellipse at 15% 90%,#171c12 0 20%,transparent 21%),
-    radial-gradient(ellipse at 42% 90%,#11160e 0 24%,transparent 25%),
-    radial-gradient(ellipse at 72% 90%,#151a10 0 22%,transparent 23%),
-    radial-gradient(ellipse at 92% 90%,#11150d 0 17%,transparent 18%);
-}
-.shell{max-width:1520px;margin:auto;padding:22px;position:relative;z-index:2}
-.shell:before,.shell:after{
-  content:"";position:fixed;top:0;bottom:0;width:72px;pointer-events:none;opacity:.15;z-index:-1;
-  background:
-    radial-gradient(circle at 50% 6%,#c59a44 0 2px,transparent 3px),
-    linear-gradient(90deg,transparent,rgba(166,124,50,.18),transparent);
-  background-size:100% 86px,100% 100%;
-}
-.shell:before{left:0}.shell:after{right:0}
-
-.topbar{
-  display:flex;gap:14px;align-items:center;justify-content:space-between;
-  position:sticky;top:10px;z-index:60;padding:11px 12px;
-  border:2px solid #63502f; outline:1px solid #17140e;
-  background:
-    linear-gradient(180deg,rgba(54,47,30,.97),rgba(20,18,13,.98)),
-    repeating-linear-gradient(90deg,rgba(255,255,255,.02) 0 1px,transparent 1px 7px);
-  box-shadow:0 2px 0 #8b6b34 inset,0 -2px 0 #0a0907 inset,0 15px 45px rgba(0,0,0,.5);
-}
-.topbar:before,.topbar:after{
-  content:"◆";position:absolute;top:50%;transform:translateY(-50%);color:#9a7130;text-shadow:0 1px #000;font-size:12px
-}
-.topbar:before{left:-8px}.topbar:after{right:-8px}
-.brand{display:flex;align-items:center;gap:11px;min-width:260px}
-.brandmark{
-  width:46px;height:46px;display:grid;place-items:center;position:relative;
-  border-radius:50%;border:2px solid #8a6932;outline:1px solid #251c0e;
-  background:
-    radial-gradient(circle at 36% 30%,#ffd777 0 3%,#9f7431 4% 15%,#3c321b 33%,#11120d 70%);
-  box-shadow:0 0 22px rgba(221,175,79,.16),inset 0 0 14px rgba(255,229,149,.10);
-  color:#fff0b0;font-size:22px;text-shadow:0 2px #000;
-  animation:orbPulse 4.5s ease-in-out infinite;
-}
-.brandmark:after{
-  content:"";position:absolute;inset:7px;border:1px dashed rgba(255,226,140,.35);border-radius:50%;animation:spin 13s linear infinite;
-}
-.brand b{
-  display:block;font-family:Georgia,serif;font-size:20px;color:var(--gold2);letter-spacing:.05em;
-  text-shadow:0 2px 0 #000,0 0 20px rgba(216,174,82,.15);
-}
-.brand small{display:block;color:#8e866f;font-size:9px;letter-spacing:.18em;margin-top:2px}
-.search{
-  flex:1;max-width:710px;display:flex;position:relative;overflow:hidden;
-  border:2px inset #675838;background:#090a07;box-shadow:inset 0 0 18px rgba(0,0,0,.65);
-}
-.search:before{
-  content:"";width:42px;flex:0 0 42px;display:block;border-right:1px solid #493d27;
-  background:
-    radial-gradient(circle,#d9b354 0 9%,#684d22 10% 21%,#1c1a12 22% 54%,transparent 55%);
-}
-.search input{
-  flex:1;min-width:0;background:transparent;border:0;color:#fff1c7;padding:11px 13px;outline:none;
-  text-shadow:0 1px #000;
-}
-.search input::placeholder{color:#6f6b5e}
-.btn{
-  border:0;border-left:1px solid #665333;position:relative;isolation:isolate;
-  background:linear-gradient(180deg,#574527,#2b2113 55%,#1b150d);
-  color:#f4dfac;padding:10px 15px;cursor:pointer;font-weight:850;font-size:10px;letter-spacing:.06em;
-  text-shadow:0 1px #000;box-shadow:inset 0 1px rgba(255,255,255,.08);
-  transition:.18s ease;
-}
-.btn:before{content:"";position:absolute;inset:2px;border:1px solid rgba(255,225,147,.08);z-index:-1}
-.btn:hover{filter:brightness(1.19);color:#fff1bf;transform:translateY(-1px)}
-.btn.secondary{background:linear-gradient(#30291c,#17150f);color:#c3bca7;border:1px solid #51462e}
-.health{display:flex;gap:6px;white-space:nowrap}
-.pill{
-  font-size:9px;padding:6px 8px;border:1px solid #463d2b;background:#0e100c;color:#817b6b;
-  box-shadow:inset 0 0 9px rgba(0,0,0,.45);
-}
-.pill.good{color:#a5efaa;border-color:#42613c;box-shadow:inset 0 0 9px rgba(88,177,89,.08)}
-.pill.bad{color:#f4a092;border-color:#723a31}
-.pill.busy{color:#ffe198;border-color:#76613a;animation:flicker 1.1s infinite}
-
-.hero{
-  margin-top:17px;display:grid;grid-template-columns:minmax(0,1.36fr) minmax(350px,.64fr);gap:14px;
-}
-.card{
-  position:relative;border:2px solid #4a402a;outline:1px solid #12100b;
-  background:
-    linear-gradient(150deg,rgba(32,31,22,.98),rgba(13,14,10,.98)),
-    repeating-linear-gradient(35deg,rgba(255,255,255,.018) 0 1px,transparent 1px 8px);
-  box-shadow:var(--shadow),var(--inner);overflow:hidden;
-}
-.card:before{
-  content:"";position:absolute;inset:5px;pointer-events:none;border:1px solid rgba(162,126,59,.10);
-}
-.card:after{
-  content:"";position:absolute;right:-70px;bottom:-70px;width:160px;height:160px;border-radius:50%;
-  border:1px solid rgba(203,158,65,.06);pointer-events:none;
-}
-.hero-main{
-  padding:34px 34px 30px;min-height:330px;position:relative;overflow:hidden;
-  background:
-    linear-gradient(90deg,rgba(14,15,11,.95) 0 52%,rgba(14,15,11,.78) 78%,rgba(14,15,11,.91)),
-    radial-gradient(circle at 80% 44%,rgba(171,130,48,.15),transparent 25%);
-}
-.hero-main:before{
-  content:"";position:absolute;inset:0;pointer-events:none;
-  background:
-    linear-gradient(115deg,transparent 0 38%,rgba(255,227,147,.025) 39%,transparent 40%),
-    radial-gradient(circle at 91% 14%,rgba(124,163,85,.08),transparent 26%);
-}
-.rune-halo{
-  position:absolute;right:20px;top:25px;width:290px;height:290px;border-radius:50%;pointer-events:none;opacity:.46;
-  border:1px solid rgba(224,187,104,.18);box-shadow:0 0 50px rgba(216,174,82,.05),inset 0 0 45px rgba(216,174,82,.05);
-  animation:floatHalo 7s ease-in-out infinite;
-}
-.rune-halo:before,.rune-halo:after{
-  content:"✦ ᚱ ✧ ᚠ ✦ ᛉ ✧ ᚾ ✦ ᛏ ✧ ᚨ";position:absolute;inset:18px;border-radius:50%;
-  border:1px dashed rgba(224,187,104,.22);display:grid;place-items:center;color:rgba(255,221,139,.18);
-  font-family:Georgia,serif;font-size:23px;letter-spacing:8px;animation:spin 34s linear infinite;
-}
-.rune-halo:after{inset:68px;animation-direction:reverse;animation-duration:21s;font-size:17px;letter-spacing:4px;color:rgba(124,175,104,.2)}
-.scan-beam{
-  position:absolute;left:-25%;top:0;width:18%;height:100%;pointer-events:none;opacity:0;
-  background:linear-gradient(90deg,transparent,rgba(255,219,128,.09),rgba(255,242,181,.19),transparent);
-  transform:skewX(-14deg);filter:blur(1px);
-}
-body.scanning .scan-beam{animation:scanAcross 1.6s ease-in-out infinite;opacity:1}
-.kicker{
-  position:relative;z-index:2;color:#92c77e;text-transform:uppercase;letter-spacing:.24em;font-size:9px;font-weight:900;
-  text-shadow:0 0 12px rgba(120,190,99,.22);
-}
-h1{
-  position:relative;z-index:2;font-family:Georgia,serif;font-size:clamp(47px,7.5vw,94px);
-  letter-spacing:-.055em;line-height:.86;margin:17px 0 16px;color:#f0e7cc;
-  text-shadow:0 5px 0 #090806,0 0 35px rgba(219,179,88,.08);
-}
-h1:after{
-  content:"";display:block;width:min(430px,70%);height:2px;margin-top:18px;
-  background:linear-gradient(90deg,#a67931,rgba(218,174,82,.1),transparent);
-  box-shadow:0 0 13px rgba(218,174,82,.22);
-}
-.subtitle{position:relative;z-index:2;color:#a7a18f;max-width:770px;line-height:1.68;font-size:13px}
-.meta{position:relative;z-index:2;display:flex;gap:7px;flex-wrap:wrap;margin-top:21px}
-.meta span{
-  font-size:9px;border:1px solid #4d432d;background:linear-gradient(#1e1c14,#10110d);padding:6px 8px;color:#aca590;
-  box-shadow:inset 0 0 7px rgba(0,0,0,.5);
-}
-.provider-card{padding:18px;display:grid;gap:10px;align-content:start}
-.provider{
-  display:grid;grid-template-columns:52px 1fr auto;gap:11px;align-items:center;min-height:74px;
-  border:1px solid #443c2a;background:
-    linear-gradient(90deg,rgba(36,34,23,.92),rgba(15,16,11,.96));
-  padding:10px 11px;position:relative;overflow:hidden;transition:.22s ease;
-}
-.provider:hover{transform:translateX(-3px);border-color:#6c5731;box-shadow:0 8px 24px rgba(0,0,0,.28)}
-.provider:after{
-  content:"";position:absolute;right:-25px;top:-25px;width:70px;height:70px;border-radius:50%;
-  background:radial-gradient(circle,rgba(221,176,75,.08),transparent 65%);
-}
-.provider-icon{
-  width:48px;height:48px;display:grid;place-items:center;border-radius:50%;
-  border:2px solid #6a5430;outline:1px solid #17110a;font-family:Georgia,serif;font-weight:900;color:#ffdd80;
-  background:radial-gradient(circle at 37% 30%,#b2873f,#3c321e 35%,#15150f 72%);
-  box-shadow:inset 0 0 15px rgba(255,231,163,.08),0 0 16px rgba(206,155,62,.07);
-}
-.provider:nth-child(1) .provider-icon{box-shadow:inset 0 0 15px rgba(119,170,231,.15),0 0 16px rgba(119,170,231,.08)}
-.provider:nth-child(2) .provider-icon{box-shadow:inset 0 0 15px rgba(235,186,81,.17),0 0 16px rgba(235,186,81,.08)}
-.provider:nth-child(3) .provider-icon{box-shadow:inset 0 0 15px rgba(146,199,126,.16),0 0 16px rgba(146,199,126,.08)}
-.provider b{font-size:12px;color:#ded5be}.provider small{display:block;color:#797566;margin-top:4px;font-size:9px;line-height:1.35}
-.provider-status{font-size:9px;color:#777164;text-transform:uppercase;letter-spacing:.08em}
-.provider-status.ok{color:#8de094;text-shadow:0 0 10px rgba(91,204,101,.20)}
-.provider-status.err{color:#ef8978}.provider-status.busy{color:#f2cf73;animation:flicker 1.1s infinite}
-
-.tabs{
-  margin-top:14px;display:flex;gap:4px;overflow:auto;position:sticky;top:82px;z-index:45;
-  border:2px solid #4b4029;outline:1px solid #13110c;background:rgba(16,16,12,.94);backdrop-filter:blur(10px);padding:6px;
-  box-shadow:0 11px 30px rgba(0,0,0,.34);
-}
-.tab{
-  flex:0 0 auto;border:1px solid #302a1e;background:linear-gradient(#252218,#15140f);color:#898474;
-  padding:9px 13px;cursor:pointer;font-size:9px;font-weight:900;letter-spacing:.08em;position:relative;transition:.15s ease;
-}
-.tab:before{content:"";position:absolute;left:4px;right:4px;top:3px;height:1px;background:rgba(255,255,255,.035)}
-.tab:hover{color:#ddd1ae;border-color:#5d4b2d;transform:translateY(-1px)}
-.tab.active{
-  color:#ffe39a;border-color:#8a6934;background:linear-gradient(#46371e,#241d12);
-  box-shadow:inset 0 0 13px rgba(218,174,82,.08),0 0 18px rgba(218,174,82,.05);
-}
-.panel{display:none;margin-top:14px;animation:panelIn .28s ease both}
-.panel.active{display:block}
-.metrics{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
-.metric{
-  padding:18px 16px 16px;min-height:111px;isolation:isolate;transition:.22s ease;
-  background:
-    linear-gradient(145deg,rgba(39,35,23,.96),rgba(14,15,10,.98)),
-    radial-gradient(circle at 90% 15%,rgba(207,158,65,.09),transparent 38%);
-}
-.metric:hover{transform:translateY(-4px);border-color:#6f5933;box-shadow:0 18px 35px rgba(0,0,0,.35)}
-.metric:after{
-  content:"✦";position:absolute;right:13px;top:10px;font-family:Georgia,serif;font-size:30px;color:rgba(229,191,99,.08);
-}
-.metric label{display:block;text-transform:uppercase;letter-spacing:.16em;color:#817a68;font-size:8px;font-weight:900}
-.metric strong{display:block;color:#f2dda2;font-size:27px;margin-top:9px;letter-spacing:-.045em;text-shadow:0 2px #000}
-.metric small{display:block;color:#6f7767;margin-top:6px;font-size:9px}
-.section-grid{display:grid;grid-template-columns:1.12fr .88fr;gap:12px;margin-top:12px}
-.section-card{padding:18px}
-.section-title{
-  display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:13px;padding-bottom:10px;
-  border-bottom:1px solid #332f21;
-}
-.section-title h2{
-  font-family:Georgia,serif;font-size:20px;margin:0;color:#ead89c;letter-spacing:.01em;
-  text-shadow:0 2px #000;
-}
-.section-title span{color:#6f6c5e;font-size:8px;text-transform:uppercase;letter-spacing:.14em}
-.table{width:100%;border-collapse:collapse;font-size:10px}
-.table th{
-  text-align:left;color:#746f60;text-transform:uppercase;letter-spacing:.12em;font-size:8px;padding:7px;
-  border-bottom:1px solid #3a3423;background:#0e100c
-}
-.table td{padding:8px 7px;border-bottom:1px solid #242419;color:#bcb5a3}
-.table tr:hover td{background:#14150f;color:#e2d8c2}
-.num{text-align:right!important;font-variant-numeric:tabular-nums}
-.good{color:var(--green)!important}.bad{color:var(--red)!important}.warn{color:var(--orange)!important}.gold{color:var(--gold2)!important}
-
-.skill-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.skill{
-  min-height:92px;padding:12px 12px 11px 48px;border:1px solid #423b29;background:
-    linear-gradient(145deg,#222118,#10110d);position:relative;overflow:hidden;transition:.18s ease;
-}
-.skill:hover{transform:translateY(-3px) scale(1.012);border-color:#735c34;box-shadow:0 10px 24px rgba(0,0,0,.28)}
-.skill:after{content:"";position:absolute;bottom:0;left:0;height:3px;width:var(--pct,0%);background:linear-gradient(90deg,#647d44,#c1a955);box-shadow:0 0 10px rgba(152,183,82,.25)}
-.skill-icon{
-  position:absolute;left:10px;top:11px;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;
-  border:1px solid #6e5731;background:radial-gradient(circle,#4a4028,#181810 70%);font-size:16px;
-  filter:saturate(.8);box-shadow:inset 0 0 9px rgba(255,230,151,.06)
-}
-.skill b{font-size:11px;color:#d6cfbd}.skill .level{float:right;color:#ffdc78;font-weight:900;font-size:15px;text-shadow:0 1px #000}
-.skill .xp{clear:both;color:#7b7a6a;font-size:8px;margin-top:10px}.skill .ranks{color:#666d60;font-size:8px;margin-top:4px}
-
-.boss-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
-.boss{
-  min-height:126px;padding:15px 14px 13px 58px;border:1px solid #433a26;background:
-    radial-gradient(circle at 20% 50%,rgba(151,92,49,.12),transparent 35%),
-    linear-gradient(150deg,#242017,#10110d);
-  position:relative;overflow:hidden;transition:.2s ease;
-}
-.boss:before{
-  content:"☠";position:absolute;left:14px;top:16px;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;
-  border:1px solid #665031;background:#15120d;color:#c79b52;box-shadow:inset 0 0 8px rgba(255,223,147,.05)
-}
-.boss:after{
-  content:"";position:absolute;left:0;bottom:0;height:2px;width:100%;background:linear-gradient(90deg,#6c2a21,#b27a3d,transparent);
-  opacity:.65
-}
-.boss:hover{transform:translateY(-4px);border-color:#7a5f33;box-shadow:0 14px 30px rgba(0,0,0,.35)}
-.boss .name{font-size:10px;color:#cfc7b5;line-height:1.3}.boss .kc{font-size:25px;color:#f0d785;font-weight:900;margin:8px 0;text-shadow:0 2px #000}
-.boss .compare{font-size:8px;color:#6e7164;line-height:1.5}
-.compare-row{
-  display:grid;grid-template-columns:1.1fr repeat(3,.6fr);gap:8px;padding:9px 5px;border-bottom:1px solid #25251b;
-  font-size:9px;align-items:center;transition:.12s ease
-}
-.compare-row:hover{background:#12140f}
-.compare-head{color:#6c6e60;text-transform:uppercase;letter-spacing:.1em;font-size:8px}
-.source-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px;box-shadow:0 0 7px currentColor}
-.wom-dot{background:#78aee3}.temple-dot{background:#d7b05d}
-.timeline{
-  height:270px;border:1px solid #413925;background:
-    radial-gradient(circle at 50% 45%,rgba(111,127,74,.08),transparent 42%),
-    linear-gradient(#0b0d09,#080906);position:relative;box-shadow:inset 0 0 24px rgba(0,0,0,.5)
-}
-.timeline:before{content:"TIMELINE SCRYING POOL";position:absolute;left:11px;top:8px;z-index:2;color:#4f574a;font-size:7px;letter-spacing:.2em}
-.timeline canvas{width:100%;height:100%}
-.toolbar{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:11px}
-.select,.small-input{
-  background:linear-gradient(#171811,#0c0d09);border:1px solid #51462f;color:#c7c0ae;padding:7px 9px;font-size:9px;outline:none;
-  box-shadow:inset 0 0 10px rgba(0,0,0,.45)
-}
-.list{display:grid;gap:7px}
-.item{
-  padding:10px 11px;border:1px solid #302d20;background:linear-gradient(90deg,#13150f,#0d0f0b);
-  display:flex;justify-content:space-between;gap:12px;align-items:center;position:relative;transition:.15s ease
-}
-.item:before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:#5e5434;opacity:.55}
-.item:hover{border-color:#57482b;transform:translateX(3px);background:#15170f}
-.item b{font-size:10px;color:#cfc8b6}.item small{display:block;color:#6e7366;font-size:8px;margin-top:3px}
-.badge{
-  font-size:8px;padding:4px 6px;border:1px solid #50442d;color:#a9a18e;background:#0b0d09;white-space:nowrap
-}
-.loader{
-  padding:35px;text-align:center;color:#8e825f;font-family:Georgia,serif;font-size:13px;letter-spacing:.06em;
-  animation:flicker 1.1s infinite
-}
-.empty{
-  padding:24px;border:1px dashed #3a3525;color:#777365;text-align:center;font-size:10px;
-  background:linear-gradient(135deg,rgba(255,255,255,.012),transparent)
-}
-.raw{
-  white-space:pre-wrap;word-break:break-word;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;
-  font-size:9px;color:#95a08b;background:#080a07;border:1px solid #383224;padding:12px;max-height:500px;overflow:auto;
-  box-shadow:inset 0 0 25px rgba(0,0,0,.6)
-}
-.raw::-webkit-scrollbar{width:10px}.raw::-webkit-scrollbar-track{background:#0b0c09}.raw::-webkit-scrollbar-thumb{background:#4c4029;border:2px solid #0b0c09}
-.footer{padding:28px 2px;color:#4e5148;font-size:9px;text-align:center;letter-spacing:.06em}
-.notice{
-  padding:11px 12px;border:1px solid #66532f;background:linear-gradient(#1e1b12,#12120d);color:#ceb87b;
-  font-size:9px;margin-bottom:10px;line-height:1.55;box-shadow:inset 3px 0 #8c6931
-}
-
-/* magical scanner overlay */
-.data-sigil{
-  position:fixed;right:26px;bottom:24px;width:68px;height:68px;border-radius:50%;z-index:40;pointer-events:none;
-  border:1px solid rgba(215,174,82,.20);opacity:.38;box-shadow:0 0 28px rgba(215,174,82,.08),inset 0 0 18px rgba(215,174,82,.05);
-}
-.data-sigil:before,.data-sigil:after{
-  content:"ᚱ";position:absolute;inset:7px;border:1px dashed rgba(215,174,82,.24);border-radius:50%;display:grid;place-items:center;color:#c99d4d;
-  animation:spin 12s linear infinite;font-family:Georgia,serif;font-size:22px
-}
-.data-sigil:after{content:"✦";inset:20px;animation-direction:reverse;animation-duration:7s;color:#76985c;font-size:13px}
-
-/* loading shimmer */
-body.scanning .card{box-shadow:0 18px 55px rgba(0,0,0,.50),0 0 22px rgba(222,181,90,.025)}
-body.scanning .brandmark{animation-duration:1.2s}
-body.scanning .data-sigil{opacity:.8}
-
-/* cursor spark */
-.cursor-spark{
-  position:fixed;width:5px;height:5px;border-radius:50%;background:#e8c56b;pointer-events:none;z-index:10000;
-  box-shadow:0 0 10px #e8c56b;animation:spark .65s ease forwards
-}
-
-/* micro rune dust in cards */
-.rune-dust{
-  position:absolute;width:3px;height:3px;border-radius:50%;background:#c6a958;pointer-events:none;opacity:.28;
-  animation:dust 5s linear infinite
-}
-
-@keyframes spin{to{transform:rotate(360deg)}}
-@keyframes orbPulse{0%,100%{box-shadow:0 0 18px rgba(221,175,79,.11),inset 0 0 14px rgba(255,229,149,.10)}50%{box-shadow:0 0 31px rgba(221,175,79,.23),inset 0 0 18px rgba(255,229,149,.15)}}
-@keyframes floatHalo{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(8px) rotate(2deg)}}
-@keyframes scanAcross{0%{left:-28%}100%{left:118%}}
-@keyframes flicker{0%,100%{opacity:1}50%{opacity:.54}}
-@keyframes panelIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-@keyframes spark{to{opacity:0;transform:translate(var(--dx),var(--dy)) scale(.2)}}
-@keyframes dust{0%{transform:translateY(0);opacity:0}20%{opacity:.28}100%{transform:translateY(-45px);opacity:0}}
-
-@media(max-width:1150px){
-  .metrics{grid-template-columns:repeat(3,1fr)}.skill-grid{grid-template-columns:repeat(3,1fr)}
-}
-@media(max-width:900px){
-  .hero,.section-grid{grid-template-columns:1fr}.health{display:none}.metrics{grid-template-columns:repeat(2,1fr)}
-  .boss-grid{grid-template-columns:repeat(2,1fr)}.rune-halo{opacity:.20}
-}
-@media(max-width:600px){
-  .shell{padding:9px}.brand{min-width:0}.brand small{display:none}.brand b{font-size:15px}.brandmark{width:38px;height:38px}
-  .topbar{top:4px;gap:8px}.search:before{display:none}.search input{padding:9px}.search .btn{padding:8px 10px}
-  .tabs{top:69px}.metrics,.skill-grid,.boss-grid{grid-template-columns:1fr}.hero-main{padding:24px 20px}.provider-card{padding:12px}
-  h1{font-size:54px}.rune-halo{width:210px;height:210px;right:-60px}.data-sigil{display:none}
-}
-
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-height:100vh;background:#090805;color:var(--text);font-family:Verdana,Arial,sans-serif;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;z-index:-3;background:
+radial-gradient(ellipse at 50% -12%,rgba(205,158,62,.2),transparent 34%),
+radial-gradient(circle at 10% 25%,rgba(70,103,49,.16),transparent 25%),
+radial-gradient(circle at 94% 32%,rgba(118,42,34,.14),transparent 26%),
+linear-gradient(#10110b,#090805 58%,#060503)}
+body:after{content:"";position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.035;background:repeating-linear-gradient(0deg,#fff 0 1px,transparent 1px 4px)}
+#runes{position:fixed;inset:0;width:100%;height:100%;z-index:-2;pointer-events:none}
+.horizon{position:fixed;top:0;left:0;right:0;height:370px;z-index:-2;pointer-events:none;opacity:.65;overflow:hidden}
+.horizon:before{content:"";position:absolute;left:-5%;right:-5%;bottom:60px;height:180px;background:#171c11;clip-path:polygon(0 86%,7% 56%,13% 69%,20% 38%,26% 63%,35% 23%,42% 62%,51% 33%,59% 66%,68% 29%,75% 57%,83% 31%,91% 64%,100% 43%,100% 100%,0 100%);filter:drop-shadow(0 -10px 18px #050504)}
+.horizon:after{content:"";position:absolute;inset:auto -4% 0;height:120px;background:radial-gradient(ellipse at 12% 100%,#11150d 0 18%,transparent 19%),radial-gradient(ellipse at 40% 100%,#11150d 0 25%,transparent 26%),radial-gradient(ellipse at 72% 100%,#12160e 0 22%,transparent 23%),radial-gradient(ellipse at 94% 100%,#10130c 0 18%,transparent 19%)}
+.shell{max-width:1540px;margin:auto;padding:18px;position:relative;z-index:1}.frame{border:3px ridge #6b5637;background:linear-gradient(160deg,rgba(40,34,23,.98),rgba(15,13,9,.98));box-shadow:var(--shadow);position:relative}.frame:before{content:"";position:absolute;inset:5px;border:1px solid rgba(232,194,105,.08);pointer-events:none}.frame:after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(30deg,rgba(255,255,255,.012) 0 1px,transparent 1px 8px)}
+.top{position:sticky;top:8px;z-index:80;display:flex;align-items:center;gap:10px;padding:9px;background:linear-gradient(#3b3020,#19140d);border:3px ridge #765f3d;box-shadow:0 14px 40px rgba(0,0,0,.55)}
+.brand{display:flex;align-items:center;gap:9px;min-width:250px}.brandorb{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;border:2px ridge #93723a;background:radial-gradient(circle at 34% 30%,#f8dc82,#7d5a26 18%,#2b2618 42%,#0e0d09 72%);color:#ffe8a0;font-family:Georgia,serif;font-size:20px;box-shadow:0 0 20px rgba(225,181,75,.18);animation:pulse 4s ease-in-out infinite}.brand b{font-family:Georgia,serif;color:#f2d889;font-size:18px;letter-spacing:.04em;text-shadow:2px 2px #000}.brand small{display:block;color:#837964;font-size:8px;letter-spacing:.15em;margin-top:2px}.search{flex:1;max-width:720px;display:flex;border:3px inset #5d4b30;background:#0d0a07;box-shadow:inset 0 0 20px rgba(0,0,0,.7)}.search:before{content:"🔎";width:40px;display:grid;place-items:center;border-right:1px solid #3d3120;filter:saturate(.7)}.search input{flex:1;min-width:0;border:0;outline:0;background:transparent;color:#fff0c0;padding:11px 12px}.search input::placeholder{color:#695f4d}.rsbtn{border:3px ridge #735b38;background:linear-gradient(#4a3920,#241a0f);color:#f0deb3;padding:9px 11px;cursor:pointer;font-weight:bold;font-size:10px;text-shadow:1px 1px #000;white-space:nowrap}.rsbtn:hover{filter:brightness(1.2)}.rsbtn.open{border-color:#97743c;background:linear-gradient(#604921,#2e2110);color:#ffe399}.rsbtn.green{border-color:#4e7042;background:linear-gradient(#2f4c27,#172315);color:#baf0b7}.health{display:flex;gap:5px;margin-left:auto}.lamp{padding:6px 7px;border:1px solid #473b28;background:#100e0a;font-size:8px;color:#786f5e}.lamp.ok{color:#86df8b;border-color:#3f633d}.lamp.bad{color:#ee8b7d;border-color:#6d3730}.lamp.busy{color:#efd074;border-color:#705a35;animation:flicker 1s infinite}
+.hero{margin-top:14px;display:grid;grid-template-columns:minmax(0,1.45fr) minmax(330px,.55fr);gap:12px}.heroMain{min-height:340px;padding:28px 30px;overflow:hidden;background:linear-gradient(90deg,rgba(15,13,9,.96) 0 55%,rgba(15,13,9,.80) 74%,rgba(15,13,9,.95)),radial-gradient(circle at 80% 40%,rgba(209,166,66,.14),transparent 28%)}.heroMain .scan{position:absolute;top:0;bottom:0;left:-30%;width:15%;background:linear-gradient(90deg,transparent,rgba(255,230,155,.15),transparent);transform:skewX(-12deg);opacity:0;pointer-events:none}.scanning .heroMain .scan{animation:scan 1.35s linear infinite;opacity:1}.wise{position:absolute;right:14px;bottom:-12px;width:min(295px,33%);max-height:330px;object-fit:contain;object-position:bottom;filter:drop-shadow(0 15px 18px #000) sepia(.06) saturate(.95);opacity:.88;z-index:1}.halo{position:absolute;right:70px;top:28px;width:245px;height:245px;border-radius:50%;border:1px solid rgba(226,188,96,.18);box-shadow:inset 0 0 35px rgba(226,188,96,.05),0 0 45px rgba(226,188,96,.05);animation:float 7s ease-in-out infinite}.halo:before,.halo:after{content:"ᚱ ✦ ᛉ ✧ ᚠ ✦ ᚾ ✧";position:absolute;inset:18px;border-radius:50%;border:1px dashed rgba(220,184,90,.18);display:grid;place-items:center;color:rgba(241,210,119,.18);font-family:Georgia,serif;letter-spacing:5px;animation:spin 30s linear infinite}.halo:after{inset:62px;animation-direction:reverse;animation-duration:17s;color:rgba(108,153,83,.2);font-size:13px}.eyebrow{position:relative;z-index:3;color:#91c27c;font-size:9px;font-weight:bold;letter-spacing:.22em;text-transform:uppercase}.hero h1{position:relative;z-index:3;font-family:Georgia,serif;font-size:clamp(45px,7.4vw,92px);line-height:.86;letter-spacing:-.055em;color:#f3ead4;margin:17px 0 16px;text-shadow:0 4px #050403}.hero h1:after{content:"";display:block;height:2px;width:min(410px,66%);margin-top:17px;background:linear-gradient(90deg,#ba8d3c,rgba(186,141,60,.1),transparent)}.lead{position:relative;z-index:3;max-width:760px;color:#aaa087;font-size:12px;line-height:1.7}.chips{position:relative;z-index:3;display:flex;flex-wrap:wrap;gap:6px;margin-top:18px}.chip{border:1px solid #51442d;background:#12100b;padding:6px 8px;color:#9f947d;font-size:8px}.sourceStack{padding:13px;display:grid;gap:8px;align-content:start}.sourceRune{display:grid;grid-template-columns:48px 1fr auto;gap:10px;align-items:center;padding:10px;border:1px solid #463b27;background:linear-gradient(90deg,#242016,#12100b);transition:.15s}.sourceRune:hover{transform:translateX(-3px);border-color:#765c31}.runeOrb{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;border:2px ridge #6e5732;background:radial-gradient(circle,#5b4826,#17140d 70%);font-family:Georgia,serif;font-weight:bold;color:#f5d97d}.sourceRune b{font-size:10px}.sourceRune small{display:block;color:#716b5c;font-size:8px;line-height:1.35;margin-top:3px}.srcStatus{font-size:8px;color:#716a59;text-transform:uppercase}.srcStatus.ok{color:#75d47f}.srcStatus.bad{color:#e37768}.srcStatus.busy{color:#e9c56e}
+.chatbar{margin-top:10px;border:3px ridge #5e4d32;background:#0d0b08;min-height:40px;padding:8px 10px;font-size:10px;line-height:1.45;box-shadow:inset 0 0 18px #000}.chatbar .blue{color:#79bdeb}.chatbar .yellow{color:#f3d15d}.chatbar .green{color:#72d17a}.chatbar .red{color:#eb7462}
+.tabs{position:sticky;top:70px;z-index:60;margin-top:10px;display:flex;gap:4px;overflow:auto;border:3px ridge #5f4e31;background:rgba(20,16,11,.95);padding:5px;backdrop-filter:blur(8px)}.tab{border:2px outset #4e402b;background:linear-gradient(#282116,#15110c);color:#897e68;padding:9px 11px;cursor:pointer;font-size:8px;font-weight:bold;letter-spacing:.08em;white-space:nowrap}.tab:hover{color:#e3d7b6}.tab.active{border-color:#896a37;background:linear-gradient(#49371d,#261c10);color:#f4d983;box-shadow:inset 0 0 10px rgba(235,199,100,.08)}.panel{display:none;margin-top:10px;animation:in .24s ease}.panel.active{display:block}.metrics{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}.metric{min-height:105px;padding:15px;background:linear-gradient(145deg,#292418,#11100b)}.metric label{display:block;color:#786f5c;font-size:7px;letter-spacing:.14em;text-transform:uppercase;font-weight:bold}.metric strong{display:block;color:#f0d687;font-size:24px;margin-top:8px;text-shadow:1px 2px #000}.metric small{display:block;color:#686657;font-size:8px;margin-top:5px}.grid2{display:grid;grid-template-columns:1.1fr .9fr;gap:10px;margin-top:10px}.section{padding:14px}.title{display:flex;align-items:center;justify-content:space-between;gap:9px;padding-bottom:9px;margin-bottom:10px;border-bottom:1px solid #3a3120}.title h2{font-family:Georgia,serif;color:#e9d292;font-size:18px;margin:0;text-shadow:1px 2px #000}.title span{font-size:7px;color:#686254;text-transform:uppercase;letter-spacing:.14em}.empty{padding:21px;text-align:center;border:1px dashed #3a3324;color:#746c5b;font-size:9px;background:#0e0d09}.rows{display:grid;gap:6px}.row{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;border:1px solid #30291c;background:#11100b;padding:9px 10px;transition:.12s}.row:hover{border-color:#5b482b;transform:translateX(2px)}.row b{font-size:9px;color:#d5cab0}.row small{display:block;color:#6e6859;font-size:7px;margin-top:3px}.badge{font-size:8px;color:#c7b88f;border:1px solid #4d402a;background:#0a0906;padding:4px 6px}.good{color:#72d57c!important}.bad{color:#e57564!important}.gold{color:#f0cc69!important}.purple{color:#c2a2eb!important}.blue{color:#7dbde7!important}
+.skills{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}.skill{position:relative;min-height:78px;padding:9px 8px 8px 43px;border:2px inset #4d3e29;background:linear-gradient(145deg,#252016,#11100b);transition:.15s}.skill:hover{filter:brightness(1.12);transform:translateY(-2px)}.skill img{position:absolute;left:9px;top:11px;width:27px;height:27px;image-rendering:pixelated;filter:drop-shadow(1px 2px #000)}.skill b{font-size:9px;color:#d6ccb4}.skill .lvl{float:right;color:#ffda71;font-weight:bold;font-size:13px}.skill .xp{clear:both;color:#746d5d;font-size:7px;margin-top:9px}.skill .rank{color:#696758;font-size:7px;margin-top:3px}.bosses{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.boss{min-height:104px;padding:12px;border:1px solid #403522;background:radial-gradient(circle at 86% 20%,rgba(132,55,36,.12),transparent 34%),linear-gradient(150deg,#262017,#100f0b);transition:.15s;position:relative;overflow:hidden}.boss:after{content:"☠";position:absolute;right:10px;top:7px;font-size:30px;color:rgba(207,155,67,.08)}.boss:hover{transform:translateY(-3px);border-color:#70552f}.boss b{font-size:9px;color:#c9bea5}.boss strong{display:block;color:#efd37e;font-size:22px;margin-top:9px}.boss small{color:#6d6758;font-size:7px}.table{width:100%;border-collapse:collapse;font-size:8px}.table th{text-align:left;color:#736b5a;text-transform:uppercase;font-size:7px;letter-spacing:.08em;border-bottom:1px solid #3d3322;padding:7px;background:#0e0d09}.table td{padding:7px;border-bottom:1px solid #262116;color:#b9ae96}.table tr:hover td{background:#14120d}.num{text-align:right!important;font-variant-numeric:tabular-nums}.progress{height:9px;border:1px solid #3e3322;background:#080704;margin-top:6px;overflow:hidden}.progress i{display:block;height:100%;background:linear-gradient(90deg,#5e7f45,#c09c46)}.tiers{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}.tier{padding:10px;border:1px solid #403521;background:#12100b;text-align:center}.tier b{display:block;color:#ead184;font-size:10px}.tier strong{display:block;font-size:17px;margin-top:5px}.portalGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.portal{display:block;text-decoration:none;padding:14px;border:1px solid #4b3f29;background:linear-gradient(145deg,#272117,#12100b);transition:.15s}.portal:hover{border-color:#8a6834;transform:translateY(-3px)}.portal b{color:#ebd38f;font-family:Georgia,serif;font-size:14px}.portal small{display:block;color:#756e5e;font-size:8px;line-height:1.45;margin-top:6px}.raw{max-height:380px;overflow:auto;white-space:pre-wrap;word-break:break-word;border:1px solid #3d3322;background:#080704;padding:10px;color:#8b957f;font:8px/1.45 Consolas,monospace}.notice{border-left:3px solid #9b7333;background:#18130c;padding:9px 10px;color:#c3ac75;font-size:8px;line-height:1.5;margin-bottom:9px}.sourceLegend{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}.sourceCard{border:1px solid #403522;background:#11100b;padding:10px}.sourceCard b{font-size:9px;color:#e0d1ab}.sourceCard small{display:block;color:#716a59;font-size:7px;line-height:1.45;margin-top:5px}.sourceCard em{display:block;font-style:normal;color:#9a824b;font-size:7px;margin-top:7px}.footer{text-align:center;padding:25px 4px 35px;color:#4f4a40;font-size:8px}.tooltip{position:fixed;z-index:2000;display:none;max-width:280px;padding:6px 8px;border:2px solid #e0d6bf;background:#100d09;color:#fff;font-size:9px;box-shadow:0 8px 24px #000;pointer-events:none}.spark{position:fixed;z-index:10000;pointer-events:none;width:4px;height:4px;border-radius:50%;background:#e7c65f;box-shadow:0 0 8px #e7c65f;animation:spark .55s ease forwards}.clogItems{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.clogItem{border:1px solid #3d3221;background:#11100b;padding:8px;min-height:59px}.clogItem b{font-size:8px}.clogItem small{display:block;color:#736b59;font-size:7px;margin-top:4px}
+@keyframes spin{to{transform:rotate(360deg)}}@keyframes pulse{50%{box-shadow:0 0 32px rgba(225,181,75,.3)}}@keyframes float{50%{transform:translateY(8px)}}@keyframes scan{to{left:120%}}@keyframes flicker{50%{opacity:.5}}@keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}@keyframes spark{to{opacity:0;transform:translate(var(--dx),var(--dy)) scale(.2)}}
+@media(max-width:1150px){.metrics{grid-template-columns:repeat(3,1fr)}.skills{grid-template-columns:repeat(4,1fr)}.bosses{grid-template-columns:repeat(3,1fr)}.portalGrid{grid-template-columns:repeat(2,1fr)}.sourceLegend{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:880px){.hero,.grid2{grid-template-columns:1fr}.health{display:none}.wise{opacity:.35;width:260px}.halo{opacity:.3}.skills{grid-template-columns:repeat(3,1fr)}.bosses{grid-template-columns:repeat(2,1fr)}.tiers{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:600px){.shell{padding:7px}.top{top:3px;flex-wrap:wrap}.brand{min-width:0;flex:0 0 auto}.brand small{display:none}.search{order:3;max-width:none;flex-basis:100%}.tabs{top:111px}.metrics,.skills,.bosses,.portalGrid,.sourceLegend,.clogItems{grid-template-columns:1fr}.heroMain{padding:22px 18px}.wise{width:200px}h1{font-size:50px!important}.tiers{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
-<canvas id="ambientCanvas" aria-hidden="true"></canvas>
-<div class="worldscape" aria-hidden="true"></div>
-<div class="data-sigil" aria-hidden="true"></div>
+<canvas id="runes" aria-hidden="true"></canvas><div class="horizon" aria-hidden="true"></div><div class="tooltip" id="tip"></div>
 <div class="shell">
-  <header class="topbar">
-    <div class="brand">
-      <div class="brandmark">☼</div>
-      <div><b>OSRS NEXUS</b><small>WISE OLD MAN × TEMPLE // ACCOUNT SCRYING ENGINE</small></div>
-    </div>
-    <form class="search" id="searchForm">
-      <input id="rsn" maxlength="12" autocomplete="off" placeholder="Enter RuneScape name">
-      <button class="btn" type="submit">SCAN PLAYER</button>
-    </form>
-    <div class="health">
-      <span class="pill" id="womHealth">WOM idle</span>
-      <span class="pill" id="templeHealth">Temple idle</span>
-    </div>
-  </header>
+<header class="top">
+  <div class="brand"><div class="brandorb">✦</div><div><b>OSRS OMNISCAPE</b><small>THE GRAND PUBLIC ACCOUNT LEDGER</small></div></div>
+  <form class="search" id="search"><input id="rsn" maxlength="12" autocomplete="off" spellcheck="false" placeholder="Enter an RSN..."><button class="rsbtn" type="submit">SCRY ACCOUNT</button></form>
+  <a class="rsbtn open" href="source.zip" download>OPEN SOURCE ↓</a>
+  <div class="health"><span class="lamp" id="womLamp">WOM</span><span class="lamp" id="templeLamp">TEMPLE</span><span class="lamp" id="rpLamp">RUNE_PROFILE</span><span class="lamp" id="cmlLamp">CML</span></div>
+</header>
 
-  <section class="hero">
-    <div class="card hero-main">
-      <div class="rune-halo" aria-hidden="true"></div>
-      <div class="scan-beam" aria-hidden="true"></div>
-      <div class="kicker">Grand Exchange Intelligence // Dual-Source Scrying</div>
-      <h1 id="displayName">Awaiting RSN</h1>
-      <div class="subtitle" id="subtitle">One search merges Wise Old Man and TempleOSRS into a single account profile: stats, bosses, gains, records, achievements, names, competitions, pets, collection-log telemetry, and source disagreement detection.</div>
-      <div class="meta" id="meta"></div>
-    </div>
-    <div class="card provider-card">
-      <div class="provider">
-        <div class="provider-icon">W</div>
-        <div><b>Wise Old Man</b><small>Player · achievements · records · groups · competitions · history</small></div>
-        <div class="provider-status" id="womStatus">idle</div>
-      </div>
-      <div class="provider">
-        <div class="provider-icon">T</div>
-        <div><b>TempleOSRS</b><small>Stats · gains · aliases · pets · collection log · competitions</small></div>
-        <div class="provider-status" id="templeStatus">idle</div>
-      </div>
-      <div class="provider">
-        <div class="provider-icon">Σ</div>
-        <div><b>Nexus Reconciliation</b><small>Compares independent sources instead of silently picking one</small></div>
-        <div class="provider-status" id="mergeStatus">waiting</div>
-      </div>
-    </div>
-  </section>
+<section class="hero">
+  <div class="frame heroMain">
+    <div class="scan"></div><div class="halo"></div>
+    <img class="wise" alt="Wise Old Man" src="https://oldschool.runescape.wiki/w/Special:Redirect/file/Wise_Old_Man.png" onerror="this.style.display='none'">
+    <div class="eyebrow">Public data scrying // no login // no account linking</div>
+    <h1 id="playerName">One RSN.<br>One ridiculous dossier.</h1>
+    <div class="lead" id="lead">Wise Old Man, TempleOSRS, RuneProfile, Crystal Math Labs and WikiSync each get exactly one job. No duplicated stat walls. No pretending one tracker has everything. Search a public RSN and Omniscape stitches together the strongest unique data from each source.</div>
+    <div class="chips" id="chips"><span class="chip">WOM · core + PvM</span><span class="chip">Temple · clog + pets</span><span class="chip">RuneProfile · progression</span><span class="chip">CML · history</span><span class="chip">WikiSync · fallback</span></div>
+  </div>
+  <aside class="frame sourceStack">
+    <div class="sourceRune"><div class="runeOrb" style="box-shadow:0 0 17px rgba(97,154,220,.18)">W</div><div><b>Wise Old Man</b><small>Current skills & bosses, EHP/EHB, achievements, groups, comps, names</small></div><span class="srcStatus" id="womStatus">idle</span></div>
+    <div class="sourceRune"><div class="runeOrb" style="box-shadow:0 0 17px rgba(228,182,87,.2)">T</div><div><b>TempleOSRS</b><small>Collection log, EHC, pets, recent items — proxied server-side</small></div><span class="srcStatus" id="templeStatus">idle</span></div>
+    <div class="sourceRune"><div class="runeOrb" style="box-shadow:0 0 17px rgba(169,126,214,.18)">R</div><div><b>RuneProfile</b><small>Quests, diaries, Combat Achievements, clan metadata, activity</small></div><span class="srcStatus" id="rpStatus">idle</span></div>
+    <div class="sourceRune"><div class="runeOrb" style="box-shadow:0 0 17px rgba(91,191,117,.16)">C</div><div><b>Crystal Math Labs</b><small>Overall XP records and 31-day historical progress</small></div><span class="srcStatus" id="cmlStatus">idle</span></div>
+    <div class="sourceRune"><div class="runeOrb">Σ</div><div><b>Fallback Rune</b><small>WikiSync only activates when RuneProfile quest data is absent</small></div><span class="srcStatus" id="wikiStatus">standby</span></div>
+  </aside>
+</section>
+<div class="chatbar" id="chat"><span class="blue">Welcome to OSRS Omniscape.</span> <span class="yellow">Wise Old Man:</span> Search someone. I have paperwork.</div>
 
-  <nav class="tabs" id="tabs">
-    <button class="tab active" data-tab="overview">OVERVIEW</button>
-    <button class="tab" data-tab="skills">SKILLS</button>
-    <button class="tab" data-tab="bosses">BOSSES</button>
-    <button class="tab" data-tab="gains">GAINS</button>
-    <button class="tab" data-tab="collection">COLLECTION</button>
-    <button class="tab" data-tab="achievements">ACHIEVEMENTS</button>
-    <button class="tab" data-tab="history">HISTORY</button>
-    <button class="tab" data-tab="audit">DATA AUDIT</button>
-  </nav>
+<nav class="tabs" id="tabs">
+  <button class="tab active" data-tab="overview">ACCOUNT</button><button class="tab" data-tab="skills">SKILLS</button><button class="tab" data-tab="pvm">PVM</button><button class="tab" data-tab="temple">TEMPLE VAULT</button><button class="tab" data-tab="progress">QUESTS & CA</button><button class="tab" data-tab="history">HISTORY</button><button class="tab" data-tab="social">SOCIAL</button><button class="tab" data-tab="portals">PORTALS</button><button class="tab" data-tab="audit">SOURCE AUDIT</button>
+</nav>
 
-  <main>
-    <section class="panel active" id="overview">
-      <div class="metrics" id="metrics"></div>
-      <div class="section-grid">
-        <div class="card section-card">
-          <div class="section-title"><h2>Account fingerprint</h2><span>merged</span></div>
-          <div id="fingerprint" class="empty">Run a scan.</div>
-        </div>
-        <div class="card section-card">
-          <div class="section-title"><h2>Source health</h2><span>freshness + sync</span></div>
-          <div id="sourceHealth" class="empty">Run a scan.</div>
-        </div>
-      </div>
-      <div class="section-grid">
-        <div class="card section-card">
-          <div class="section-title"><h2>Largest source disagreements</h2><span>WOM vs Temple</span></div>
-          <div id="disagreements" class="empty">Run a scan.</div>
-        </div>
-        <div class="card section-card">
-          <div class="section-title"><h2>Latest notable activity</h2><span>cross-source</span></div>
-          <div id="activity" class="empty">Run a scan.</div>
-        </div>
-      </div>
-    </section>
+<main>
+<section class="panel active" id="overview">
+  <div class="metrics" id="summaryMetrics"><div class="frame metric"><label>STATUS</label><strong>—</strong><small>Search an RSN</small></div></div>
+  <div class="grid2">
+    <div class="frame section"><div class="title"><h2>Adventurer Ledger</h2><span>WOM + RuneProfile metadata</span></div><div id="ledger" class="empty">No account loaded.</div></div>
+    <div class="frame section"><div class="title"><h2>Freshness Runes</h2><span>upstream telemetry</span></div><div id="freshness" class="empty">No source calls yet.</div></div>
+  </div>
+  <div class="grid2">
+    <div class="frame section"><div class="title"><h2>Latest Activity</h2><span>RuneProfile only</span></div><div id="activity" class="empty">No activity loaded.</div></div>
+    <div class="frame section"><div class="title"><h2>Achievements</h2><span>Wise Old Man milestones</span></div><div id="achievements" class="empty">No achievements loaded.</div></div>
+  </div>
+</section>
 
-    <section class="panel" id="skills">
-      <div class="card section-card">
-        <div class="section-title"><h2>Skill matrix</h2><span>latest recorded values</span></div>
-        <div class="skill-grid" id="skillsGrid"><div class="empty">Run a scan.</div></div>
-      </div>
-    </section>
+<section class="panel" id="skills"><div class="frame section"><div class="title"><h2>Skill Ledger</h2><span>Wise Old Man · Jagex fallback</span></div><div class="skills" id="skillGrid"></div></div></section>
+<section class="panel" id="pvm"><div class="frame section"><div class="title"><h2>Boss Kill Ledger</h2><span>Wise Old Man current snapshot</span></div><div class="bosses" id="bossGrid"></div></div></section>
 
-    <section class="panel" id="bosses">
-      <div class="card section-card">
-        <div class="section-title"><h2>Boss matrix</h2><span>KC reconciliation</span></div>
-        <div class="boss-grid" id="bossGrid"><div class="empty">Run a scan.</div></div>
-      </div>
-    </section>
+<section class="panel" id="temple">
+  <div class="metrics" id="templeMetrics"></div>
+  <div class="grid2">
+    <div class="frame section"><div class="title"><h2>Pet Menagerie</h2><span>TempleOSRS</span></div><div id="pets" class="empty">No Temple pet data.</div></div>
+    <div class="frame section"><div class="title"><h2>Recent Collection Log</h2><span>TempleOSRS lightweight endpoint</span></div><div id="recentClog" class="empty">No recent collection items.</div></div>
+  </div>
+  <div class="frame section" style="margin-top:10px"><div class="title"><h2>The Ancient Collection Vault</h2><button class="rsbtn open" id="vaultBtn" disabled>OPEN FULL TEMPLE VAULT</button></div><div class="notice">The full collection endpoint is deliberately not hit during normal search. Temple asks API clients to query only the collection data they actually need, so this heavy item payload is user-triggered.</div><div id="fullClog" class="empty">Vault sealed.</div></div>
+</section>
 
-    <section class="panel" id="gains">
-      <div class="section-grid">
-        <div class="card section-card">
-          <div class="section-title"><h2>Temple weekly gains</h2><span>skills + bosses</span></div>
-          <div id="gainsList" class="empty">Run a scan.</div>
-        </div>
-        <div class="card section-card">
-          <div class="section-title"><h2>WOM records</h2><span>tracked records</span></div>
-          <div id="recordsList" class="empty">Run a scan.</div>
-        </div>
-      </div>
-    </section>
+<section class="panel" id="progress">
+  <div class="metrics" id="progressMetrics"></div>
+  <div class="grid2">
+    <div class="frame section"><div class="title"><h2>Quest Tome</h2><span>RuneProfile · WikiSync fallback</span></div><div id="quests" class="empty">No progression source loaded.</div></div>
+    <div class="frame section"><div class="title"><h2>Achievement Diaries</h2><span>RuneProfile</span></div><div id="diaries" class="empty">No diary data.</div></div>
+  </div>
+  <div class="frame section" style="margin-top:10px"><div class="title"><h2>Combat Achievement Tiers</h2><span>RuneProfile</span></div><div class="tiers" id="caTiers"></div></div>
+</section>
 
-    <section class="panel" id="collection">
-      <div class="metrics" id="collectionMetrics"></div>
-      <div class="section-grid">
-        <div class="card section-card">
-          <div class="section-title">
-            <h2>Recent collection log</h2><span>Temple</span>
-          </div>
-          <div id="recentClog" class="empty">Run a scan.</div>
-        </div>
-        <div class="card section-card">
-          <div class="section-title">
-            <h2>Pets</h2><span>Temple</span>
-          </div>
-          <div id="petsList" class="empty">Run a scan.</div>
-        </div>
-      </div>
-      <div class="card section-card" style="margin-top:12px">
-        <div class="section-title">
-          <h2>Deep collection-log scan</h2>
-          <button class="btn secondary" id="deepClogBtn" onclick="loadDeepClog()" disabled>LOAD HEAVY DATA</button>
-        </div>
-        <div class="notice">This is intentionally on-demand. Temple's documentation asks clients to query only the collection-log data they need; the normal scan stays lightweight.</div>
-        <div id="deepClog" class="empty">Not loaded.</div>
-      </div>
-    </section>
+<section class="panel" id="history">
+  <div class="metrics" id="historyMetrics"></div>
+  <div class="grid2">
+    <div class="frame section"><div class="title"><h2>Personal Records</h2><span>Crystal Math Labs · overall XP</span></div><div id="cmlRecords" class="empty">No CML record data.</div></div>
+    <div class="frame section"><div class="title"><h2>31-Day Trail</h2><span>Crystal Math Labs</span></div><div id="cmlTrail" class="empty">No CML history data.</div></div>
+  </div>
+</section>
 
-    <section class="panel" id="achievements">
-      <div class="section-grid">
-        <div class="card section-card">
-          <div class="section-title"><h2>WOM achievements</h2><span>milestones</span></div>
-          <div id="achievementsList" class="empty">Run a scan.</div>
-        </div>
-        <div class="card section-card">
-          <div class="section-title"><h2>Competitions</h2><span>both providers</span></div>
-          <div id="competitionsList" class="empty">Run a scan.</div>
-        </div>
-      </div>
-    </section>
+<section class="panel" id="social">
+  <div class="grid2">
+    <div class="frame section"><div class="title"><h2>Name History</h2><span>Wise Old Man</span></div><div id="names" class="empty">No name data.</div></div>
+    <div class="frame section"><div class="title"><h2>Groups</h2><span>Wise Old Man</span></div><div id="groups" class="empty">No group data.</div></div>
+  </div>
+  <div class="frame section" style="margin-top:10px"><div class="title"><h2>Competitions</h2><span>Wise Old Man</span></div><div id="competitions" class="empty">No competition data.</div></div>
+</section>
 
-    <section class="panel" id="history">
-      <div class="card section-card">
-        <div class="section-title"><h2>WOM timeline</h2><span>on-demand metric history</span></div>
-        <div class="toolbar">
-          <select class="select" id="timelineMetric">
-            <option value="overall">Overall XP</option>
-            <option value="attack">Attack</option>
-            <option value="strength">Strength</option>
-            <option value="slayer">Slayer</option>
-            <option value="runecrafting">Runecraft</option>
-            <option value="ehp">EHP</option>
-            <option value="ehb">EHB</option>
-            <option value="tombs_of_amascut_expert">ToA Expert</option>
-            <option value="theatre_of_blood">Theatre of Blood</option>
-          </select>
-          <select class="select" id="timelinePeriod">
-            <option value="week">Week</option>
-            <option value="month" selected>Month</option>
-            <option value="year">Year</option>
-          </select>
-          <button class="btn secondary" onclick="loadTimeline()">LOAD TIMELINE</button>
-        </div>
-        <div class="timeline"><canvas id="timelineCanvas"></canvas></div>
-        <div id="timelineCaption" style="margin-top:8px;color:#687261;font-size:10px">No timeline loaded.</div>
-      </div>
-      <div class="section-grid">
-        <div class="card section-card">
-          <div class="section-title"><h2>Name intelligence</h2><span>WOM + Temple</span></div>
-          <div id="namesList" class="empty">Run a scan.</div>
-        </div>
-        <div class="card section-card">
-          <div class="section-title"><h2>Groups</h2><span>WOM</span></div>
-          <div id="groupsList" class="empty">Run a scan.</div>
-        </div>
-      </div>
-    </section>
+<section class="panel" id="portals">
+  <div class="frame section"><div class="title"><h2>External Teleports</h2><span>open the original source</span></div><div class="notice">These sites are useful, but their player data overlaps lanes already rendered above. Omniscape links them instead of duplicating the same information.</div><div class="portalGrid" id="portalGrid"></div></div>
+  <div class="frame section" style="margin-top:10px"><div class="title"><h2>Why each source gets one job</h2><span>no feature spam</span></div><div class="sourceLegend"><div class="sourceCard"><b>Wise Old Man</b><small>The account spine: current skill/boss state, EHP/EHB and WOM-native tracking/social metadata.</small><em>NOT used for collection log or quests.</em></div><div class="sourceCard"><b>TempleOSRS</b><small>The collection specialist: EHC, pets, collection sync and recent/full collection items.</small><em>NOT used for skills or gains here.</em></div><div class="sourceCard"><b>RuneProfile</b><small>The progression specialist: quests, diaries, Combat Achievements and activity feed.</small><em>NOT used for skills/clog rendering.</em></div><div class="sourceCard"><b>Crystal Math Labs</b><small>The old historical ledger: overall XP records and account movement over time.</small><em>NOT used as a second current hiscores.</em></div><div class="sourceCard"><b>WikiSync</b><small>Fallback progression data from RuneLite/Wiki integration.</small><em>Only activates if RuneProfile quests fail.</em></div></div></div>
+</section>
 
-    <section class="panel" id="audit">
-      <div class="section-grid">
-        <div class="card section-card">
-          <div class="section-title"><h2>Normalized snapshot</h2><span>Nexus model</span></div>
-          <div class="raw" id="normalizedRaw">Run a scan.</div>
-        </div>
-        <div class="card section-card">
-          <div class="section-title"><h2>Provider failures</h2><span>nothing hidden</span></div>
-          <div id="errorsList" class="empty">No scan yet.</div>
-        </div>
-      </div>
-      <div class="section-grid">
-        <div class="card section-card">
-          <div class="section-title"><h2>Raw WOM</h2><span>debug</span></div>
-          <div class="raw" id="womRaw">—</div>
-        </div>
-        <div class="card section-card">
-          <div class="section-title"><h2>Raw Temple</h2><span>debug</span></div>
-          <div class="raw" id="templeRaw">—</div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="footer">Unofficial OSRS data mashup. Data remains owned/served by its respective providers. No credentials, API keys, or account login required.</footer>
+<section class="panel" id="audit">
+  <div class="frame section"><div class="title"><h2>Source Audit</h2><span>nothing hidden</span></div><div id="auditSummary" class="empty">Run a search.</div></div>
+  <div class="grid2"><div class="frame section"><div class="title"><h2>Normalized Debug</h2><span>client model</span></div><pre class="raw" id="normalized">—</pre></div><div class="frame section"><div class="title"><h2>Raw Aggregator Payload</h2><span>/api/lookup</span></div><pre class="raw" id="raw">—</pre></div></div>
+</section>
+</main>
+<footer class="footer">Unofficial OSRS project. No passwords. No account linking. Jagex and Old School RuneScape assets belong to their respective owners. OSRS imagery is loaded from the Old School RuneScape Wiki.</footer>
 </div>
-
 <script>
-const WOM='https://api.wiseoldman.net/v2';
-const TEMPLE='https://templeosrs.com/api';
-let currentRSN='';
-let raw={wom:{},temple:{}};
-let errors=[];
-let model=null;
-
-const SKILLS=['overall','attack','defence','strength','hitpoints','ranged','prayer','magic','cooking','woodcutting','fletching','fishing','firemaking','crafting','smithing','mining','herblore','agility','thieving','slayer','farming','runecrafting','hunter','construction'];
-const LABELS={
-  runecrafting:'Runecraft',theatre_of_blood:'Theatre of Blood',theatre_of_blood_hard_mode:'ToB Hard Mode',
-  chambers_of_xeric:'Chambers of Xeric',chambers_of_xeric_challenge_mode:'CoX Challenge Mode',
-  tombs_of_amascut:'Tombs of Amascut',tombs_of_amascut_expert:'ToA Expert',
-  commander_zilyana:'Commander Zilyana',general_graardor:'General Graardor',
-  kril_tsutsaroth:"K'ril Tsutsaroth",kreearra:"Kree'Arra",phantom_muspah:'Phantom Muspah',
-  royal_titans:'Royal Titans',the_whisperer:'The Whisperer',duke_sucellus:'Duke Sucellus',
-  vardorvis:'Vardorvis',leviathan:'The Leviathan',yama:'Yama'
-};
-
-const $=id=>document.getElementById(id);
+const $=id=>document.getElementById(id), arr=x=>Array.isArray(x)?x:(x&&typeof x==='object'?Object.values(x):[]), data=x=>x?.data??x;
+let payload=null, currentRSN='', model=null;
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const human=s=>LABELS[s]||String(s||'').replaceAll('_',' ').replace(/\b\w/g,m=>m.toUpperCase());
-const num=n=>Number.isFinite(+n)?Math.round(+n).toLocaleString():'—';
-const dec=(n,d=2)=>Number.isFinite(+n)?(+n).toLocaleString(undefined,{maximumFractionDigits:d}):'—';
-const pct=(a,b)=>Number.isFinite(+a)&&Number.isFinite(+b)&&+b>0?`${((+a/+b)*100).toFixed(1)}%`:'—';
-const arr=v=>Array.isArray(v)?v:(v&&typeof v==='object'?Object.values(v):[]);
-const dataOf=v=>v&&typeof v==='object'&&v.data!==undefined?v.data:v;
-const ago=v=>{
-  if(!v)return 'unknown';
-  let d;
-  if(typeof v==='number'||/^\d+$/.test(String(v))) d=new Date(+v*(+v<1e12?1000:1));
-  else d=new Date(v);
-  if(!Number.isFinite(d.getTime()))return String(v);
-  const s=Math.max(0,(Date.now()-d.getTime())/1000);
-  if(s<60)return `${Math.floor(s)}s ago`; if(s<3600)return `${Math.floor(s/60)}m ago`;
-  if(s<86400)return `${Math.floor(s/3600)}h ago`; if(s<2592000)return `${Math.floor(s/86400)}d ago`;
-  return d.toLocaleDateString();
-};
-function pick(obj,...paths){
-  for(const p of paths){
-    let v=obj;
-    for(const key of p.split('.')) v=v?.[key];
-    if(v!==undefined&&v!==null)return v;
-  }
-}
-async function fetchJSON(url,source,key){
-  try{
-    const r=await fetch(url,{headers:{'Accept':'application/json'}});
-    if(!r.ok)throw new Error(`HTTP ${r.status}`);
-    const text=await r.text();
-    let j;
-    try{j=JSON.parse(text)}catch{throw new Error('Non-JSON response')}
-    raw[source][key]=j;
-    return j;
-  }catch(e){
-    errors.push({source,key,url,error:e.message});
-    raw[source][key]={__error:e.message};
-    return null;
-  }
-}
-function setProvider(which,state,text){
-  const a=$(which+'Status'),b=$(which+'Health');
-  if(a){a.className='provider-status '+state;a.textContent=text}
-  if(b){b.className='pill '+state;b.textContent=(which==='wom'?'WOM ':'Temple ')+text}
-}
-function loadState(){
-  document.body.classList.add('scanning');
-  $('mergeStatus').className='provider-status busy';$('mergeStatus').textContent='merging';
-  setProvider('wom','busy','loading');setProvider('temple','busy','loading');
-  $('displayName').textContent=currentRSN||'Scanning…';
-  $('subtitle').textContent='Querying both tracking networks and normalizing their different response models…';
-  $('deepClogBtn').disabled=true;
-}
-function setTab(name){
-  document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.tab===name));
-  document.querySelectorAll('.panel').forEach(x=>x.classList.toggle('active',x.id===name));
-}
-$('tabs').addEventListener('click',e=>{const t=e.target.closest('.tab');if(t)setTab(t.dataset.tab)});
-$('searchForm').addEventListener('submit',e=>{e.preventDefault();scan($('rsn').value.trim())});
+const num=v=>Number.isFinite(+v)?Math.round(+v).toLocaleString():'—';
+const dec=(v,d=2)=>Number.isFinite(+v)?(+v).toLocaleString(undefined,{maximumFractionDigits:d}):'—';
+const human=s=>String(s??'').replaceAll('_',' ').replace(/\b\w/g,m=>m.toUpperCase()).replace('Kril Tsutsaroth',"K'ril Tsutsaroth").replace('Kreearra',"Kree'Arra").replace('Runecrafting','Runecraft');
+const pick=(o,...ps)=>{for(const p of ps){let v=o;for(const k of p.split('.'))v=v?.[k];if(v!==undefined&&v!==null)return v}};
+const ago=v=>{if(v==null)return 'unknown';let d;if(typeof v==='number'||/^\d+$/.test(String(v))){let n=+v;d=new Date(n<1e12?n*1000:n)}else d=new Date(v);if(!Number.isFinite(d.getTime()))return String(v);const s=Math.max(0,(Date.now()-d)/1000);if(s<60)return Math.floor(s)+'s ago';if(s<3600)return Math.floor(s/60)+'m ago';if(s<86400)return Math.floor(s/3600)+'h ago';if(s<2592000)return Math.floor(s/86400)+'d ago';return d.toLocaleDateString()};
+const wikiFile=name=>'https://oldschool.runescape.wiki/w/Special:Redirect/file/'+encodeURIComponent(name.replaceAll(' ','_'));
+function chat(text,cls='blue'){$('chat').innerHTML=`<span class="${cls}">${esc(text)}</span>`}
+function metric(label,value,sub){return `<div class="frame metric"><label>${esc(label)}</label><strong>${esc(value)}</strong><small>${esc(sub)}</small></div>`}
+function rows(items){return items.length?`<div class="rows">${items.map(x=>`<div class="row"><div><b>${esc(x.a)}</b><small>${esc(x.b||'')}</small></div>${x.c?`<span class="badge ${x.cls||''}">${esc(x.c)}</span>`:''}</div>`).join('')}</div>`:'<div class="empty">Nothing returned.</div>'}
+function sourceOk(x){return !!x?.ok}
+function status(id,ok,text){const el=$(id+'Status'),lamp=$(id+'Lamp');if(el){el.className='srcStatus '+(ok?'ok':'bad');el.textContent=text}if(lamp){lamp.className='lamp '+(ok?'ok':'bad');lamp.textContent=id.toUpperCase()+' '+(ok?'✓':'×')}}
+function busy(){document.body.classList.add('scanning');['wom','temple','rp','cml'].forEach(id=>{const e=$(id+'Status'),l=$(id+'Lamp');if(e){e.className='srcStatus busy';e.textContent='scrying'}if(l){l.className='lamp busy';l.textContent=id.toUpperCase()+' …'}});$('wikiStatus').textContent='standby';chat('Wise Old Man: Hold on, I am asking four databases at once.','yellow')}
+function skillName(k){const map={runecrafting:'Runecraft',tombs_of_amascut_expert:'Tombs of Amascut: Expert'};return map[k]||human(k)}
+function skillIcon(k){let n=k==='runecrafting'?'Runecraft':human(k);return wikiFile(n+'_icon.png')}
 
-async function scan(rsn){
-  if(!rsn)return;
-  currentRSN=rsn;history.replaceState(null,'',`?rsn=${encodeURIComponent(rsn)}`);
-  raw={wom:{},temple:{}};errors=[];model=null;loadState();
+$('tabs').onclick=e=>{const t=e.target.closest('.tab');if(!t)return;document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x===t));document.querySelectorAll('.panel').forEach(x=>x.classList.toggle('active',x.id===t.dataset.tab))};
+$('search').onsubmit=e=>{e.preventDefault();lookup($('rsn').value.trim())};
+$('vaultBtn').onclick=loadVault;
 
-  const e=encodeURIComponent(rsn);
-  const womReq={
-    player:fetchJSON(`${WOM}/players/${e}`,'wom','player'),
-    achievements:fetchJSON(`${WOM}/players/${e}/achievements`,'wom','achievements'),
-    records:fetchJSON(`${WOM}/players/${e}/records`,'wom','records'),
-    competitions:fetchJSON(`${WOM}/players/${e}/competitions`,'wom','competitions'),
-    groups:fetchJSON(`${WOM}/players/${e}/groups`,'wom','groups'),
-    names:fetchJSON(`${WOM}/players/${e}/names`,'wom','names')
-  };
-  const templeReq={
-    info:fetchJSON(`${TEMPLE}/player_info.php?player=${e}&dateformat=unix&cloginfo=1&formattedrsn=1`,'temple','info'),
-    stats:fetchJSON(`${TEMPLE}/player_stats.php?player=${e}&bosses=1`,'temple','stats'),
-    gains:fetchJSON(`${TEMPLE}/player_gains.php?player=${e}&time=week&bosses=1`,'temple','gains'),
-    names:fetchJSON(`${TEMPLE}/player/player_names.php?player=${e}`,'temple','names'),
-    competitions:fetchJSON(`${TEMPLE}/player_competitions.php?player=${e}`,'temple','competitions'),
-    pets:fetchJSON(`${TEMPLE}/pets/pet_count.php?player=${e}&count=1`,'temple','pets'),
-    recent:fetchJSON(`${TEMPLE}/collection-log/player_recent_items.php?player=${e}&count=25`,'temple','recent')
-  };
-
-  const [wom,temple]=await Promise.all([
-    Promise.all(Object.entries(womReq).map(async([k,p])=>[k,await p])).then(Object.fromEntries),
-    Promise.all(Object.entries(templeReq).map(async([k,p])=>[k,await p])).then(Object.fromEntries)
-  ]);
-
-  setProvider('wom',wom.player?'ok':'err',wom.player?'online':'failed');
-  setProvider('temple',temple.info||temple.stats?'ok':'err',(temple.info||temple.stats)?'online':'failed');
-  model=normalize(wom,temple);
-  renderAll();
-  $('mergeStatus').className='provider-status ok';$('mergeStatus').textContent='complete';document.body.classList.remove('scanning');
-  $('deepClogBtn').disabled=!(temple.info||temple.stats);
+async function lookup(rsn){
+ if(!rsn)return;currentRSN=rsn;busy();history.replaceState(null,'','?rsn='+encodeURIComponent(rsn));$('playerName').innerHTML=esc(rsn)+'<br><span style="color:#d9bd70">is being scryed.</span>';$('vaultBtn').disabled=true;
+ try{
+   const r=await fetch('/api/lookup?rsn='+encodeURIComponent(rsn));payload=await r.json();if(!r.ok)throw new Error(payload.error||'Lookup failed');model=normalize(payload);render();chat(`Wise Old Man: I found ${model.name}. The paperwork is obscene.`,'green');
+ }catch(e){chat('Lookup failed: '+e.message,'red');$('lead').textContent='The aggregator request failed. If you opened index.html directly, deploy the included Cloudflare Worker—the API proxy is required, especially for TempleOSRS.';}
+ finally{document.body.classList.remove('scanning')}
 }
 
-function normalize(w,t){
-  const wp=w.player||{};
-  const snap=wp.latestSnapshot||wp.latest_snapshot||wp.snapshot||{};
-  const wd=snap.data||{};
-  const ts=dataOf(t.stats)||{};
-  const ti=dataOf(t.info)||{};
-  const tg=dataOf(t.gains)||{};
-  const tp=dataOf(t.pets)||{};
-  const tr=dataOf(t.recent)||{};
-  const tn=dataOf(t.names)||{};
-  const tc=dataOf(t.competitions)||{};
-
-  const skills={};
-  for(const s of SKILLS){
-    const ws=wd.skills?.[s]||{};
-    const k= s==='overall'?'Overall':human(s);
-    const tv=pick(ts,k,s,human(s),`${k}_xp`,`${s}_xp`);
-    const tl=pick(ts,`${k}_level`,`${s}_level`);
-    const trank=pick(ts,`${k}_rank`,`${s}_rank`);
-    skills[s]={
-      wom:{xp:ws.experience,level:ws.level,rank:ws.rank},
-      temple:{xp:tv,level:tl,rank:trank}
-    };
-  }
-
-  const bosses={};
-  const wb=wd.bosses||{};
-  Object.entries(wb).forEach(([k,v])=>bosses[k]={wom:{kc:v?.kills,rank:v?.rank},temple:{}});
-  Object.entries(ts).forEach(([k,v])=>{
-    if(typeof v!=='number'&&typeof v!=='string')return;
-    const lower=k.toLowerCase();
-    if(/(_rank|_level|_ehp)$/.test(lower)||SKILLS.some(s=>lower===s||lower===human(s).toLowerCase()))return;
-    const match=Object.keys(bosses).find(b=>lower===b.toLowerCase()||human(b).toLowerCase()===lower);
-    if(match)bosses[match].temple.kc=+v;
-  });
-
-  return {
-    name:pick(wp,'displayName','username')||pick(ti,'player_name_with_capitalization','Username','username')||currentRSN,
-    type:pick(wp,'type')??pick(ti,'Game mode','game_mode'),
-    build:pick(wp,'build'),
-    country:pick(wp,'country')||pick(ti,'Country'),
-    xp:pick(wp,'exp')??skills.overall?.wom?.xp??skills.overall?.temple?.xp,
-    ehp:pick(wp,'ehp')??pick(ts,'Ehp','EHP'),
-    ehb:pick(wp,'ehb')??pick(ts,'Ehb','EHB'),
-    ttm:pick(wp,'ttm'),
-    tt200m:pick(wp,'tt200m','ttm200m'),
-    womUpdated:pick(wp,'updatedAt','lastChangedAt'),
-    templeUpdated:pick(ti,'Last changed','last_changed')||pick(ts,'date'),
-    clogSynced:pick(ti,'collection_log.log_synced','collection_log.logSynced'),
-    clogLast:pick(ti,'collection_log.last_changed','collection_log.lastChecked'),
-    skills,bosses,
-    achievements:arr(w.achievements),
-    records:arr(w.records),
-    womCompetitions:arr(w.competitions),
-    groups:arr(w.groups),
-    womNames:arr(w.names),
-    templeNames:tn,
-    templeCompetitions:arr(tc),
-    gains:tg,
-    pets:tp,
-    recentCollections:arr(tr)
-  };
+function normalize(p){
+ const s=p.sources||{}, wom=s.wom||{}, wp=data(wom.player?.data)||wom.player?.data||{};
+ const snap=wp.latestSnapshot||wp.latest_snapshot||wp.snapshot||{}, wd=snap.data||{};
+ const rpSum=data(s.runeProfile?.summary?.data)||{}, rpQ=data(s.runeProfile?.quests?.data)||{}, rpD=data(s.runeProfile?.diaries?.data)||{}, rpCA=data(s.runeProfile?.combatAchievements?.data)||{}, rpAct=data(s.runeProfile?.activities?.data)||{};
+ const ti=data(s.temple?.info?.data)||{}, tp=data(s.temple?.pets?.data)||{}, tr=data(s.temple?.recent?.data)||{};
+ const jg=s.jagexFallback?.parsed||{}; const skills=Object.keys(wd.skills||{}).length?(wd.skills||{}):(jg.skills||{}), bosses=wd.bosses||{};
+ const quests=arr(pick(rpQ,'quests')||rpQ);
+ const diaries=arr(pick(rpD,'achievementDiaries','diaries')||rpD);
+ const cas=arr(pick(rpCA,'combatAchievements','tiers')||rpCA);
+ const activities=arr(pick(rpAct,'activities')||rpAct);
+ const fallback=data(s.wikiSync?.data)||null;
+ return {name:wp.displayName||wp.username||rpSum.username||pick(ti,'player_name_with_capitalization','Username')||p.rsn,type:wp.type||rpSum.accountType?.name||rpSum.accountType,build:wp.build,country:wp.country||pick(ti,'Country','country'),ehp:wp.ehp,ehb:wp.ehb,ttm:wp.ttm,tt200m:wp.tt200m||wp.ttm200m,xp:wp.exp||skills.overall?.experience,updated:wp.updatedAt||wp.lastChangedAt,skills,bosses,womAchievements:arr(data(wom.achievements?.data)),groups:arr(data(wom.groups?.data)),competitions:arr(data(wom.competitions?.data)),names:arr(data(wom.names?.data)),templeInfo:ti,pets:tp,recent:arr(tr),rpSummary:rpSum,quests,diaries,cas,activities,wikiFallback:fallback,cml:s.cml,sources:s};
 }
 
-function renderAll(){
-  const m=model;
-  $('displayName').textContent=m.name;
-  $('subtitle').textContent='A living account relic forged from two tracking networks. Every visible metric keeps its source provenance; disagreements become intelligence instead of getting buried.';
-  const meta=[
-    m.type&&`Type: ${human(m.type)}`,m.build&&`Build: ${human(m.build)}`,m.country&&`Country: ${m.country}`,
-    m.womUpdated&&`WOM: ${ago(m.womUpdated)}`,m.templeUpdated&&`Temple: ${ago(m.templeUpdated)}`
-  ].filter(Boolean);
-  $('meta').innerHTML=meta.map(x=>`<span>${esc(x)}</span>`).join('');
+function render(){
+ const m=model,s=m.sources;$('playerName').innerHTML=esc(m.name)+'<br><span style="color:#d9bd70">public account dossier.</span>';$('lead').textContent='One account, five distinct public-data lanes. Omniscape does not render duplicate features just because another API can also provide them.';
+ $('chips').innerHTML=[m.type&&'Account: '+human(m.type),m.build&&'Build: '+human(m.build),m.country&&'Country: '+m.country,m.updated&&'WOM updated '+ago(m.updated),(!sourceOk(s.wom?.player)&&sourceOk(s.jagexFallback))&&'Skills fallback: Jagex HiScores'].filter(Boolean).map(x=>`<span class="chip">${esc(x)}</span>`).join('');
+ status('wom',sourceOk(s.wom?.player),'loaded');status('temple',sourceOk(s.temple?.info)||sourceOk(s.temple?.pets),'proxied');status('rp',sourceOk(s.runeProfile?.summary),'loaded');status('cml',!!s.cml?.ok,'loaded');$('wikiStatus').className='srcStatus '+(s.wikiSync?.ok?'ok':'');$('wikiStatus').textContent=s.wikiSync?.ok?'fallback used':'standby';
+ renderOverview();renderSkills();renderPvm();renderTemple();renderProgress();renderHistory();renderSocial();renderPortals();renderAudit();$('vaultBtn').disabled=!sourceOk(s.temple?.info);
+}
+function renderOverview(){const m=model,rp=m.rpSummary,quest=rp.quests||{},clan=rp.clan;const totalLevel=rp.skills?.totalLevel||Object.entries(m.skills).filter(([k])=>k!=='overall').reduce((a,[,v])=>a+(+v.level||0),0);const bossTotal=Object.values(m.bosses).reduce((a,v)=>a+Math.max(0,+v.kills||0),0);$('summaryMetrics').innerHTML=[metric('TOTAL LEVEL',num(totalLevel),'RuneProfile summary / WOM fallback'),metric('TOTAL XP',num(m.xp),'WOM · Jagex fallback'),metric('EHP',dec(m.ehp),'Wise Old Man'),metric('EHB',dec(m.ehb),'Wise Old Man'),metric('VISIBLE BOSS KC',num(bossTotal),'Wise Old Man'),metric('QUESTS',quest.completed!=null?num(quest.completed)+' / '+num(quest.total):'—','RuneProfile')].join('');
+ $('ledger').className='';$('ledger').innerHTML=rows([{a:'Account type',b:human(m.type||rp.accountType?.name||'unknown'),c:m.build?human(m.build):''},{a:'Clan',b:clan?.name||rp.groupName||'No RuneProfile clan metadata',c:clan?.title||''},{a:'Time to max',b:Number.isFinite(+m.ttm)?dec(m.ttm,1)+' efficient hours':'Not returned',c:''},{a:'Time to 200m all',b:Number.isFinite(+m.tt200m)?dec(m.tt200m,1)+' efficient hours':'Not returned',c:''}]);
+ const statuses=[['WOM player',m.sources.wom?.player],['Temple info',m.sources.temple?.info],['Temple pets',m.sources.temple?.pets],['RuneProfile summary',m.sources.runeProfile?.summary],['CML bundle',{ok:m.sources.cml?.ok,ms:null}],['WikiSync fallback',m.sources.wikiSync],['Jagex skill fallback',m.sources.jagexFallback]].map(([a,x])=>({a,b:x?((x.ok?'OK':'FAIL')+(x.ms!=null?' · '+x.ms+'ms':'')):'not called',c:x?.ok?'✓':'×',cls:x?.ok?'good':'bad'}));$('freshness').className='';$('freshness').innerHTML=rows(statuses);
+ $('activity').className='';$('activity').innerHTML=rows(m.activities.slice(0,12).map(x=>({a:pick(x,'enriched.title','enriched.name','type')||human(x.type),b:x.createdAt?ago(x.createdAt):'',c:human(x.type||'')})));
+ $('achievements').className='';$('achievements').innerHTML=rows(m.womAchievements.slice().reverse().slice(0,12).map(x=>({a:x.name||human(x.metric),b:x.createdAt?ago(x.createdAt):human(x.metric||''),c:x.threshold!=null?num(x.threshold):''})));
+}
+function renderSkills(){const entries=Object.entries(model.skills).filter(([k])=>k!=='overall');$('skillGrid').innerHTML=entries.length?entries.map(([k,v])=>`<div class="skill" data-examine="${esc(skillName(k))}: ${num(v.experience)} XP, rank ${num(v.rank)}"><img src="${skillIcon(k)}" alt="" onerror="this.style.display='none'"><b>${esc(skillName(k))}</b><span class="lvl">${num(v.level)}</span><div class="xp">${num(v.experience)} XP</div><div class="rank">Rank ${num(v.rank)}</div></div>`).join(''):'<div class="empty">Neither WOM nor the official Jagex fallback returned ranked skill data.</div>'}
+function renderPvm(){const list=Object.entries(model.bosses).filter(([,v])=>+v.kills>0).sort((a,b)=>(+b[1].kills)-(+a[1].kills));$('bossGrid').innerHTML=list.length?list.map(([k,v])=>`<div class="boss" data-examine="Wise Old Man boss snapshot"><b>${esc(skillName(k))}</b><strong>${num(v.kills)}</strong><small>Rank ${num(v.rank)}</small></div>`).join(''):'<div class="empty">No ranked boss KCs returned by WOM.</div>'}
+function renderTemple(){const ti=model.templeInfo,tp=model.pets,ci=pick(ti,'collection_log')||{},petMap=pick(tp,'pets')||{},owned=Object.entries(petMap).filter(([,v])=>+v===1);$('templeMetrics').innerHTML=[metric('PETS',num(pick(tp,'pet_count')??owned.length),'TempleOSRS'),metric('PET HOURS',dec(pick(tp,'pet_hours'),1),'Temple estimate'),metric('CLOG SYNC',pick(ci,'log_synced')?'SYNCED':'UNKNOWN','Temple plugin'),metric('LAST CLOG',pick(ci,'last_changed')?ago(pick(ci,'last_changed')):'—','Temple'),metric('RECENT ITEMS',num(model.recent.length),'lightweight request'),metric('FULL EHC','VAULT','loaded on demand')].join('');$('pets').className='';$('pets').innerHTML=rows(owned.map(([k])=>({a:human(k),b:'Owned pet',c:'✓',cls:'good'})));$('recentClog').className='';$('recentClog').innerHTML=rows(model.recent.slice(0,25).map(x=>({a:pick(x,'name')||'Collection item',b:pick(x,'date_unix','date')?ago(pick(x,'date_unix','date')):'Temple recent item',c:pick(x,'notable_item')?'NOTABLE':'',cls:pick(x,'notable_item')?'gold':''})))}
+async function loadVault(){const b=$('vaultBtn');b.disabled=true;b.textContent='UNSEALING…';$('fullClog').className='empty';$('fullClog').textContent='Temple vault request in progress…';try{const r=await fetch('/api/temple-clog?rsn='+encodeURIComponent(currentRSN)),j=await r.json();if(!r.ok||!j.temple?.ok)throw new Error(j.temple?.error||'Temple vault failed');const d=data(j.temple.data)||{},items=pick(d,'items')||{};const flat=[];const walk=o=>{if(!o||typeof o!=='object')return;for(const [k,v] of Object.entries(o)){if(v&&typeof v==='object'&&('id'in v||'count'in v||'date'in v))flat.push([k,v]);else if(v&&typeof v==='object')walk(v)}};walk(items);$('fullClog').className='';$('fullClog').innerHTML=`<div class="metrics">${metric('COLLECTIONS',num(pick(d,'total_collections_finished'))+' / '+num(pick(d,'total_collections_available')), 'Temple full log')}${metric('CLOG RANK',num(pick(d,'collections_hiscores_rank')),'Temple')}${metric('EHC',dec(pick(d,'ehc'),2),'third-age algorithm')}${metric('EHC GILDED',dec(pick(d,'ehc_gilded'),2),'gilded algorithm')}${metric('CATEGORIES',num(pick(d,'total_categories_finished'))+' / '+num(pick(d,'total_categories_available')),'Temple')}${metric('ITEMS RETURNED',num(flat.length),'flat payload')}</div><div class="clogItems" style="margin-top:9px">${flat.slice(0,300).map(([k,v])=>`<div class="clogItem"><b>${esc(v.name||human(k))}</b><small>${num(v.count??1)}×${v.date?' · '+ago(v.date):''}</small></div>`).join('')}</div>`;chat('Temple Vault: full collection payload loaded through the Worker proxy.','green')}catch(e){$('fullClog').textContent='Temple vault failed: '+e.message;chat('TempleOSRS vault request failed: '+e.message,'red')}finally{b.disabled=false;b.textContent='REOPEN FULL TEMPLE VAULT'}}
+function renderProgress(){const q=model.quests,d=model.diaries,ca=model.cas,qs=model.rpSummary.quests||{};const done=q.filter(x=>String(x.state).includes('finished')).length||qs.completed;const qtotal=q.length||qs.total;const caDone=ca.reduce((a,x)=>a+(+x.completed||0),0),caTotal=ca.reduce((a,x)=>a+(+x.total||0),0);$('progressMetrics').innerHTML=[metric('QUESTS',qtotal?num(done)+' / '+num(qtotal):'—','RuneProfile'),metric('QUEST POINTS',qs.earnedPoints!=null?num(qs.earnedPoints)+' / '+num(qs.totalPoints):'—','RuneProfile'),metric('CA TASKS',caTotal?num(caDone)+' / '+num(caTotal):'—','RuneProfile tiers'),metric('DIARY AREAS',num(d.length),'RuneProfile'),metric('ACTIVITY EVENTS',num(model.activities.length),'RuneProfile'),metric('FALLBACK',model.wikiFallback?'WikiSync used':'Not needed','only if quests absent')].join('');
+ $('quests').className='';if(q.length){const completed=q.filter(x=>String(x.state).includes('finished')),remaining=q.filter(x=>!String(x.state).includes('finished'));$('quests').innerHTML=`<div class="notice">${num(completed.length)} completed · ${num(remaining.length)} remaining</div>`+rows(remaining.slice(0,30).map(x=>({a:x.name,b:human(x.type||''),c:human(x.state||'')})))}else if(model.wikiFallback){$('quests').innerHTML='<div class="notice">RuneProfile quest endpoint was unavailable, so this lookup activated the WikiSync fallback. Raw fallback data is visible in Source Audit.</div>'}else $('quests').innerHTML='<div class="empty">No quest data returned.</div>';
+ $('diaries').className='';$('diaries').innerHTML=rows(d.slice(0,20).map(x=>{const tiers=arr(x.tiers),c=tiers.reduce((a,t)=>a+(+t.completed||0),0),t=tiers.reduce((a,t)=>a+(+t.total||0),0);return{a:x.area||x.name||'Diary',b:t?num(c)+' / '+num(t)+' tasks':'RuneProfile diary',c:t?Math.round(c/t*100)+'%':''}}));
+ $('caTiers').innerHTML=ca.length?ca.map(x=>`<div class="tier"><b>${esc(x.name||'Tier')}</b><strong>${num(x.completed)} / ${num(x.total)}</strong><div class="progress"><i style="width:${(+x.total?Math.min(100,+x.completed/+x.total*100):0)}%"></i></div></div>`).join(''):'<div class="empty">No Combat Achievement tier data.</div>';
+}
+function renderHistory(){const c=model.cml||{},p=c.parsed||{},r=p.overallRecords,t=p.overall31d;$('historyMetrics').innerHTML=[metric('LAST CML CHECK',p.secondsSinceCheck!=null?ago(Date.now()-p.secondsSinceCheck*1000):'—','Crystal Math Labs'),metric('LAST XP CHANGE',p.secondsSinceChange!=null?ago(Date.now()-p.secondsSinceChange*1000):'—','Crystal Math Labs'),metric('31D XP',t?num(t.xpGained):'—','Crystal Math Labs'),metric('31D RANK Δ',t?num(t.ranksGained):'—','negative is improvement'),metric('31D LEVELS',t?num(t.levelsGained):'—','Crystal Math Labs'),metric('31D EHP',t?dec(t.ehpGained,2):'—','Crystal Math Labs')].join('');$('cmlRecords').className='';$('cmlRecords').innerHTML=r?rows([{a:'Best daily Overall XP',b:'CML personal record',c:num(r.day),cls:'gold'},{a:'Best weekly Overall XP',b:'CML personal record',c:num(r.week),cls:'gold'},{a:'Best monthly Overall XP',b:'CML personal record',c:num(r.month),cls:'gold'}]):'<div class="empty">CML did not return parseable Overall records. Raw legacy response is preserved in Source Audit.</div>';$('cmlTrail').className='';$('cmlTrail').innerHTML=t?rows([{a:'Current Overall XP',b:'31-day track row',c:num(t.xp)},{a:'Current Overall rank',b:'31-day track row',c:num(t.rank)},{a:'XP gained',b:'31-day window',c:num(t.xpGained),cls:'good'},{a:'Ranks moved',b:'negative means rank improved',c:num(t.ranksGained)},{a:'EHP gained',b:'31-day window',c:dec(t.ehpGained,2),cls:'gold'}]):'<div class="empty">CML did not return a parseable 31-day row.</div>'}
+function renderSocial(){$('names').className='';$('names').innerHTML=rows(model.names.slice().reverse().slice(0,30).map(x=>({a:(x.oldName||'?')+' → '+(x.newName||'?'),b:x.resolvedAt?ago(x.resolvedAt):human(x.status||''),c:'WOM'})));$('groups').className='';$('groups').innerHTML=rows(model.groups.map(x=>({a:pick(x,'group.name','name')||'Group #'+(x.groupId||x.id||'?'),b:human(x.role||''),c:'WOM'})));$('competitions').className='';$('competitions').innerHTML=rows(model.competitions.slice(0,40).map(x=>({a:pick(x,'competition.title','competition.name','title','name')||'Competition',b:human(pick(x,'competition.metric','metric')||''),c:human(pick(x,'competition.status','status')||'')})))}
+function renderPortals(){const e=encodeURIComponent(currentRSN);const links=[['Wise Old Man','Original player page','https://wiseoldman.net/players/'+e],['TempleOSRS','Original player search / collection portal','https://templeosrs.com/players/overview.php'],['RuneProfile','Original public profile site','https://runeprofile.com/'],['Crystal Math Labs','Original XP tracker','https://crystalmathlabs.com/view_stats.php?player='+e],['Official HiScores','Jagex source-of-truth portal','https://secure.runescape.com/m=hiscore_oldschool/overall?table=0&category_type=0&user1='+e],['Kill Clog','Excellent PvM/profile frontend; overlaps Temple + RuneProfile data','https://killclog.com/'],['OSRS Wiki','WikiSync / game reference','https://oldschool.runescape.wiki/'],['Source Code','Download this entire project','source.zip']];$('portalGrid').innerHTML=links.map(([a,b,u])=>`<a class="portal" href="${u}" ${u==='source.zip'?'download':'target="_blank" rel="noopener"'}><b>${esc(a)} ↗</b><small>${esc(b)}</small></a>`).join('')}
+function renderAudit(){const src=model.sources;const audit=[['Wise Old Man player',src.wom?.player],['WOM achievements',src.wom?.achievements],['WOM groups',src.wom?.groups],['WOM competitions',src.wom?.competitions],['WOM names',src.wom?.names],['Temple info',src.temple?.info],['Temple pets',src.temple?.pets],['Temple recent clog',src.temple?.recent],['RuneProfile summary',src.runeProfile?.summary],['RuneProfile quests',src.runeProfile?.quests],['RuneProfile diaries',src.runeProfile?.diaries],['RuneProfile CA',src.runeProfile?.combatAchievements],['RuneProfile activity',src.runeProfile?.activities],['CML bundle',{ok:src.cml?.ok}],['WikiSync fallback',src.wikiSync],['Jagex skill fallback',src.jagexFallback]];$('auditSummary').className='';$('auditSummary').innerHTML=rows(audit.map(([a,x])=>({a,b:x?(x.ok?'Loaded':'Failed: '+(x.error||x.status||'unknown')):'Not called',c:x?.ok?'OK':'—',cls:x?.ok?'good':(x?'bad':'')})));$('normalized').textContent=JSON.stringify(model,null,2);$('raw').textContent=JSON.stringify(payload,null,2)}
 
-  const completed=Object.values(m.skills).filter(x=>(+x.wom.level||+x.temple.level)>=99).length-(m.skills.overall?1:0);
-  const bossTotal=Object.values(m.bosses).reduce((a,x)=>a+Math.max(+x.wom.kc||0,+x.temple.kc||0),0);
-  const petCount=pick(m.pets,'pet_count')??Object.values(pick(m.pets,'pets')||{}).filter(x=>+x===1).length;
-  $('metrics').innerHTML=[
-    metric('Total XP',num(m.xp),'best available'),
-    metric('EHP',dec(m.ehp),'WOM / Temple'),
-    metric('EHB',dec(m.ehb),'WOM / Temple'),
-    metric('99s',num(completed),'skills at 99'),
-    metric('Boss KC',num(bossTotal),'merged visible KC'),
-    metric('Pets',num(petCount),'Temple')
-  ].join('');
-
-  renderFingerprint();renderHealth();renderDisagreements();renderActivity();
-  renderSkills();renderBosses();renderGains();renderRecords();
-  renderCollection();renderAchievements();renderCompetitions();
-  renderNames();renderGroups();renderAudit();
-}
-function metric(label,value,sub){return `<div class="card metric"><label>${esc(label)}</label><strong>${esc(value)}</strong><small>${esc(sub)}</small></div>`}
-
-function renderFingerprint(){
-  const m=model;
-  const maxed=Object.entries(m.skills).filter(([k])=>k!=='overall').every(([,x])=>(+x.wom.level||+x.temple.level||0)>=99);
-  const topBoss=Object.entries(m.bosses).map(([k,x])=>[k,Math.max(+x.wom.kc||0,+x.temple.kc||0)]).sort((a,b)=>b[1]-a[1])[0];
-  const rows=[
-    ['Account',`${human(m.type||'unknown')} · ${human(m.build||'main')}`],
-    ['Max status',maxed?'Maxed / all visible skills 99':'Not maxed or incomplete source data'],
-    ['Highest visible boss KC',topBoss&&topBoss[1]?`${human(topBoss[0])} · ${num(topBoss[1])}`:'No boss KC visible'],
-    ['Time to max',Number.isFinite(+m.ttm)?`${dec(m.ttm,1)} hours`:'—'],
-    ['Time to 200m all',Number.isFinite(+m.tt200m)?`${dec(m.tt200m,1)} hours`:'—']
-  ];
-  $('fingerprint').className='';
-  $('fingerprint').innerHTML=rows.map(([a,b])=>`<div class="compare-row"><div>${esc(a)}</div><div style="grid-column:span 3;color:#d2dbc9">${esc(b)}</div></div>`).join('');
-}
-function renderHealth(){
-  const rows=[
-    ['Wise Old Man',model.womUpdated?ago(model.womUpdated):'unknown',raw.wom.player?.__error?'failed':'loaded'],
-    ['TempleOSRS',model.templeUpdated?ago(model.templeUpdated):'unknown',(raw.temple.info?.__error&&raw.temple.stats?.__error)?'failed':'loaded'],
-    ['Temple collection log',model.clogSynced? 'synced':'unknown / not synced',model.clogLast?ago(model.clogLast):'no timestamp'],
-    ['API errors',String(errors.length),errors.length?'inspect Data Audit':'none']
-  ];
-  $('sourceHealth').className='';
-  $('sourceHealth').innerHTML=rows.map(([a,b,c])=>`<div class="compare-row"><div>${esc(a)}</div><div style="grid-column:span 2">${esc(b)}</div><div class="${c==='loaded'||c==='none'?'good':c==='failed'?'bad':''}">${esc(c)}</div></div>`).join('');
-}
-function allDiffs(){
-  const out=[];
-  for(const [k,x] of Object.entries(model.skills)){
-    const a=+x.wom.xp,b=+x.temple.xp;
-    if(Number.isFinite(a)&&Number.isFinite(b)&&a>=0&&b>=0)out.push({type:'skill',name:human(k),a,b,d:Math.abs(a-b)});
-  }
-  for(const [k,x] of Object.entries(model.bosses)){
-    const a=+x.wom.kc,b=+x.temple.kc;
-    if(Number.isFinite(a)&&Number.isFinite(b)&&a>=0&&b>=0)out.push({type:'boss',name:human(k),a,b,d:Math.abs(a-b)});
-  }
-  return out.sort((x,y)=>y.d-x.d);
-}
-function renderDisagreements(){
-  const ds=allDiffs().filter(x=>x.d>0).slice(0,10);
-  if(!ds.length){$('disagreements').className='empty';$('disagreements').textContent='No comparable disagreements found in the fields both providers returned.';return}
-  $('disagreements').className='';
-  $('disagreements').innerHTML=`<div class="compare-row compare-head"><div>Metric</div><div>WOM</div><div>Temple</div><div>Δ</div></div>`+
-    ds.map(x=>`<div class="compare-row"><div>${esc(x.name)}</div><div>${num(x.a)}</div><div>${num(x.b)}</div><div class="${x.d?'warn':''}">${num(x.d)}</div></div>`).join('');
-}
-function renderActivity(){
-  const items=[];
-  for(const x of model.recentCollections.slice(0,8)){
-    items.push({t:pick(x,'name')||'Collection item',s:pick(x,'date','date_unix')?`Collection log · ${ago(pick(x,'date_unix','date'))}`:'Temple collection log'});
-  }
-  for(const a of model.achievements.slice(-5).reverse()){
-    items.push({t:a.name||human(a.metric),s:`WOM achievement · ${a.createdAt?ago(a.createdAt):''}`});
-  }
-  $('activity').className=items.length?'list':'empty';
-  $('activity').innerHTML=items.length?items.slice(0,10).map(x=>`<div class="item"><div><b>${esc(x.t)}</b><small>${esc(x.s)}</small></div></div>`).join(''):'No recent activity returned.';
-}
-
-const SKILL_ICONS={
-  attack:'⚔',defence:'🛡',strength:'✊',hitpoints:'♥',ranged:'➶',prayer:'☀',magic:'✦',
-  cooking:'♨',woodcutting:'♣',fletching:'➤',fishing:'≈',firemaking:'♨',crafting:'✂',
-  smithing:'⚒',mining:'⛏',herblore:'⚗',agility:'↯',thieving:'♜',slayer:'☠',
-  farming:'♧',runecrafting:'◉',hunter:'⌁',construction:'⌂'
-};
-function skillIcon(k){return SKILL_ICONS[k]||'◆'}
-
-function renderSkills(){
-  $('skillsGrid').innerHTML=Object.entries(model.skills).filter(([k])=>k!=='overall').map(([k,x])=>{
-    const lvl=+x.wom.level||+x.temple.level||0;
-    const best=Math.max(+x.wom.xp||0,+x.temple.xp||0);
-    const rank=+x.wom.rank>0?x.wom.rank:(+x.temple.rank>0?x.temple.rank:null);
-    const delta=(Number.isFinite(+x.wom.xp)&&Number.isFinite(+x.temple.xp))?Math.abs(+x.wom.xp-+x.temple.xp):null;
-    return `<div class="skill" style="--pct:${Math.min(100,lvl)}%">
-      <span class="skill-icon">${skillIcon(k)}</span>
-      <b>${esc(human(k))}</b><span class="level">${num(lvl)}</span>
-      <div class="xp">${num(best)} XP</div>
-      <div class="ranks">Rank ${rank?num(rank):'—'}${delta?` · Δ ${num(delta)}`:''}</div>
-    </div>`;
-  }).join('');
-}
-function renderBosses(){
-  const rows=Object.entries(model.bosses).map(([k,x])=>[k,x,Math.max(+x.wom.kc||0,+x.temple.kc||0)]).filter(x=>x[2]>0).sort((a,b)=>b[2]-a[2]);
-  $('bossGrid').innerHTML=rows.length?rows.map(([k,x,best])=>{
-    const wa=Number.isFinite(+x.wom.kc)?num(x.wom.kc):'—',ta=Number.isFinite(+x.temple.kc)?num(x.temple.kc):'—';
-    return `<div class="boss"><div class="name">${esc(human(k))}</div><div class="kc">${num(best)}</div><div class="compare"><span class="source-dot wom-dot"></span>WOM ${wa} &nbsp; <span class="source-dot temple-dot"></span>Temple ${ta}</div></div>`;
-  }).join(''):`<div class="empty">No boss KC returned.</div>`;
-}
-function renderGains(){
-  const g=model.gains||{};
-  const rows=Object.entries(g).filter(([k,v])=>typeof v==='number'&&+v!==0&&!/date|rank|primary/i.test(k)).sort((a,b)=>Math.abs(+b[1])-Math.abs(+a[1])).slice(0,24);
-  $('gainsList').className=rows.length?'':'empty';
-  $('gainsList').innerHTML=rows.length?`<table class="table"><tr><th>Metric</th><th class="num">Week gain</th></tr>${rows.map(([k,v])=>`<tr><td>${esc(human(k))}</td><td class="num ${+v>0?'good':''}">${num(v)}</td></tr>`).join('')}</table>`:'No Temple weekly gains returned.';
-}
-function renderRecords(){
-  const r=model.records.slice().sort((a,b)=>Math.abs(+b.value||0)-Math.abs(+a.value||0)).slice(0,20);
-  $('recordsList').className=r.length?'':'empty';
-  $('recordsList').innerHTML=r.length?r.map(x=>`<div class="item"><div><b>${esc(human(x.metric||x.name))}</b><small>${esc(human(x.period||''))}${x.updatedAt?' · '+ago(x.updatedAt):''}</small></div><span class="badge">${num(x.value)}</span></div>`).join(''):'No WOM records returned.';
-}
-function renderCollection(){
-  const p=model.pets||{};
-  const petsMap=pick(p,'pets')||{};
-  const owned=Object.entries(petsMap).filter(([,v])=>+v===1);
-  const petCount=pick(p,'pet_count')??owned.length;
-  const petHours=pick(p,'pet_hours');
-  const info=dataOf(raw.temple.info)||{};
-  const ci=pick(info,'collection_log')||{};
-  $('collectionMetrics').innerHTML=[
-    metric('Pets',num(petCount),'Temple'),
-    metric('Pet EHP hours',dec(petHours,1),'Temple estimate'),
-    metric('Clog synced',pick(ci,'log_synced')?'Yes':'Unknown','Temple plugin'),
-    metric('Last clog change',pick(ci,'last_changed')?ago(pick(ci,'last_changed')):'—','Temple'),
-    metric('Recent items',num(model.recentCollections.length),'loaded'),
-    metric('Deep EHC','On demand','Temple heavy endpoint')
-  ].join('');
-  $('recentClog').className=model.recentCollections.length?'list':'empty';
-  $('recentClog').innerHTML=model.recentCollections.length?model.recentCollections.map(x=>`<div class="item"><div><b>${esc(pick(x,'name')||'Unknown item')}</b><small>${pick(x,'date_unix','date')?ago(pick(x,'date_unix','date')):'Unknown date'}</small></div>${pick(x,'notable_item')?'<span class="badge gold">NOTABLE</span>':''}</div>`).join(''):'No recent collection-log items returned.';
-  $('petsList').className=owned.length?'list':'empty';
-  $('petsList').innerHTML=owned.length?owned.map(([k])=>`<div class="item"><div><b>${esc(human(k))}</b><small>Owned</small></div><span class="badge good">✓</span></div>`).join(''):'No owned pet map returned.';
-}
-function renderAchievements(){
-  const a=model.achievements.slice().reverse();
-  $('achievementsList').className=a.length?'list':'empty';
-  $('achievementsList').innerHTML=a.length?a.slice(0,50).map(x=>`<div class="item"><div><b>${esc(x.name||human(x.metric))}</b><small>${esc(human(x.metric||''))}${x.createdAt?' · '+ago(x.createdAt):''}</small></div><span class="badge">${num(x.threshold)}</span></div>`).join(''):'No WOM achievements returned.';
-}
-function renderCompetitions(){
-  const merged=[];
-  model.womCompetitions.forEach(x=>merged.push({src:'WOM',name:pick(x,'competition.title','competition.name','title','name')||`Competition #${pick(x,'competitionId','id')||'?'}`,status:pick(x,'competition.status','status')||'',metric:pick(x,'competition.metric','metric')||''}));
-  model.templeCompetitions.forEach(x=>merged.push({src:'Temple',name:pick(x,'name')||`Competition #${pick(x,'id')||'?'}`,status:pick(x,'status_text','status')||'',metric:pick(x,'skill_name','skill')||''}));
-  $('competitionsList').className=merged.length?'list':'empty';
-  $('competitionsList').innerHTML=merged.length?merged.slice(0,30).map(x=>`<div class="item"><div><b>${esc(x.name)}</b><small>${esc(x.src)} · ${esc(human(x.metric))}</small></div><span class="badge">${esc(human(x.status))}</span></div>`).join(''):'No competitions returned.';
-}
-function renderNames(){
-  const rows=[];
-  model.womNames.forEach(x=>rows.push({src:'WOM',name:`${x.oldName||'?'} → ${x.newName||'?'}`,sub:x.resolvedAt?ago(x.resolvedAt):human(x.status||'')}));
-  const tn=model.templeNames||{};
-  const hist=arr(pick(tn,'history'));
-  hist.forEach(x=>rows.push({src:'Temple',name:pick(x,'name')||'Alias',sub:pick(x,'first_date')?`${pick(x,'first_date')} → ${pick(x,'last_date')}`:''}));
-  const aliases=pick(tn,'aliases');
-  if(aliases&&typeof aliases==='object')Object.values(aliases).slice(0,20).forEach(x=>rows.push({src:'Temple',name:pick(x,'name')||'Alias',sub:pick(x,'last_used')!==undefined?`last used ${pick(x,'last_used')}d ago`:''}));
-  $('namesList').className=rows.length?'list':'empty';
-  $('namesList').innerHTML=rows.length?rows.slice(0,30).map(x=>`<div class="item"><div><b>${esc(x.name)}</b><small>${esc(x.src)} · ${esc(x.sub)}</small></div></div>`).join(''):'No name history returned.';
-}
-function renderGroups(){
-  const g=model.groups;
-  $('groupsList').className=g.length?'list':'empty';
-  $('groupsList').innerHTML=g.length?g.map(x=>`<div class="item"><div><b>${esc(pick(x,'group.name','name')||`Group #${pick(x,'groupId','id')||'?'}`)}</b><small>${esc(human(pick(x,'role')||''))}</small></div></div>`).join(''):'No WOM group memberships returned.';
-}
-function renderAudit(){
-  $('normalizedRaw').textContent=JSON.stringify(model,null,2);
-  $('womRaw').textContent=JSON.stringify(raw.wom,null,2);
-  $('templeRaw').textContent=JSON.stringify(raw.temple,null,2);
-  $('errorsList').className=errors.length?'list':'empty';
-  $('errorsList').innerHTML=errors.length?errors.map(x=>`<div class="item"><div><b>${esc(x.source.toUpperCase())} · ${esc(x.key)}</b><small>${esc(x.error)}</small></div></div>`).join(''):'No provider request failures.';
-}
-async function loadDeepClog(){
-  if(!currentRSN)return;
-  $('deepClogBtn').disabled=true;$('deepClogBtn').textContent='LOADING…';
-  $('deepClog').className='loader';$('deepClog').textContent='Requesting Temple collection-log summary + all item data…';
-  const e=encodeURIComponent(currentRSN);
-  const j=await fetchJSON(`${TEMPLE}/collection-log/player_collection_log.php?player=${e}&categories=all&includenames=1&onlyitems=1&yearlygains=1&categoryhours=1&dateformat=unix`,'temple','deepClog');
-  $('deepClogBtn').disabled=false;$('deepClogBtn').textContent='RELOAD HEAVY DATA';
-  if(!j){
-    $('deepClog').className='empty';$('deepClog').textContent='Temple did not return the deep collection-log payload. See Data Audit for the exact failure.';
-    renderAudit();return;
-  }
-  const d=dataOf(j)||{};
-  const total=pick(d,'total_collections_finished');
-  const avail=pick(d,'total_collections_available');
-  const rank=pick(d,'collections_hiscores_rank');
-  const ehc=pick(d,'ehc');
-  const gilded=pick(d,'ehc_gilded');
-  const cats=pick(d,'total_categories_finished'),catsA=pick(d,'total_categories_available');
-  const items=pick(d,'items')||{};
-  const flat=[];
-  function flatten(o){
-    if(!o||typeof o!=='object')return;
-    for(const [k,v] of Object.entries(o)){
-      if(v&&typeof v==='object'&&('id'in v||'count'in v||'date'in v))flat.push([k,v]);
-      else if(v&&typeof v==='object')flatten(v);
-    }
-  }
-  flatten(items);
-  $('deepClog').className='';
-  $('deepClog').innerHTML=`
-    <div class="metrics" style="grid-template-columns:repeat(4,1fr)">
-      ${metric('Collection log',`${num(total)} / ${num(avail)}`,pct(total,avail))}
-      ${metric('Clog rank',num(rank),'Temple')}
-      ${metric('EHC',dec(ehc,2),'third-age algorithm')}
-      ${metric('EHC gilded',dec(gilded,2),'gilded algorithm')}
-    </div>
-    <div style="margin:12px 0;color:#7e8978;font-size:10px">Categories finished: ${num(cats)} / ${num(catsA)} · Items returned: ${num(flat.length)}</div>
-    <div class="list">${flat.slice(0,150).map(([k,v])=>`<div class="item"><div><b>${esc(pick(v,'name')||human(k))}</b><small>${pick(v,'date')?ago(pick(v,'date')):'Collection log item'}</small></div><span class="badge">${num(pick(v,'count')??1)}×</span></div>`).join('')}</div>`;
-  renderAudit();
-}
-async function loadTimeline(){
-  if(!currentRSN)return;
-  const metric=$('timelineMetric').value,period=$('timelinePeriod').value;
-  $('timelineCaption').textContent='Loading WOM timeline…';
-  const j=await fetchJSON(`${WOM}/players/${encodeURIComponent(currentRSN)}/snapshots/timeline?metric=${encodeURIComponent(metric)}&period=${encodeURIComponent(period)}`,'wom','timeline_'+metric+'_'+period);
-  const rows=arr(j).filter(x=>Number.isFinite(+x.value)&&x.date);
-  drawTimeline(rows,metric);
-  renderAudit();
-}
-function drawTimeline(rows,metric){
-  const c=$('timelineCanvas'),r=c.getBoundingClientRect(),dpr=devicePixelRatio||1;
-  c.width=Math.max(1,r.width*dpr);c.height=Math.max(1,r.height*dpr);
-  const x=c.getContext('2d');x.scale(dpr,dpr);const W=r.width,H=r.height;
-  x.clearRect(0,0,W,H);x.fillStyle='#090b08';x.fillRect(0,0,W,H);
-  x.strokeStyle='#20281c';x.lineWidth=1;
-  for(let i=1;i<5;i++){let y=H*i/5;x.beginPath();x.moveTo(0,y);x.lineTo(W,y);x.stroke()}
-  if(rows.length<2){$('timelineCaption').textContent='Not enough WOM datapoints returned.';return}
-  rows.sort((a,b)=>new Date(a.date)-new Date(b.date));
-  const vals=rows.map(x=>+x.value),min=Math.min(...vals),max=Math.max(...vals),span=max-min||1;
-  x.beginPath();x.strokeStyle='#d8bd69';x.lineWidth=2;
-  rows.forEach((p,i)=>{
-    const px=14+(W-28)*(i/(rows.length-1));
-    const py=H-18-(H-36)*((+p.value-min)/span);
-    i?x.lineTo(px,py):x.moveTo(px,py);
-  });x.stroke();
-  x.fillStyle='#7b8574';x.font='10px sans-serif';
-  x.fillText(num(max),8,12);x.fillText(num(min),8,H-6);
-  $('timelineCaption').textContent=`${human(metric)} · ${rows.length} WOM datapoints · ${num(vals[0])} → ${num(vals.at(-1))} (${num(vals.at(-1)-vals[0])} change)`;
-}
-
-window.addEventListener('resize',()=>{if(raw.wom&&Object.keys(raw.wom).some(k=>k.startsWith('timeline_'))) loadTimeline()});
-
-// --- ridiculous visual overkill layer ---
-(function nexusFX(){
-  const c=document.getElementById('ambientCanvas');
-  const x=c.getContext('2d');
-  let W=0,H=0,dpr=1,particles=[];
-  const glyphs=['✦','·','ᚱ','ᛉ','ᚠ','◈'];
-  function resizeFX(){
-    dpr=Math.min(devicePixelRatio||1,2);
-    W=innerWidth;H=innerHeight;
-    c.width=W*dpr;c.height=H*dpr;c.style.width=W+'px';c.style.height=H+'px';
-    x.setTransform(dpr,0,0,dpr,0,0);
-    const count=Math.min(90,Math.max(36,Math.floor(W/18)));
-    particles=Array.from({length:count},()=>({
-      x:Math.random()*W,y:Math.random()*H,
-      s:Math.random()*1.5+.35,v:Math.random()*.13+.035,
-      a:Math.random()*.26+.035,g:glyphs[Math.floor(Math.random()*glyphs.length)],
-      drift:(Math.random()-.5)*.08
-    }));
-  }
-  function tickFX(){
-    x.clearRect(0,0,W,H);
-    for(const p of particles){
-      p.y-=p.v;p.x+=p.drift;
-      if(p.y<-20){p.y=H+20;p.x=Math.random()*W}
-      if(p.x<-20)p.x=W+20;if(p.x>W+20)p.x=-20;
-      x.globalAlpha=p.a;
-      x.fillStyle=p.g==='·'?'#d1b45f':'#8c9c64';
-      x.font=(7+p.s*6)+'px Georgia';
-      x.fillText(p.g,p.x,p.y);
-    }
-    x.globalAlpha=1;
-    requestAnimationFrame(tickFX);
-  }
-  addEventListener('resize',resizeFX);resizeFX();tickFX();
-
-  document.addEventListener('pointermove',e=>{
-    document.documentElement.style.setProperty('--mx',(e.clientX/innerWidth-.5).toFixed(3));
-    document.documentElement.style.setProperty('--my',(e.clientY/innerHeight-.5).toFixed(3));
-    if(Math.random()<.10){
-      const s=document.createElement('i');s.className='cursor-spark';
-      s.style.left=e.clientX+'px';s.style.top=e.clientY+'px';
-      s.style.setProperty('--dx',((Math.random()-.5)*24)+'px');
-      s.style.setProperty('--dy',((Math.random()-.5)*24)+'px');
-      document.body.appendChild(s);setTimeout(()=>s.remove(),700);
-    }
-  });
-
-  document.querySelectorAll('.card').forEach((card,idx)=>{
-    for(let i=0;i<3;i++){
-      const d=document.createElement('i');d.className='rune-dust';
-      d.style.left=(10+Math.random()*80)+'%';
-      d.style.bottom=(3+Math.random()*30)+'px';
-      d.style.animationDelay=(-Math.random()*5)+'s';
-      d.style.animationDuration=(4+Math.random()*4)+'s';
-      card.appendChild(d);
-    }
-  });
-
-  function clickTone(freq=310){
-    try{
-      const AC=window.AudioContext||window.webkitAudioContext;
-      window.__nexusAC=window.__nexusAC||new AC();
-      const o=window.__nexusAC.createOscillator(),g=window.__nexusAC.createGain();
-      o.type='triangle';o.frequency.value=freq;g.gain.value=.018;
-      o.connect(g);g.connect(window.__nexusAC.destination);o.start();
-      g.gain.exponentialRampToValueAtTime(.0001,window.__nexusAC.currentTime+.055);
-      o.stop(window.__nexusAC.currentTime+.06);
-    }catch{}
-  }
-  document.addEventListener('click',e=>{
-    if(e.target.closest('button,.tab,.item,.skill,.boss')) clickTone(e.target.closest('.tab')?410:290);
-  });
-})();
-
-const initial=new URLSearchParams(location.search).get('rsn');
-if(initial){$('rsn').value=initial;scan(initial)}
+// OSRS-ish floating rune dust + examine tooltips.
+(function fx(){const c=$('runes'),x=c.getContext('2d');let W,H,p=[];function resize(){W=c.width=innerWidth*(devicePixelRatio||1);H=c.height=innerHeight*(devicePixelRatio||1);c.style.width=innerWidth+'px';c.style.height=innerHeight+'px';x.setTransform(devicePixelRatio||1,0,0,devicePixelRatio||1,0,0);p=Array.from({length:Math.min(80,Math.max(32,innerWidth/20|0))},()=>({x:Math.random()*innerWidth,y:Math.random()*innerHeight,v:.03+Math.random()*.12,a:.03+Math.random()*.16,g:['·','✦','ᚱ','ᛉ','◈'][Math.random()*5|0]}))}function tick(){x.clearRect(0,0,innerWidth,innerHeight);for(const q of p){q.y-=q.v;if(q.y<-20){q.y=innerHeight+20;q.x=Math.random()*innerWidth}x.globalAlpha=q.a;x.fillStyle=q.g==='·'?'#d4ae55':'#708056';x.font='10px Georgia';x.fillText(q.g,q.x,q.y)}x.globalAlpha=1;requestAnimationFrame(tick)}addEventListener('resize',resize);resize();tick();document.addEventListener('pointermove',e=>{if(Math.random()<.06){const s=document.createElement('i');s.className='spark';s.style.left=e.clientX+'px';s.style.top=e.clientY+'px';s.style.setProperty('--dx',(Math.random()*20-10)+'px');s.style.setProperty('--dy',(Math.random()*20-10)+'px');document.body.appendChild(s);setTimeout(()=>s.remove(),600)}const ex=e.target.closest('[data-examine]');const tip=$('tip');if(ex){tip.textContent='Examine: '+ex.dataset.examine;tip.style.display='block';tip.style.left=Math.min(innerWidth-300,e.clientX+14)+'px';tip.style.top=Math.min(innerHeight-50,e.clientY+14)+'px'}else tip.style.display='none'})})();
+const initial=new URLSearchParams(location.search).get('rsn');if(initial){$('rsn').value=initial;lookup(initial)}
 </script>
-</body>
-</html>
+</body></html>
