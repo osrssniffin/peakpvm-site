@@ -1,0 +1,87 @@
+[
+  {
+    "id": "exhibit-2021-rebalance",
+    "title": "The Great Equipment Rebalance of 2021",
+    "subtitle": "How Jagex cured 6 years of ranged stagnation and set up the next decade of PvM gear.",
+    "category": "Historic Rebalance",
+    "year": "2021",
+    "badge": "Meta Defining",
+    "icon": "⚖️",
+    "heroImage": "https://oldschool.runescape.wiki/images/Toxic_blowpipe.png",
+    "summary": "In early 2021, Jagex unveiled the most ambitious combat rebalance project in OSRS history. The Toxic Blowpipe had suppressed design space for 6 full years—any new ranged weapon had to compete with a 2-tick machine gun. By slicing Blowpipe accuracy in half, nerfing Black D'hide magic defense, and buffing Crystal Armour and Mace weapons, the modern gear landscape was born.",
+    "keyTakeaways": [
+      "Toxic Blowpipe base accuracy cut from +60 to +30",
+      "Black D'hide body magic defense slashed from +50 to +20, restoring Magic in PvP",
+      "Crystal Bow and Crystal Armour buffed by 15-30% damage/accuracy",
+      "Bow of Faerdhinen (BowFa) introduced as the bridge weapon between Blowpipe and Twisted Bow",
+      "Maces received +1 prayer bonus and 4-tick attack speed (matching Scimitars)"
+    ]
+  },
+  {
+    "id": "exhibit-day1-droptables",
+    "title": "The Infamous Day-1 Broken Drop Tables Vault",
+    "subtitle": "From the 100x Revenant Statuettes to 200 Noted Zulrah Magic Logs.",
+    "category": "Economy & Chaos",
+    "year": "2015 - 2018",
+    "badge": "Chaos Archive",
+    "icon": "💰",
+    "heroImage": "https://oldschool.runescape.wiki/images/Zulrah_%28serpentine%29.png",
+    "summary": "Several major releases in OSRS history shipped with day-one drop tables so overwhelmingly lucrative that players made hundreds of millions of GP before emergency hotfixes were deployed. This exhibit chronicles the wildest drop table launch days in Gielinor.",
+    "keyTakeaways": [
+      "Zulrah (2015): 100 Magic Logs, 100 Raw Sharks, and 20 Teleport scrolls per drop flooded skilling markets.",
+      "Revenant Caves (2017): Multiplier bug caused 100x ancient statuette drops simultaneously upon launch.",
+      "Konar Slayer (2019): Day-1 Brimstone Chest dropped 2,500 Saradomin Brews and 200 Torstol in a single roll before hotfix.",
+      "Nightmare of Ashihama (2020): Inquisitor pieces initially rolled without intended regional world protection."
+    ]
+  },
+  {
+    "id": "exhibit-6hr-splashing",
+    "title": "The 6-Hour Sleeping NMZ & Splashing Saga",
+    "subtitle": "The 2.5-year controversy where players reached 99 combat while asleep in bed.",
+    "category": "Controversy & Integrity",
+    "year": "2013 - 2015",
+    "badge": "Pure Nostalgia",
+    "icon": "💤",
+    "heroImage": "https://oldschool.runescape.wiki/images/Dominic_Onion.png",
+    "summary": "From 2013 to September 2015, OSRS had no automatic interaction timeout for combat. Players discovered two massive unintended interactions: wearing -68 magic gear to 'splash' on chickens for 6 hours uninterrupted, and using Guthan's healing armor in Nightmare Zone Rumble. When polling the fix failed repeatedly due to player self-interest, Jagex made their first historic unpolled 'Game Integrity' intervention.",
+    "keyTakeaways": [
+      "Full Guthan's set healed more than NMZ bosses could damage, enabling 6 hours of hands-off training.",
+      "Splashing Fire Strike on rats in Lumbridge flooded banks with AFK mages.",
+      "Multiple polls to fix it failed to reach the required 75% threshold.",
+      "On September 3, 2015, Jagex established the precedent of Unpolled Integrity Updates with the 20-minute auto-retaliate timer."
+    ]
+  },
+  {
+    "id": "exhibit-kourend-evolution",
+    "title": "The Metamorphosis of Great Kourend",
+    "subtitle": "How a community Reddit map by GentleTractor rebuilt an entire fantasy continent.",
+    "category": "World Design",
+    "year": "2016 - 2024",
+    "badge": "Community Triumph",
+    "icon": "🗺️",
+    "heroImage": "https://oldschool.runescape.wiki/images/Great_Kourend.png",
+    "summary": "When Great Kourend debuted in January 2016, it was criticized for massive empty square roads, clone-stamped buildings, and artificial geometry. A passionate player named 'GentleTractor' drew a complete artistic redesign on Reddit. Jagex embraced the blueprint, hiring community artists and redesigning Hosidius, Shayzien, and the Catacombs into the most vibrant continent in the game.",
+    "keyTakeaways": [
+      "2016: Rigid grid layout replaced with natural organic hills and rivers.",
+      "2019: Hosidius rework creates the Woodcutting Guild and bustling farmer's market.",
+      "2021: Shayzien rework replaces barren dirt with an authentic military fortress.",
+      "2024: The tedious 100% favor system is permanently removed for seamless questing."
+    ]
+  },
+  {
+    "id": "exhibit-inferno-legend",
+    "title": "The Legend of the TzHaar Inferno",
+    "subtitle": "The 69-wave gauntlet that pushed the human skill ceiling to its absolute limits.",
+    "category": "PvM Mastery",
+    "year": "2017",
+    "badge": "Endgame Milestone",
+    "icon": "🌋",
+    "heroImage": "https://oldschool.runescape.wiki/images/TzKal-Zuk.png",
+    "summary": "Released on June 1, 2017, The Inferno was designed to be near-impossible. Players had to manage 3 distinct combat style prayers while solving wave spawns, managing Nibblers, and executing the 1-shot shield walk against TzKal-Zuk. Woox conquered it 2 days later without a Twisted Bow in front of 60,000 live spectators.",
+    "keyTakeaways": [
+      "First major PvM challenge that required true 1-tick prayer alternating and stack solving.",
+      "TzKal-Zuk's shield walk mechanic created the gold standard for high-stakes movement.",
+      "Remains the undisputed symbol of PvM prestige and game mastery in Old School RuneScape."
+    ]
+  }
+]

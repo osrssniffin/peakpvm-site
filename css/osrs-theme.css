@@ -1,0 +1,349 @@
+/* OSRS Stone & Ornate Theme */
+
+/* Navigation Header */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(13, 12, 10, 0.94);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--stone-border);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 72px;
+  gap: 1.5rem;
+}
+
+.logo-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--gold-100);
+  text-decoration: none;
+  letter-spacing: 0.05em;
+  text-shadow: 0 0 16px rgba(224, 182, 83, 0.4);
+}
+
+.logo-icon-rune {
+  width: 38px;
+  height: 38px;
+  background: linear-gradient(135deg, #2b2318 0%, #17130d 100%);
+  border: 1px solid var(--gold-600);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 0 8px rgba(224, 182, 83, 0.3), 0 0 12px rgba(224, 182, 83, 0.2);
+  color: var(--gold-300);
+  font-size: 1.2rem;
+  animation: pulseRune 4s ease-in-out infinite;
+}
+
+@keyframes pulseRune {
+  0%, 100% { box-shadow: inset 0 0 8px rgba(224, 182, 83, 0.3), 0 0 10px rgba(224, 182, 83, 0.2); }
+  50% { box-shadow: inset 0 0 14px rgba(224, 182, 83, 0.5), 0 0 20px rgba(224, 182, 83, 0.4); }
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  list-style: none;
+}
+
+.nav-link {
+  font-family: var(--font-serif);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--text-secondary);
+  padding: 0.5rem 0.9rem;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.nav-link:hover, .nav-link.active {
+  color: var(--gold-300);
+  background: rgba(224, 182, 83, 0.08);
+  border: 1px solid rgba(224, 182, 83, 0.25);
+  text-shadow: 0 0 8px var(--gold-glow);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Ornate OSRS Fantasy Buttons */
+.btn-osrs {
+  font-family: var(--font-serif);
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 0.65rem 1.25rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all var(--transition-fast);
+  text-transform: uppercase;
+  user-select: none;
+  position: relative;
+  outline: none;
+}
+
+.btn-osrs-gold {
+  background: linear-gradient(180deg, #574419 0%, #3d2f10 50%, #291f09 100%);
+  color: var(--gold-100);
+  border: 1px solid var(--gold-500);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 3px 12px rgba(0, 0, 0, 0.7);
+  text-shadow: 0 1px 2px #000;
+}
+
+.btn-osrs-gold:hover {
+  background: linear-gradient(180deg, #6e5621 0%, #4f3d16 50%, #362a0c 100%);
+  border-color: var(--gold-300);
+  color: #fff;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 0 18px rgba(224, 182, 83, 0.4);
+  transform: translateY(-1px);
+}
+
+.btn-osrs-gold:active {
+  transform: translateY(1px);
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.8);
+}
+
+.btn-osrs-stone {
+  background: linear-gradient(180deg, #2a251e 0%, #1e1a14 100%);
+  color: var(--text-secondary);
+  border: 1px solid var(--stone-border-light);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 2px 6px rgba(0, 0, 0, 0.5);
+}
+
+.btn-osrs-stone:hover {
+  background: linear-gradient(180deg, #363027 0%, #28231c 100%);
+  color: var(--gold-300);
+  border-color: var(--gold-600);
+  box-shadow: 0 0 12px rgba(224, 182, 83, 0.2);
+}
+
+/* Sound & Quick Search Buttons */
+.btn-icon {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-secondary);
+  border: 1px solid var(--stone-border);
+  color: var(--text-secondary);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btn-icon:hover {
+  border-color: var(--gold-500);
+  color: var(--gold-300);
+  box-shadow: 0 0 10px var(--gold-glow);
+}
+
+.btn-search-trigger {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--stone-border);
+  padding: 0.45rem 0.85rem;
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all var(--transition-fast);
+}
+
+.btn-search-trigger:hover {
+  border-color: var(--gold-500);
+  color: var(--text-primary);
+  box-shadow: 0 0 12px rgba(224, 182, 83, 0.15);
+}
+
+.kbd-shortcut {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--stone-border-light);
+  padding: 0.1rem 0.4rem;
+  border-radius: 3px;
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  color: var(--gold-300);
+}
+
+/* OSRS Ornate Frame / Card Component */
+.osrs-card {
+  background: var(--bg-card);
+  border: 1px solid var(--stone-border);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  position: relative;
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-normal);
+}
+
+.osrs-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, var(--gold-600) 50%, transparent 100%);
+  opacity: 0.6;
+}
+
+.osrs-card:hover {
+  border-color: var(--gold-600);
+  box-shadow: var(--shadow-lg), 0 0 20px rgba(224, 182, 83, 0.1);
+  transform: translateY(-2px);
+}
+
+.osrs-card:hover::before {
+  opacity: 1;
+}
+
+/* Parchment Accent Box */
+.parchment-box {
+  background: linear-gradient(180deg, rgba(37, 30, 20, 0.95) 0%, rgba(26, 21, 14, 0.95) 100%);
+  border: 1px solid var(--gold-700);
+  border-radius: var(--radius-sm);
+  padding: 1.25rem;
+  position: relative;
+  box-shadow: inset 0 0 16px rgba(0, 0, 0, 0.6);
+}
+
+.parchment-box::after {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  border: 1px solid rgba(224, 182, 83, 0.12);
+  pointer-events: none;
+}
+
+/* Badges & Pills */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.25rem 0.6rem;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+}
+
+.badge-era {
+  background: rgba(224, 182, 83, 0.15);
+  border: 1px solid var(--gold-500);
+  color: var(--gold-300);
+}
+
+.badge-buff {
+  background: var(--diff-buff-bg);
+  border: 1px solid var(--diff-buff);
+  color: var(--diff-buff);
+}
+
+.badge-nerf {
+  background: var(--diff-nerf-bg);
+  border: 1px solid var(--diff-nerf);
+  color: var(--diff-nerf);
+}
+
+.badge-rework, .badge-rebalance {
+  background: rgba(179, 136, 255, 0.15);
+  border: 1px solid var(--rune-cosmic);
+  color: var(--rune-cosmic);
+}
+
+.badge-droptable {
+  background: rgba(255, 183, 77, 0.15);
+  border: 1px solid var(--rune-solar);
+  color: var(--rune-solar);
+}
+
+.badge-release {
+  background: rgba(61, 243, 255, 0.15);
+  border: 1px solid var(--rune-cyan);
+  color: var(--rune-cyan);
+}
+
+.badge-qol, .badge-trivia {
+  background: rgba(144, 164, 174, 0.15);
+  border: 1px solid #90a4ae;
+  color: #cfd8dc;
+}
+
+/* Footer Styling */
+.site-footer {
+  border-top: 1px solid var(--stone-border);
+  background: #090807;
+  padding: 3.5rem 0 2rem;
+  margin-top: 5rem;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 2.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.footer-col h4 {
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+  color: var(--gold-300);
+}
+
+.footer-links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.footer-links a {
+  color: var(--text-secondary);
+}
+
+.footer-links a:hover {
+  color: var(--gold-300);
+}
+
+.footer-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}

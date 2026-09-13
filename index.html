@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OSRS Time Machine — Interactive Old School RuneScape History Explorer</title>
+  <meta name="description" content="Explore the rich chronological history of Old School RuneScape — updates, buffs, nerfs, drop changes, visual evolutions, and forgotten eras.">
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⏳</text></svg>">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/osrs-theme.css">
+  <link rel="stylesheet" href="css/timeline.css">
+  <link rel="stylesheet" href="css/comparison.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+
+  <!-- Site Header -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="#" class="logo-brand">
+        <div class="logo-icon-rune">⏳</div>
+        <div>
+          <span>OSRS TIME MACHINE</span>
+          <div style="font-size: 0.65rem; color: var(--gold-500); font-family: var(--font-mono); letter-spacing: 0.1em;">GIELINOR ARCHIVE</div>
+        </div>
+      </a>
+
+      <!-- Navigation Links -->
+      <nav>
+        <ul class="nav-links">
+          <li><a href="#" class="nav-link active">Home</a></li>
+          <li><a href="#timeline" class="nav-link">Timeline</a></li>
+          <li><a href="#browse" class="nav-link">Codex</a></li>
+          <li><a href="#comparisons" class="nav-link">Before & After</a></li>
+          <li><a href="#museum" class="nav-link">Museum</a></li>
+        </ul>
+      </nav>
+
+      <!-- Header Actions -->
+      <div class="header-actions">
+        <button class="btn-search-trigger" title="Global Deep Search (Ctrl+K)">
+          <span>🔍</span>
+          <span>Search Archive...</span>
+          <span class="kbd-shortcut">Ctrl+K</span>
+        </button>
+
+        <button class="btn-osrs btn-osrs-stone" id="btn-sound-toggle" style="font-size: 0.75rem; padding: 0.45rem 0.75rem;">
+          🔊 Audio ON
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="container" style="padding-top: 1.5rem; padding-bottom: 3rem;">
+
+    <!-- ================= VIEW: HOME ================= -->
+    <section id="view-home" class="page-view active">
+      
+      <!-- Hero Section -->
+      <div class="hero-section">
+        <div class="hero-tagline-badge">
+          <span>✨</span>
+          <span>THE ULTIMATE OLD SCHOOL RUNESCAPE HISTORY CODEX</span>
+        </div>
+
+        <h1 class="hero-main-title font-display text-gradient-gold">
+          OSRS TIME MACHINE
+        </h1>
+
+        <p class="hero-subtitle">
+          Explore the living history of Old School RuneScape — updates, buffs, nerfs, drop changes, visual evolutions, and forgotten eras.
+        </p>
+
+        <div class="hero-cta-group">
+          <a href="#timeline" class="btn-osrs btn-osrs-gold">
+            ⏳ Search the Timeline
+          </a>
+          <a href="#browse" class="btn-osrs btn-osrs-stone">
+            📜 Explore Archives
+          </a>
+          <button class="btn-osrs btn-osrs-stone btn-random-warp">
+            🎲 Random Nostalgia Warp
+          </button>
+        </div>
+
+        <!-- Metric Counter Strip -->
+        <div class="stats-counter-strip">
+          <div class="stat-counter-item">
+            <span class="counter-num">13+</span>
+            <span class="counter-lbl">Years Documented</span>
+          </div>
+          <div class="stat-counter-item">
+            <span class="counter-num">150+</span>
+            <span class="counter-lbl">Patches Cataloged</span>
+          </div>
+          <div class="stat-counter-item">
+            <span class="counter-num">30+</span>
+            <span class="counter-lbl">Iconic Items & Bosses</span>
+          </div>
+          <div class="stat-counter-item">
+            <span class="counter-num">7</span>
+            <span class="counter-lbl">Defined Historic Eras</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Today In History Banner -->
+      <div id="today-in-history-container"></div>
+
+      <!-- Interactive Scrubber -->
+      <div id="home-scrubber-container"></div>
+
+      <!-- Featured Exhibits Preview -->
+      <div style="margin-top: 3.5rem;">
+        <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom: 1.5rem;">
+          <div>
+            <span class="badge badge-era">CURATED ARCHIVES</span>
+            <h2 style="font-size: 1.8rem; margin-top: 0.35rem;">Iconic Museum Showcases</h2>
+          </div>
+          <a href="#museum" class="btn-osrs btn-osrs-stone" style="font-size: 0.8rem; padding: 0.45rem 0.9rem;">
+            View All Exhibits ➔
+          </a>
+        </div>
+        <div id="museum-exhibits-container"></div>
+      </div>
+
+      <!-- Most Reworked Content Preview -->
+      <div style="margin-top: 3.5rem;">
+        <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom: 1.5rem;">
+          <div>
+            <span class="badge badge-nerf">HIGH VOLATILITY</span>
+            <h2 style="font-size: 1.8rem; margin-top: 0.35rem;">Most Reworked Content</h2>
+          </div>
+          <a href="#browse" class="btn-osrs btn-osrs-stone" style="font-size: 0.8rem; padding: 0.45rem 0.9rem;">
+            Browse All ➔
+          </a>
+        </div>
+        <div class="entity-grid" id="browse-entities-grid"></div>
+      </div>
+    </section>
+
+    <!-- ================= VIEW: TIMELINE ================= -->
+    <section id="view-timeline" class="page-view">
+      <div style="margin-bottom: 2rem;">
+        <span class="badge badge-era">CHRONOLOGICAL RECORD</span>
+        <h1 style="font-size: 2.2rem; margin-top: 0.4rem;">OSRS Grand Timeline (2013 — 2026)</h1>
+        <p class="text-secondary">Scrub through every milestone, update, balance patch, and controversy in OSRS history.</p>
+      </div>
+
+      <div id="timeline-scrubber-container"></div>
+      <div id="global-timeline-feed"></div>
+    </section>
+
+    <!-- ================= VIEW: BROWSE / CODEX ================= -->
+    <section id="view-browse" class="page-view">
+      <div style="margin-bottom: 1.5rem;">
+        <span class="badge badge-era">ARCHIVE DATABASE</span>
+        <h1 style="font-size: 2.2rem; margin-top: 0.4rem;">Gielinor History Codex</h1>
+        <p class="text-secondary">Search and filter across weapons, bosses, continents, and legacy mechanics.</p>
+      </div>
+
+      <!-- Filter Bar -->
+      <div class="filter-bar">
+        <button class="filter-chip active" data-filter="all">🌟 All Content</button>
+        <button class="filter-chip" data-filter="item">🗡️ Items & Weapons</button>
+        <button class="filter-chip" data-filter="boss">🐉 Bosses & Raids</button>
+        <button class="filter-chip" data-filter="location">🗺️ Locations</button>
+        <button class="filter-chip" data-filter="mechanic">⚙️ Combat Mechanics</button>
+        <button class="filter-chip" data-filter="minigame">💤 Minigames</button>
+        <button class="filter-chip" data-filter="most-changed">⚡ Most Reworked</button>
+      </div>
+
+      <div id="browse-entities-grid"></div>
+    </section>
+
+    <!-- ================= VIEW: COMPARISONS ================= -->
+    <section id="view-comparisons" class="page-view">
+      <div style="margin-bottom: 2rem;">
+        <span class="badge badge-rebalance">SIDE-BY-SIDE LAB</span>
+        <h1 style="font-size: 2.2rem; margin-top: 0.4rem;">Before & After Evolution</h1>
+        <p class="text-secondary">Direct side-by-side stat matrices, drop table reductions, and balance shifts.</p>
+      </div>
+
+      <div id="comparisons-list-container"></div>
+    </section>
+
+    <!-- ================= VIEW: MUSEUM ================= -->
+    <section id="view-museum" class="page-view">
+      <div style="margin-bottom: 2rem;">
+        <span class="badge badge-era">EXHIBIT VAULT</span>
+        <h1 style="font-size: 2.2rem; margin-top: 0.4rem;">The OSRS Historical Museum</h1>
+        <p class="text-secondary">Deep-dive retrospectives into the most defining moments and eras in OSRS history.</p>
+      </div>
+
+      <h2 style="font-size:1.5rem; margin-bottom:1rem; color:var(--gold-300);">🏛️ Historic Eras of Old School RuneScape</h2>
+      <div id="eras-grid-container" style="margin-bottom: 3.5rem;"></div>
+
+      <h2 style="font-size:1.5rem; margin-bottom:1rem; color:var(--gold-300);">📖 Landmark Historical Showcases</h2>
+      <div id="museum-exhibits-container"></div>
+    </section>
+
+    <!-- ================= VIEW: ENTITY DETAIL ================= -->
+    <section id="view-entity-detail" class="page-view">
+      <div style="margin-bottom: 1.5rem;">
+        <a href="#browse" class="btn-osrs btn-osrs-stone" style="font-size: 0.8rem; padding: 0.4rem 0.85rem;">
+          ← Back to Archive Codex
+        </a>
+      </div>
+      <div id="entity-detail-content"></div>
+    </section>
+
+  </main>
+
+  <!-- Global Deep Search Modal Overlay -->
+  <div class="modal-overlay" id="search-modal-overlay">
+    <div class="search-modal-container">
+      <div class="search-input-header">
+        <span class="search-icon-svg">🔍</span>
+        <input type="text" class="global-search-input" id="global-search-input" placeholder="Search weapons, bosses, mechanics, or patch notes...">
+        <span class="kbd-shortcut">ESC</span>
+      </div>
+      <ul class="search-results-list" id="search-results-list"></ul>
+      <div class="search-footer-bar">
+        <span>Press <kbd class="kbd-shortcut">ESC</kbd> to exit</span>
+        <span>OSRS Time Machine v2.0</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <div class="logo-brand" style="margin-bottom: 0.75rem;">
+            <div class="logo-icon-rune">⏳</div>
+            <span>OSRS TIME MACHINE</span>
+          </div>
+          <p style="line-height: 1.6; max-width: 380px;">
+            A fan-made interactive museum and timeline explorer dedicated to preserving the rich evolution of Old School RuneScape (2013–Present).
+          </p>
+        </div>
+        <div class="footer-col">
+          <h4>Archives</h4>
+          <ul class="footer-links">
+            <li><a href="#timeline">Chronological Timeline</a></li>
+            <li><a href="#browse">Gielinor Codex</a></li>
+            <li><a href="#comparisons">Before & After Lab</a></li>
+            <li><a href="#museum">Museum Exhibits</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Iconic Eras</h4>
+          <ul class="footer-links">
+            <li><a href="#year=2013">2013 Genesis Era</a></li>
+            <li><a href="#year=2015">2015 Zulrah & Resizable</a></li>
+            <li><a href="#year=2017">2017 Raids & Inferno</a></li>
+            <li><a href="#year=2021">2021 Equipment Rebalance</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Community</h4>
+          <ul class="footer-links">
+            <li><a href="https://oldschool.runescape.wiki" target="_blank" rel="noopener">OSRS Wiki</a></li>
+            <li><a href="https://secure.runescape.com/m=news/archive?oldschool=true" target="_blank" rel="noopener">Official Patch Archive</a></li>
+            <li><a href="https://github.com" target="_blank" rel="noopener">Open Source Archive</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div>Old School RuneScape is a registered trademark of Jagex Limited. This is an independent open fan project.</div>
+        <div style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--gold-500);">100% Static & Zero Backend Required</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/sound-fx.js"></script>
+  <script src="js/data-store.js"></script>
+  <script src="js/timeline-ui.js"></script>
+  <script src="js/comparison-ui.js"></script>
+  <script src="js/museum-ui.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

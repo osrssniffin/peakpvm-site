@@ -1,0 +1,107 @@
+[
+  {
+    "id": "comp-blowpipe",
+    "title": "Toxic Blowpipe: Pre-2021 vs Post-Rebalance",
+    "entityId": "toxic-blowpipe",
+    "category": "Item Stats",
+    "eraBadge": "2015 - 2021 vs 2021+",
+    "type": "stats",
+    "description": "The landmark 2021 Equipment Rebalance halved the base accuracy and retuned dart tiers to allow other ranged weapons (BowFa, Zaryte Crossbow) to exist.",
+    "leftLabel": "Pre-Nerf (2015-2021)",
+    "rightLabel": "Current (Post-2021 Rebalance)",
+    "statComparison": [
+      { "stat": "Base Ranged Attack", "before": "+60", "after": "+30", "diff": "-50% accuracy", "type": "nerf" },
+      { "stat": "Bronze Dart Str", "before": "+1", "after": "+1", "diff": "Unchanged", "type": "neutral" },
+      { "stat": "Mithril Dart Str", "before": "+9", "after": "+7", "diff": "-2 str", "type": "nerf" },
+      { "stat": "Adamant Dart Str", "before": "+17", "after": "+10", "diff": "-7 str", "type": "nerf" },
+      { "stat": "Rune Dart Str", "before": "+26", "after": "+14", "diff": "-12 str", "type": "nerf" },
+      { "stat": "Amethyst Dart Str", "before": "N/A", "after": "+28", "diff": "+28 (New Tier)", "type": "buff" },
+      { "stat": "Dragon Dart Str", "before": "+40", "after": "+35", "diff": "-5 str", "type": "nerf" },
+      { "stat": "Attack Speed (PvM)", "before": "2-tick (1.2s)", "after": "2-tick (1.2s)", "diff": "Unchanged", "type": "neutral" },
+      { "stat": "High-Defense DPS", "before": "Top Tier Everywhere", "after": "Significantly Reduced", "diff": "Niche Shift", "type": "nerf" },
+      { "stat": "Low-Defense DPS", "before": "God Tier", "after": "God Tier (Amethyst/Dragon)", "diff": "Maintained", "type": "neutral" }
+    ],
+    "notes": "Introduced Bow of Faerdhinen (BowFa) in the same update to inherit the high-defense ranged combat crown."
+  },
+  {
+    "id": "comp-fang",
+    "title": "Osmumten's Fang: Launch vs Post-Slash Nerf",
+    "entityId": "osmumtens-fang",
+    "category": "Weapon Mechanics",
+    "eraBadge": "2022 vs 2024",
+    "type": "stats",
+    "description": "Originally rolling double-accuracy on every attack style, Fang rendered dedicated slash weapons obsolete until its slash passive was removed.",
+    "leftLabel": "Launch Version (2022)",
+    "rightLabel": "Current Version (2024)",
+    "statComparison": [
+      { "stat": "Stab Accuracy", "before": "+105", "after": "+105", "diff": "Unchanged", "type": "neutral" },
+      { "stat": "Slash Accuracy", "before": "+75", "after": "+75", "diff": "Unchanged", "type": "neutral" },
+      { "stat": "Melee Strength", "before": "+103", "after": "+103", "diff": "Unchanged", "type": "neutral" },
+      { "stat": "Stab Double Accuracy Roll", "before": "Active (High roll used)", "after": "Active (High roll used)", "diff": "Unchanged", "type": "buff" },
+      { "stat": "Slash Double Accuracy Roll", "before": "Active (Overpowered)", "after": "REMOVED (Standard roll)", "diff": "Passive Removed", "type": "nerf" },
+      { "stat": "Min Hit Damage Floor", "before": "15% of Max Hit", "after": "15% of Max Hit", "diff": "Unchanged", "type": "neutral" },
+      { "stat": "Performance at Vardorvis", "before": "Beats Blade of Saeldor", "after": "Standard Slash Tier", "diff": "Restored Meta Balance", "type": "nerf" }
+    ],
+    "notes": "Fang now serves its intended fantasy as the premier stab weapon against high-defense monsters like ToA bosses and Nex."
+  },
+  {
+    "id": "comp-zulrah-drops",
+    "title": "Zulrah Drop Table: Day-1 Launch vs Modern Table",
+    "entityId": "zulrah",
+    "category": "Drop Table Economy",
+    "eraBadge": "2015 vs Today",
+    "type": "droptable",
+    "description": "The evolution of the 'Money Snake' drop table that shaped the entire OSRS resource economy.",
+    "leftLabel": "Original 2015 Drop Table",
+    "rightLabel": "Current Modern Drop Table",
+    "dropItems": [
+      { "name": "Magic Logs", "before": "100 (Noted)", "after": "Removed (Replaced by Swamp Tar)", "impact": "-100% Woodcutting Crash" },
+      { "name": "Raw Sharks", "before": "100 (Noted)", "after": "35 (Noted)", "impact": "-65% Shark Devaluation" },
+      { "name": "Mahogany Planks", "before": "50 (Noted)", "after": "40 (Noted)", "impact": "-20% Construction Planks" },
+      { "name": "Runite Ore", "before": "10 (Noted)", "after": "2 (Noted)", "impact": "-80% Free Mining Wealth" },
+      { "name": "Dragon Med Helm", "before": "1 (Unnoted)", "after": "1 (Unnoted)", "impact": "Classic High Alch" },
+      { "name": "Zul-andra Teleports", "before": "20 Scrolls", "after": "1 - 4 Scrolls", "impact": "-85% Infinite Banking" },
+      { "name": "Average GP per Kill", "before": "~160,000 GP", "after": "~95,000 GP (scaled to scales)", "impact": "Balanced Resource Faucet" }
+    ],
+    "notes": "The 2017 nerf restored gathering skill profit for high-level skillers."
+  },
+  {
+    "id": "comp-dinhs",
+    "title": "Dinh's Bulwark: Original Tank vs Modern Offensive Shield",
+    "entityId": "dinhs-bulwark",
+    "category": "Item Stats",
+    "eraBadge": "2017 vs 2021+",
+    "type": "stats",
+    "description": "From a purely passive Wilderness escape shield into a weapon with defense-scaling offensive power.",
+    "leftLabel": "2017 Launch",
+    "rightLabel": "Current (Post-Rebalance)",
+    "statComparison": [
+      { "stat": "Stab Defense", "before": "+141", "after": "+141", "diff": "Unchanged", "type": "neutral" },
+      { "stat": "Slash Defense", "before": "+145", "after": "+145", "diff": "Unchanged", "type": "neutral" },
+      { "stat": "Crush Defense", "before": "+145", "after": "+145", "diff": "Unchanged", "type": "neutral" },
+      { "stat": "Magic Defense", "before": "+0", "after": "-10", "diff": "-10 Magic Weakness", "type": "nerf" },
+      { "stat": "Ranged Defense", "before": "+148", "after": "+148", "diff": "Unchanged", "type": "neutral" },
+      { "stat": "Strength Scaling Passive", "before": "None", "after": "+1 Str per 5 total Def bonus", "diff": "Massive AoE Melee Spec", "type": "buff" },
+      { "stat": "Special Attack Target Cap", "before": "10 Targets", "after": "10 Targets (Higher DMG)", "diff": "Top-tier Slayer Multi-Hit", "type": "buff" }
+    ],
+    "notes": "Now actively used to speedrun Slayer burst tasks and multi-target dungeon encounters."
+  },
+  {
+    "id": "comp-void-knight",
+    "title": "Elite Void Knight Set: 20% Damage vs 12.5% Damage",
+    "entityId": "abyssal-whip",
+    "category": "Armour Set Rebalance",
+    "eraBadge": "2013-2017 vs 2017+",
+    "type": "stats",
+    "description": "Void Ranged was universally best-in-slot everywhere in early OSRS until the historic May 2017 rebalance.",
+    "leftLabel": "Pre-2017 Void Ranged",
+    "rightLabel": "Modern Void / Elite Void",
+    "statComparison": [
+      { "stat": "Ranged Accuracy Bonus", "before": "+10%", "after": "+10%", "diff": "Unchanged", "type": "neutral" },
+      { "stat": "Standard Void Ranged Damage", "before": "+20%", "after": "+10%", "diff": "-50% Damage Cut", "type": "nerf" },
+      { "stat": "Elite Void Ranged Damage", "before": "+20%", "after": "+12.5%", "diff": "-37.5% Damage Cut", "type": "nerf" },
+      { "stat": "Armadyl Armour Viability", "before": "Completely Dead Content", "after": "Restored to Best-in-Slot", "diff": "Saved Boss Armour Tier", "type": "buff" }
+    ],
+    "notes": "Paved the way for Armadyl and Masori armour sets to have meaningful progression value."
+  }
+]

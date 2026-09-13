@@ -1,0 +1,183 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Cinzel+Decorative:wght@700;900&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap');
+
+:root {
+  /* Color Palette: Dark Obsidian, Runite, Ancient Gold, Parchment */
+  --bg-primary: #0d0c0a;
+  --bg-secondary: #161410;
+  --bg-tertiary: #201c15;
+  --bg-card: rgba(26, 23, 18, 0.92);
+  --bg-card-hover: rgba(36, 32, 25, 0.98);
+  --bg-parchment: #221c13;
+  
+  --gold-100: #fff4cf;
+  --gold-300: #f6d376;
+  --gold-500: #e0b653;
+  --gold-600: #c4983b;
+  --gold-700: #936e22;
+  --gold-glow: rgba(224, 182, 83, 0.25);
+  
+  --stone-border: #3b3325;
+  --stone-border-light: #524734;
+  --stone-dark: #12100d;
+  
+  --rune-cyan: #3df3ff;
+  --rune-blood: #ff4747;
+  --rune-nature: #4caf50;
+  --rune-cosmic: #b388ff;
+  --rune-solar: #ffb74d;
+
+  --text-primary: #f2eada;
+  --text-secondary: #b8ac97;
+  --text-muted: #7d7260;
+  --text-gold: #f6d376;
+  
+  /* Status Diffs */
+  --diff-buff: #4ade80;
+  --diff-buff-bg: rgba(74, 222, 128, 0.12);
+  --diff-nerf: #f87171;
+  --diff-nerf-bg: rgba(248, 113, 113, 0.12);
+  --diff-neutral: #facc15;
+  --diff-neutral-bg: rgba(250, 204, 21, 0.12);
+  
+  /* Fonts */
+  --font-serif: 'Cinzel', serif;
+  --font-display: 'Cinzel Decorative', 'Cinzel', serif;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 12px 36px rgba(0, 0, 0, 0.85);
+  --shadow-gold: 0 0 24px rgba(224, 182, 83, 0.22);
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 18px;
+
+  --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-smooth: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+  color-scheme: dark;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background-image: 
+    radial-gradient(circle at 50% 0%, rgba(224, 182, 83, 0.08) 0%, transparent 60%),
+    radial-gradient(circle at 10% 40%, rgba(61, 243, 255, 0.03) 0%, transparent 40%),
+    radial-gradient(circle at 90% 70%, rgba(255, 71, 71, 0.03) 0%, transparent 40%),
+    linear-gradient(180deg, #0a0907 0%, #110f0c 100%);
+  background-attachment: fixed;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--stone-border-light);
+  border: 2px solid var(--bg-secondary);
+  border-radius: var(--radius-sm);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gold-600);
+}
+
+/* Selection */
+::selection {
+  background: var(--gold-600);
+  color: #000;
+}
+
+/* Container */
+.container {
+  width: 100%;
+  max-width: 1340px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+/* Typography Helpers */
+h1, h2, h3, h4, .font-serif {
+  font-family: var(--font-serif);
+  letter-spacing: 0.03em;
+  color: var(--gold-100);
+  line-height: 1.25;
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.text-gold {
+  color: var(--gold-500);
+}
+
+.text-gradient-gold {
+  background: linear-gradient(135deg, #fff7db 0%, #e0b653 50%, #c4983b 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-muted {
+  color: var(--text-muted);
+}
+
+.text-secondary {
+  color: var(--text-secondary);
+}
+
+a {
+  color: var(--gold-500);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: var(--gold-300);
+  text-shadow: 0 0 10px var(--gold-glow);
+}
+
+/* Main Layout Grids */
+.page-view {
+  display: none;
+  animation: fadeIn 0.35s ease forwards;
+}
+
+.page-view.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

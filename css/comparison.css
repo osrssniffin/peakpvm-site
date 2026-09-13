@@ -1,0 +1,179 @@
+/* Before & After Visual Comparison Lab */
+
+.comparison-module {
+  background: var(--bg-secondary);
+  border: 1px solid var(--stone-border);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  margin: 2rem 0;
+  box-shadow: var(--shadow-lg);
+}
+
+.comparison-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1.5rem;
+  border-bottom: 1px solid var(--stone-border);
+  padding-bottom: 1.25rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.comparison-title-box h3 {
+  font-size: 1.35rem;
+  color: var(--gold-100);
+  margin-bottom: 0.35rem;
+}
+
+.comparison-title-box p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+/* Stat Matrix Grid */
+.stat-matrix-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.9rem;
+  margin: 1.25rem 0;
+}
+
+.stat-matrix-table th {
+  background: var(--bg-tertiary);
+  color: var(--gold-300);
+  font-family: var(--font-serif);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 0.85rem 1rem;
+  text-align: left;
+  border-bottom: 2px solid var(--gold-700);
+}
+
+.stat-matrix-table td {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  vertical-align: middle;
+}
+
+.stat-matrix-table tr:hover td {
+  background: rgba(224, 182, 83, 0.04);
+}
+
+.stat-name {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.stat-before-val {
+  font-family: var(--font-mono);
+  color: #fca5a5;
+  background: rgba(248, 113, 113, 0.08);
+  padding: 0.25rem 0.6rem;
+  border-radius: var(--radius-sm);
+  display: inline-block;
+}
+
+.stat-after-val {
+  font-family: var(--font-mono);
+  color: #86efac;
+  background: rgba(74, 222, 128, 0.08);
+  padding: 0.25rem 0.6rem;
+  border-radius: var(--radius-sm);
+  display: inline-block;
+}
+
+.stat-diff-tag {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.2rem 0.5rem;
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.stat-diff-nerf {
+  background: var(--diff-nerf-bg);
+  border: 1px solid var(--diff-nerf);
+  color: var(--diff-nerf);
+}
+
+.stat-diff-buff {
+  background: var(--diff-buff-bg);
+  border: 1px solid var(--diff-buff);
+  color: var(--diff-buff);
+}
+
+.stat-diff-neutral {
+  background: var(--diff-neutral-bg);
+  border: 1px solid var(--diff-neutral);
+  color: var(--diff-neutral);
+}
+
+/* Drop Table Visual Comparison Cards */
+.drop-comparison-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.25rem;
+  margin: 1.5rem 0;
+}
+
+.drop-item-card {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--stone-border);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  transition: all var(--transition-fast);
+}
+
+.drop-item-card:hover {
+  border-color: var(--gold-600);
+  transform: translateY(-2px);
+}
+
+.drop-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.drop-item-name {
+  font-weight: 700;
+  color: var(--gold-100);
+  font-size: 1rem;
+}
+
+.drop-rates-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-sm);
+}
+
+.drop-arrow {
+  color: var(--gold-500);
+  font-weight: 800;
+}
+
+.drop-impact-tag {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+/* Responsive Table Wrapper */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}

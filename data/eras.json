@@ -1,0 +1,99 @@
+[
+  {
+    "id": "launch-era",
+    "years": "2013",
+    "name": "The Nostalgia & Genesis Era",
+    "tagline": "A backup from August 10, 2007 brought back to life.",
+    "color": "#e0b653",
+    "description": "After a legendary 2013 poll with 446,605 votes, Old School RuneScape launched on February 22, 2013. Run by a tiny team of 3 J-Mods (Mod Ash, Mod Mat K, Mod Reach), the game began as a pure preservation time-capsule before the community demanded new updates.",
+    "milestones": [
+      "February 2013: OSRS official launch from August 2007 backup",
+      "October 2013: God Wars Dungeon reintroduced",
+      "November 2013: Rooftop Agility courses created",
+      "December 2013: Nightmare Zone released"
+    ]
+  },
+  {
+    "id": "rejuvenation-era",
+    "years": "2014 - 2015",
+    "name": "Wilderness & Slayer Rejuvenation",
+    "tagline": "The era of high-risk wilderness bosses, resizable mode, and the Money Snake.",
+    "color": "#ff5252",
+    "description": "OSRS found its own identity. Jagex reinvigorated the Wilderness with 3 multi bosses (Vet'ion, Venenatis, Callisto) and the Chaos Fanatic. In January 2015, Zulrah emerged with unprecedented drop tables, sparking both a PvM revolution and economic debates.",
+    "milestones": [
+      "March 2014: Wilderness Rejuvenation (Wildy bosses, Fountain of Rune)",
+      "January 2015: Zulrah & Toxic Blowpipe released",
+      "June 2015: Resizable Screen Mode released",
+      "September 2015: 6-hour AFK Guthans & Splashing removed",
+      "October 2015: Cerberus & Abyssal Sire released"
+    ]
+  },
+  {
+    "id": "expansion-era",
+    "years": "2016 - 2017",
+    "name": "The Great Expansion & First Raids",
+    "tagline": "The continent of Great Kourend arrives, alongside OSRS's first Raid and the ultimate PvM challenge.",
+    "color": "#76ff03",
+    "description": "OSRS doubled its landmass with Great Kourend. In January 2017, Chambers of Xeric brought raiding to OSRS. In June 2017, the TzHaar Inferno tested players with the hardest solo challenge in gaming history.",
+    "milestones": [
+      "January 2016: Great Kourend continent released",
+      "September 2016: Wintertodt released",
+      "January 2017: Chambers of Xeric (Raids 1) released",
+      "June 2017: The Inferno & Infernal Cape conquered by Woox"
+    ]
+  },
+  {
+    "id": "golden-pvm-era",
+    "years": "2018 - 2020",
+    "name": "The Golden PvM & Mobile Revolution",
+    "tagline": "OSRS Mobile explodes onto app stores, Theatre of Blood sets the peak combat standard.",
+    "color": "#40c4ff",
+    "description": "With the release of Dragon Slayer II, Vorkath, Theatre of Blood (ToB), and Song of the Elves (Prifddinas), OSRS enjoyed explosive growth. The launch of OSRS Mobile brought millions of new and returning players into Gielinor.",
+    "milestones": [
+      "January 2018: Dragon Slayer II, Vorkath, Myth's Guild",
+      "June 2018: Theatre of Blood (Raids 2) released",
+      "October 2018: OSRS Mobile global launch",
+      "July 2019: Song of the Elves & Prifddinas / Gauntlet",
+      "November 2019: First Twisted League begins"
+    ]
+  },
+  {
+    "id": "rebalance-era",
+    "years": "2021",
+    "name": "The Great Equipment Rebalance & Combat Achievements",
+    "tagline": "Fixing 6 years of power creep to pave the way for the future.",
+    "color": "#e040fb",
+    "description": "After dominating the meta for over 6 years, the Toxic Blowpipe and Black D'hide faced historic nerfs in Project Rebalance. Combat Achievements brought tiered bossing goals, and Nex returned to God Wars.",
+    "milestones": [
+      "June 2021: The Great Equipment Rebalance (Blowpipe nerf, D'hide nerf, Crystal bow buffs)",
+      "July 2021: Combat Achievements released",
+      "January 2022: Nex released in the God Wars Dungeon"
+    ]
+  },
+  {
+    "id": "modern-raids-era",
+    "years": "2022 - 2024",
+    "name": "Tombs of Amascut, DT2 & Varlamore",
+    "tagline": "Invocations redefine raiding, four grandmaster bosses arrive in DT2, and the Sun-drenched kingdom opens.",
+    "color": "#ffd700",
+    "description": "Raids 3: Tombs of Amascut launched with a customizable Invocation system. In 2023, Desert Treasure II introduced Duke Sucellus, Vardorvis, The Leviathan, and The Whisperer. Varlamore expanded the south with the Fortis Colosseum and perilous moons.",
+    "milestones": [
+      "August 2022: Tombs of Amascut (Raids 3) & Shadow of Tumeken",
+      "July 2023: Desert Treasure II & Virtus / Soulreaper Axe",
+      "March 2024: Varlamore Part 1 & Fortis Colosseum / Dizana's Quiver",
+      "September 2024: Varlamore Part 2 & Araxxor"
+    ]
+  },
+  {
+    "id": "future-era",
+    "years": "2025 - 2026",
+    "name": "The Sailing Horizon & HD Evolution",
+    "tagline": "The first new skill in OSRS history and next-generation official client upgrades.",
+    "color": "#00e676",
+    "description": "OSRS embarks into uncharted waters with Sailing, deep island exploration, and official HD graphics, standing as the longest-running and most successful retro community MMO in history.",
+    "milestones": [
+      "2025: Official OSRS HD Graphics & Plugins Client overhaul",
+      "2025 - 2026: Sailing skill launch & Ocean exploration"
+    ]
+  }
+]

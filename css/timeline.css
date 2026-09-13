@@ -1,0 +1,312 @@
+/* Timeline Scrubber & Chronological Branch Styles */
+
+/* Interactive Horizontal Year Scrubber */
+.timeline-scrubber-wrapper {
+  background: var(--bg-secondary);
+  border: 1px solid var(--stone-border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem 1.75rem;
+  margin: 2rem 0;
+  box-shadow: var(--shadow-md), inset 0 0 20px rgba(0, 0, 0, 0.5);
+  position: relative;
+  overflow: hidden;
+}
+
+.scrubber-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.scrubber-title {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--gold-300);
+}
+
+.scrubber-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.timeline-track-container {
+  position: relative;
+  padding: 1rem 0 2rem;
+  user-select: none;
+}
+
+.timeline-track-line {
+  position: absolute;
+  top: 26px;
+  left: 20px;
+  right: 20px;
+  height: 4px;
+  background: linear-gradient(90deg, #3d2f10 0%, #70541e 50%, #3d2f10 100%);
+  border-radius: 2px;
+}
+
+.timeline-track-progress {
+  position: absolute;
+  top: 26px;
+  left: 20px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--gold-600) 0%, var(--gold-300) 100%);
+  box-shadow: 0 0 12px var(--gold-glow);
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+.timeline-nodes-row {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  z-index: 2;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+}
+
+.timeline-year-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0 0.5rem;
+  transition: all var(--transition-fast);
+  outline: none;
+  min-width: 60px;
+}
+
+.node-bullet {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--bg-tertiary);
+  border: 2px solid var(--stone-border-light);
+  margin-bottom: 0.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.8);
+}
+
+.node-bullet::after {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--stone-border-light);
+  transition: all var(--transition-fast);
+}
+
+.node-year-label {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  transition: all var(--transition-fast);
+}
+
+.timeline-year-node:hover .node-bullet {
+  border-color: var(--gold-500);
+  box-shadow: 0 0 10px var(--gold-glow);
+  transform: scale(1.15);
+}
+
+.timeline-year-node:hover .node-year-label {
+  color: var(--gold-300);
+}
+
+.timeline-year-node.active .node-bullet {
+  background: var(--gold-500);
+  border-color: #fff;
+  box-shadow: 0 0 16px rgba(224, 182, 83, 0.8);
+  transform: scale(1.25);
+}
+
+.timeline-year-node.active .node-bullet::after {
+  background: #000;
+}
+
+.timeline-year-node.active .node-year-label {
+  color: var(--gold-100);
+  font-weight: 800;
+  text-shadow: 0 0 8px var(--gold-glow);
+}
+
+/* Vertical History Chronology Feed */
+.chronology-feed {
+  position: relative;
+  padding-left: 2.5rem;
+  margin: 2.5rem 0;
+}
+
+.chronology-feed::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 15px;
+  width: 3px;
+  background: linear-gradient(180deg, var(--gold-500) 0%, var(--stone-border) 95%, transparent 100%);
+}
+
+.chronology-item {
+  position: relative;
+  margin-bottom: 2rem;
+  transition: all var(--transition-normal);
+}
+
+.chronology-node-point {
+  position: absolute;
+  left: -2.5rem;
+  top: 1.25rem;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--bg-primary);
+  border: 2px solid var(--gold-500);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 10px rgba(224, 182, 83, 0.3);
+  z-index: 2;
+}
+
+.chronology-node-point::after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--gold-300);
+}
+
+.chronology-card {
+  background: var(--bg-card);
+  border: 1px solid var(--stone-border);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-fast);
+}
+
+.chronology-card:hover {
+  border-color: var(--gold-600);
+  box-shadow: var(--shadow-lg), 0 0 20px rgba(224, 182, 83, 0.1);
+  transform: translateX(4px);
+}
+
+.event-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.event-date-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--gold-500);
+  font-weight: 700;
+}
+
+.event-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--gold-100);
+  margin-bottom: 0.5rem;
+}
+
+.event-summary {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  margin-bottom: 0.85rem;
+}
+
+.event-details {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  background: rgba(0, 0, 0, 0.25);
+  border-left: 3px solid var(--stone-border-light);
+  padding: 0.75rem 1rem;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  margin-bottom: 0.85rem;
+}
+
+.event-quote {
+  font-style: italic;
+  font-size: 0.85rem;
+  color: var(--gold-300);
+  background: rgba(224, 182, 83, 0.05);
+  border-left: 3px solid var(--gold-600);
+  padding: 0.65rem 1rem;
+  margin-top: 0.75rem;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+.quote-author {
+  display: block;
+  text-align: right;
+  font-style: normal;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 0.35rem;
+}
+
+.event-diff-box {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-top: 0.85rem;
+}
+
+@media (max-width: 650px) {
+  .event-diff-box {
+    grid-template-columns: 1fr;
+  }
+}
+
+.diff-panel {
+  padding: 0.75rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+}
+
+.diff-before {
+  background: var(--diff-nerf-bg);
+  border: 1px solid rgba(248, 113, 113, 0.3);
+  color: #fca5a5;
+}
+
+.diff-after {
+  background: var(--diff-buff-bg);
+  border: 1px solid rgba(74, 222, 128, 0.3);
+  color: #86efac;
+}
+
+.diff-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.3rem;
+  display: block;
+}
