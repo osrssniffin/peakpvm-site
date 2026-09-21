@@ -1,298 +1,455 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OSRS Time Machine — Interactive Old School RuneScape History Explorer</title>
-  <meta name="description" content="Explore the rich chronological history of Old School RuneScape — updates, buffs, nerfs, drop changes, visual evolutions, and forgotten eras.">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0d0f0c" />
+  <meta name="description" content="Peak PvM — an Old School RuneScape PvM community for raids, bosses, learners, and endgame players." />
+  <title>Peak PvM — Old School RuneScape PvM Community</title>
+  <style>
+    :root {
+      --gold: #d9b45a;
+      --gold-2: #f1d486;
+      --ink: #090b09;
+      --panel: rgba(14, 17, 14, .92);
+      --panel-2: rgba(22, 25, 21, .92);
+      --line: rgba(223, 192, 108, .22);
+      --muted: #b9bcae;
+      --discord: #5865f2;
+      --discord-hover: #6d78f6;
+    }
 
-  <!-- Favicon -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⏳</text></svg>">
+    * { box-sizing: border-box; }
+    html, body { min-height: 100%; }
+    body {
+      margin: 0;
+      color: #f4f1e6;
+      background: #0a0c09;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      overflow-x: hidden;
+    }
 
-  <!-- Stylesheets -->
-  <link rel="stylesheet" href="css/main.css">
-  <link rel="stylesheet" href="css/osrs-theme.css">
-  <link rel="stylesheet" href="css/timeline.css">
-  <link rel="stylesheet" href="css/comparison.css">
-  <link rel="stylesheet" href="css/components.css">
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        linear-gradient(180deg, rgba(7,9,7,.24) 0%, rgba(7,9,7,.52) 48%, rgba(7,9,7,.96) 100%),
+        linear-gradient(90deg, rgba(8,10,8,.7) 0%, rgba(8,10,8,.16) 48%, rgba(8,10,8,.58) 100%),
+        url("assets/wallpaper.jpg") center center / cover no-repeat;
+      z-index: -3;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      background:
+        radial-gradient(circle at 50% 12%, rgba(236,198,102,.14), transparent 34%),
+        radial-gradient(circle at 50% 110%, rgba(0,0,0,.6), transparent 60%);
+      pointer-events: none;
+    }
+
+    .page {
+      min-height: 100vh;
+      display: grid;
+      align-items: center;
+      padding: 42px 22px;
+    }
+
+    .shell {
+      width: min(1080px, 100%);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.08fr .92fr;
+      gap: 28px;
+      align-items: stretch;
+    }
+
+    .hero, .invite-wrap {
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(15,18,14,.92), rgba(9,11,9,.95));
+      box-shadow: 0 24px 90px rgba(0,0,0,.58), inset 0 1px 0 rgba(255,255,255,.025);
+      backdrop-filter: blur(8px);
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      border-radius: 18px;
+      padding: 44px 44px 40px;
+      min-height: 520px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(217,180,90,.09), transparent 42%);
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      width: fit-content;
+      align-items: center;
+      gap: 10px;
+      color: var(--gold-2);
+      text-transform: uppercase;
+      letter-spacing: .2em;
+      font-size: 12px;
+      font-weight: 800;
+      margin-bottom: 18px;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 34px;
+      height: 1px;
+      background: var(--gold);
+      box-shadow: 0 0 10px rgba(217,180,90,.55);
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 680px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(54px, 8vw, 96px);
+      line-height: .88;
+      letter-spacing: -.055em;
+      color: #fff9e8;
+      text-shadow: 0 5px 26px rgba(0,0,0,.55);
+    }
+
+    h1 span { color: var(--gold-2); }
+
+    .lead {
+      margin: 25px 0 0;
+      max-width: 560px;
+      color: #d5d5cb;
+      font-size: 18px;
+      line-height: 1.65;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin-top: 30px;
+    }
+
+    .tag {
+      border: 1px solid rgba(227,197,112,.2);
+      background: rgba(227,197,112,.055);
+      color: #d9d6c9;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .04em;
+    }
+
+    .hero-foot {
+      margin-top: 36px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #a7aa9d;
+      font-size: 13px;
+    }
+
+    .pulse {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #4fd56b;
+      box-shadow: 0 0 14px rgba(79,213,107,.8);
+    }
+
+    .invite-wrap {
+      border-radius: 18px;
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .corp-frame {
+      position: relative;
+      margin-bottom: 20px;
+      border-radius: 13px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.06);
+      background: #0d0f0c;
+      aspect-ratio: 4 / 2.45;
+    }
+
+    .corp-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: saturate(.9) contrast(1.03) brightness(.8);
+    }
+
+    .corp-frame::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 45%, rgba(8,10,8,.68) 100%);
+      pointer-events: none;
+    }
+
+    .mini-label {
+      position: absolute;
+      left: 16px;
+      bottom: 14px;
+      z-index: 1;
+      color: #f4e9c8;
+      font-size: 12px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      font-weight: 800;
+    }
+
+    .discord-card {
+      display: block;
+      color: inherit;
+      text-decoration: none;
+      border-radius: 14px;
+      background: #1e1f22;
+      border: 1px solid rgba(255,255,255,.06);
+      box-shadow: 0 14px 28px rgba(0,0,0,.35);
+      overflow: hidden;
+      transition: transform .16s ease, border-color .16s ease, box-shadow .16s ease;
+    }
+
+    .discord-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(120,129,255,.46);
+      box-shadow: 0 18px 36px rgba(0,0,0,.42), 0 0 0 1px rgba(88,101,242,.16);
+    }
+
+    .discord-banner {
+      position: relative;
+      height: 112px;
+      background: linear-gradient(135deg, #313338, #1e1f22);
+      overflow: hidden;
+    }
+
+    .discord-banner img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: none;
+    }
+
+    .discord-banner.has-image img { display: block; }
+
+    .discord-banner::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(0,0,0,.02), rgba(0,0,0,.28));
+      pointer-events: none;
+    }
+
+    .discord-top {
+      padding: 18px 22px 18px;
+      display: grid;
+      grid-template-columns: 64px 1fr;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .server-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 19px;
+      display: grid;
+      place-items: center;
+      object-fit: cover;
+      background: linear-gradient(145deg, #25282d, #131518);
+      border: 4px solid #1e1f22;
+      box-shadow: 0 0 0 1px rgba(255,255,255,.06);
+    }
+
+    .discord-kicker {
+      color: #949ba4;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      margin-bottom: 3px;
+    }
+
+    .server-name {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -.02em;
+      color: #f2f3f5;
+    }
+
+    .server-desc {
+      margin-top: 4px;
+      color: #b5bac1;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .member-line {
+      padding: 0 22px 18px;
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      color: #b5bac1;
+      font-size: 12px;
+    }
+
+    .status { display: inline-flex; align-items: center; gap: 7px; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: #23a55a; }
+    .dot.offline { background: #80848e; }
+
+    .join {
+      margin: 0 18px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      border-radius: 8px;
+      background: var(--discord);
+      color: #fff;
+      font-weight: 800;
+      font-size: 15px;
+      transition: background .15s ease;
+    }
+
+    .discord-card:hover .join { background: var(--discord-hover); }
+
+    .fineprint {
+      margin: 16px 4px 0;
+      text-align: center;
+      color: #8d9088;
+      font-size: 11px;
+      line-height: 1.45;
+    }
+
+    @media (max-width: 860px) {
+      .page { padding: 20px 14px; align-items: start; }
+      .shell { grid-template-columns: 1fr; gap: 14px; }
+      .hero { min-height: auto; padding: 34px 26px 30px; }
+      h1 { font-size: clamp(58px, 18vw, 92px); }
+      .lead { font-size: 16px; }
+      .invite-wrap { padding: 18px; }
+    }
+
+    @media (max-width: 520px) {
+      .hero { padding: 28px 20px 24px; }
+      .invite-wrap { padding: 14px; }
+      .corp-frame { aspect-ratio: 16 / 9; }
+      .discord-top { padding: 18px 16px 14px; }
+      .member-line { padding: 0 16px 14px; }
+      .join { margin: 0 14px 14px; }
+    }
+  </style>
 </head>
 <body>
-
-  <!-- Site Header -->
-  <header class="site-header">
-    <div class="container header-inner">
-      <a href="#" class="logo-brand">
-        <div class="logo-icon-rune">⏳</div>
+  <main class="page">
+    <section class="shell" aria-label="Peak PvM Discord invitation">
+      <div class="hero">
         <div>
-          <span>OSRS TIME MACHINE</span>
-          <div style="font-size: 0.65rem; color: var(--gold-500); font-family: var(--font-mono); letter-spacing: 0.1em;">GIELINOR ARCHIVE</div>
-        </div>
-      </a>
-
-      <!-- Navigation Links -->
-      <nav>
-        <ul class="nav-links">
-          <li><a href="#" class="nav-link active">Home</a></li>
-          <li><a href="#timeline" class="nav-link">Timeline</a></li>
-          <li><a href="#browse" class="nav-link">Codex</a></li>
-          <li><a href="#comparisons" class="nav-link">Before & After</a></li>
-          <li><a href="#museum" class="nav-link">Museum</a></li>
-        </ul>
-      </nav>
-
-      <!-- Header Actions -->
-      <div class="header-actions">
-        <button class="btn-search-trigger" title="Global Deep Search (Ctrl+K)">
-          <span>🔍</span>
-          <span>Search Archive...</span>
-          <span class="kbd-shortcut">Ctrl+K</span>
-        </button>
-
-        <button class="btn-osrs btn-osrs-stone" id="btn-sound-toggle" style="font-size: 0.75rem; padding: 0.45rem 0.75rem;">
-          🔊 Audio ON
-        </button>
-      </div>
-    </div>
-  </header>
-
-  <!-- Main Container -->
-  <main class="container" style="padding-top: 1.5rem; padding-bottom: 3rem;">
-
-    <!-- ================= VIEW: HOME ================= -->
-    <section id="view-home" class="page-view active">
-      
-      <!-- Hero Section -->
-      <div class="hero-section">
-        <div class="hero-tagline-badge">
-          <span>✨</span>
-          <span>THE ULTIMATE OLD SCHOOL RUNESCAPE HISTORY CODEX</span>
-        </div>
-
-        <h1 class="hero-main-title font-display text-gradient-gold">
-          OSRS TIME MACHINE
-        </h1>
-
-        <p class="hero-subtitle">
-          Explore the living history of Old School RuneScape — updates, buffs, nerfs, drop changes, visual evolutions, and forgotten eras.
-        </p>
-
-        <div class="hero-cta-group">
-          <a href="#timeline" class="btn-osrs btn-osrs-gold">
-            ⏳ Search the Timeline
-          </a>
-          <a href="#browse" class="btn-osrs btn-osrs-stone">
-            📜 Explore Archives
-          </a>
-          <button class="btn-osrs btn-osrs-stone btn-random-warp">
-            🎲 Random Nostalgia Warp
-          </button>
-        </div>
-
-        <!-- Metric Counter Strip -->
-        <div class="stats-counter-strip">
-          <div class="stat-counter-item">
-            <span class="counter-num">13+</span>
-            <span class="counter-lbl">Years Documented</span>
-          </div>
-          <div class="stat-counter-item">
-            <span class="counter-num">150+</span>
-            <span class="counter-lbl">Patches Cataloged</span>
-          </div>
-          <div class="stat-counter-item">
-            <span class="counter-num">30+</span>
-            <span class="counter-lbl">Iconic Items & Bosses</span>
-          </div>
-          <div class="stat-counter-item">
-            <span class="counter-num">7</span>
-            <span class="counter-lbl">Defined Historic Eras</span>
+          <div class="eyebrow">Old School RuneScape PvM</div>
+          <h1>Peak <span>PvM</span></h1>
+          <p class="lead">
+            A relaxed OSRS PvM community for raids, bosses, learners, and endgame players. No need to leave your clan — just come chill and send content.
+          </p>
+          <div class="tags" aria-label="Community activities">
+            <span class="tag">ToA</span>
+            <span class="tag">CoX</span>
+            <span class="tag">ToB</span>
+            <span class="tag">Nex</span>
+            <span class="tag">Bossing</span>
+            <span class="tag">Learners welcome</span>
           </div>
         </div>
+        <div class="hero-foot"><span class="pulse"></span> Discord-first • raids, events, and people to PvM with</div>
       </div>
 
-      <!-- Today In History Banner -->
-      <div id="today-in-history-container"></div>
-
-      <!-- Interactive Scrubber -->
-      <div id="home-scrubber-container"></div>
-
-      <!-- Featured Exhibits Preview -->
-      <div style="margin-top: 3.5rem;">
-        <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom: 1.5rem;">
-          <div>
-            <span class="badge badge-era">CURATED ARCHIVES</span>
-            <h2 style="font-size: 1.8rem; margin-top: 0.35rem;">Iconic Museum Showcases</h2>
-          </div>
-          <a href="#museum" class="btn-osrs btn-osrs-stone" style="font-size: 0.8rem; padding: 0.45rem 0.9rem;">
-            View All Exhibits ➔
-          </a>
+      <aside class="invite-wrap">
+        <div class="corp-frame">
+          <img src="assets/corp.png" alt="Old School RuneScape group fighting the Corporeal Beast" />
+          <div class="mini-label">group content • no elitist nonsense</div>
         </div>
-        <div id="home-exhibits-container"></div>
-      </div>
 
-      <!-- Most Reworked Content Preview -->
-      <div style="margin-top: 3.5rem;">
-        <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom: 1.5rem;">
-          <div>
-            <span class="badge badge-nerf">HIGH VOLATILITY</span>
-            <h2 style="font-size: 1.8rem; margin-top: 0.35rem;">Most Reworked Content</h2>
+        <a class="discord-card" href="https://discord.gg/sg8Pq3whSS" aria-label="Join Peak PvM on Discord">
+          <div class="discord-banner" id="discordBanner" aria-hidden="true">
+            <img id="discordBannerImage" alt="" />
           </div>
-          <a href="#browse" class="btn-osrs btn-osrs-stone" style="font-size: 0.8rem; padding: 0.45rem 0.9rem;">
-            Browse All ➔
-          </a>
-        </div>
-        <div class="entity-grid" id="home-reworked-grid"></div>
-      </div>
-    </section>
-
-    <!-- ================= VIEW: TIMELINE ================= -->
-    <section id="view-timeline" class="page-view">
-      <div style="margin-bottom: 2rem;">
-        <span class="badge badge-era">CHRONOLOGICAL RECORD</span>
-        <h1 style="font-size: 2.2rem; margin-top: 0.4rem;">OSRS Grand Timeline (2013 — 2026)</h1>
-        <p class="text-secondary">Scrub through every milestone, update, balance patch, and controversy in OSRS history.</p>
-      </div>
-
-      <div id="timeline-scrubber-container"></div>
-      <div id="global-timeline-feed"></div>
-    </section>
-
-    <!-- ================= VIEW: BROWSE / CODEX ================= -->
-    <section id="view-browse" class="page-view">
-      <div style="margin-bottom: 1.5rem;">
-        <span class="badge badge-era">ARCHIVE DATABASE</span>
-        <h1 style="font-size: 2.2rem; margin-top: 0.4rem;">Gielinor History Codex</h1>
-        <p class="text-secondary">Search and filter across weapons, bosses, continents, and legacy mechanics.</p>
-      </div>
-
-      <!-- Codex Search Bar -->
-      <div style="margin-bottom: 1rem; position: relative;">
-        <input type="text" id="codex-search-input" class="global-search-input" placeholder="Quick filter codex by name, boss, or tag..." style="width:100%; background:var(--bg-secondary); border:1px solid var(--stone-border); padding:0.85rem 1.25rem; border-radius:var(--radius-sm); font-size:0.95rem;">
-      </div>
-
-      <!-- Filter Bar -->
-      <div class="filter-bar">
-        <button class="filter-chip active" data-filter="all">🌟 All Content</button>
-        <button class="filter-chip" data-filter="item">🗡️ Items & Weapons</button>
-        <button class="filter-chip" data-filter="boss">🐉 Bosses & Raids</button>
-        <button class="filter-chip" data-filter="location">🗺️ Locations</button>
-        <button class="filter-chip" data-filter="mechanic">⚙️ Combat Mechanics</button>
-        <button class="filter-chip" data-filter="minigame">💤 Minigames</button>
-        <button class="filter-chip" data-filter="most-changed">⚡ Most Reworked</button>
-      </div>
-
-      <div class="entity-grid" id="browse-entities-grid"></div>
-    </section>
-
-    <!-- ================= VIEW: COMPARISONS ================= -->
-    <section id="view-comparisons" class="page-view">
-      <div style="margin-bottom: 2rem;">
-        <span class="badge badge-rebalance">SIDE-BY-SIDE LAB</span>
-        <h1 style="font-size: 2.2rem; margin-top: 0.4rem;">Before & After Evolution</h1>
-        <p class="text-secondary">Direct side-by-side stat matrices, drop table reductions, and balance shifts.</p>
-      </div>
-
-      <div id="comparisons-list-container"></div>
-    </section>
-
-    <!-- ================= VIEW: MUSEUM ================= -->
-    <section id="view-museum" class="page-view">
-      <div style="margin-bottom: 2rem;">
-        <span class="badge badge-era">EXHIBIT VAULT</span>
-        <h1 style="font-size: 2.2rem; margin-top: 0.4rem;">The OSRS Historical Museum</h1>
-        <p class="text-secondary">Deep-dive retrospectives into the most defining moments and eras in OSRS history.</p>
-      </div>
-
-      <h2 style="font-size:1.5rem; margin-bottom:1rem; color:var(--gold-300);">🏛️ Historic Eras of Old School RuneScape</h2>
-      <div id="eras-grid-container" style="margin-bottom: 3.5rem;"></div>
-
-      <h2 style="font-size:1.5rem; margin-bottom:1rem; color:var(--gold-300);">📖 Landmark Historical Showcases</h2>
-      <div id="museum-exhibits-container"></div>
-    </section>
-
-    <!-- ================= VIEW: ENTITY DETAIL ================= -->
-    <section id="view-entity-detail" class="page-view">
-      <div style="margin-bottom: 1.5rem;">
-        <a href="#browse" class="btn-osrs btn-osrs-stone" style="font-size: 0.8rem; padding: 0.4rem 0.85rem;">
-          ← Back to Archive Codex
+          <div class="discord-top">
+            <img class="server-icon" id="discordServerIcon" alt="Peak PvM server icon" />
+            <div>
+              <div class="discord-kicker">You've been invited to join</div>
+              <div class="server-name">Peak PvM</div>
+              <div class="server-desc">OSRS PvM • Raids • Bossing • Learners welcome</div>
+            </div>
+          </div>
+          <div class="member-line">
+            <span class="status"><span class="dot"></span> active community</span>
+            <span class="status"><span class="dot offline"></span> no clan hop required</span>
+          </div>
+          <div class="join">Accept Invite</div>
         </a>
-      </div>
-      <div id="entity-detail-content"></div>
+        <div class="fineprint">Clicking the invite leaves peakpvm.com and opens Discord in this tab.</div>
+      </aside>
     </section>
-
   </main>
 
-  <!-- Global Deep Search Modal Overlay -->
-  <div class="modal-overlay" id="search-modal-overlay">
-    <div class="search-modal-container">
-      <div class="search-input-header">
-        <span class="search-icon-svg">🔍</span>
-        <input type="text" class="global-search-input" id="global-search-input" placeholder="Search weapons, bosses, mechanics, or patch notes...">
-        <span class="kbd-shortcut">ESC</span>
-      </div>
-      <ul class="search-results-list" id="search-results-list"></ul>
-      <div class="search-footer-bar">
-        <span>Press <kbd class="kbd-shortcut">ESC</kbd> to exit</span>
-        <span>OSRS Time Machine v2.0</span>
-      </div>
-    </div>
-  </div>
+  <script>
+    (() => {
+      const inviteCode = "sg8Pq3whSS";
+      const api = `https://discord.com/api/v10/invites/${inviteCode}?with_counts=true&with_expiration=true`;
 
-  <!-- Toast Notification Container -->
-  <div class="toast-container" id="toast-container"></div>
+      fetch(api)
+        .then(response => {
+          if (!response.ok) throw new Error(`Discord invite API returned ${response.status}`);
+          return response.json();
+        })
+        .then(data => {
+          const guild = data.guild;
+          if (!guild) return;
 
-  <!-- Site Footer -->
-  <footer class="site-footer">
-    <div class="container">
-      <div class="footer-grid">
-        <div class="footer-col">
-          <div class="logo-brand" style="margin-bottom: 0.75rem;">
-            <div class="logo-icon-rune">⏳</div>
-            <span>OSRS TIME MACHINE</span>
-          </div>
-          <p style="line-height: 1.6; max-width: 380px;">
-            A fan-made interactive museum and timeline explorer dedicated to preserving the rich evolution of Old School RuneScape (2013–Present).
-          </p>
-        </div>
-        <div class="footer-col">
-          <h4>Archives</h4>
-          <ul class="footer-links">
-            <li><a href="#timeline">Chronological Timeline</a></li>
-            <li><a href="#browse">Gielinor Codex</a></li>
-            <li><a href="#comparisons">Before & After Lab</a></li>
-            <li><a href="#museum">Museum Exhibits</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4>Iconic Eras</h4>
-          <ul class="footer-links">
-            <li><a href="#year=2013">2013 Genesis Era</a></li>
-            <li><a href="#year=2015">2015 Zulrah & Resizable</a></li>
-            <li><a href="#year=2017">2017 Raids & Inferno</a></li>
-            <li><a href="#year=2021">2021 Equipment Rebalance</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4>Community</h4>
-          <ul class="footer-links">
-            <li><a href="https://oldschool.runescape.wiki" target="_blank" rel="noopener">OSRS Wiki</a></li>
-            <li><a href="https://secure.runescape.com/m=news/archive?oldschool=true" target="_blank" rel="noopener">Official Patch Archive</a></li>
-            <li><a href="https://github.com" target="_blank" rel="noopener">Open Source Archive</a></li>
-          </ul>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <div>Old School RuneScape is a registered trademark of Jagex Limited. This is an independent open fan project.</div>
-        <div style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--gold-500);">100% Static & Zero Backend Required</div>
-      </div>
-    </div>
-  </footer>
+          const icon = document.getElementById("discordServerIcon");
+          if (guild.icon) {
+            const ext = guild.icon.startsWith("a_") ? "gif" : "png";
+            icon.src = `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.${ext}?size=128`;
+          }
 
-  <!-- Scripts -->
-  <script src="js/sound-fx.js"></script>
-  <script src="js/data-store.js"></script>
-  <script src="js/timeline-ui.js"></script>
-  <script src="js/comparison-ui.js"></script>
-  <script src="js/museum-ui.js"></script>
-  <script src="js/app.js"></script>
+          const bannerWrap = document.getElementById("discordBanner");
+          const banner = document.getElementById("discordBannerImage");
+          let bannerUrl = "";
+
+          if (guild.splash) {
+            bannerUrl = `https://cdn.discordapp.com/splashes/${guild.id}/${guild.splash}.jpg?size=1024`;
+          } else if (guild.banner) {
+            const ext = guild.banner.startsWith("a_") ? "gif" : "png";
+            bannerUrl = `https://cdn.discordapp.com/banners/${guild.id}/${guild.banner}.${ext}?size=1024`;
+          }
+
+          if (bannerUrl) {
+            banner.onload = () => bannerWrap.classList.add("has-image");
+            banner.src = bannerUrl;
+          }
+        })
+        .catch(() => {
+          /* Keep the card usable if Discord's public invite metadata is unavailable. */
+        });
+    })();
+  </script>
 </body>
 </html>
