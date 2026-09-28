@@ -40,7 +40,7 @@
   fetch("https://peakpvm-analytics.bells-pvm.workers.dev/api/track", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    credentials: "same-origin",
+    credentials: "include",
     keepalive: true,
     body: JSON.stringify(payload),
   }).catch(() => {});
