@@ -3,6 +3,8 @@ main = "worker.js"
 compatibility_date = "2026-09-28"
 
 # After `npx wrangler d1 create peakpvm-analytics`, paste the returned database_id below.
+workers_dev = true
+
 routes = [
   "peakpvm.com/api/*",
   "www.peakpvm.com/api/*"
