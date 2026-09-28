@@ -1,0 +1,14 @@
+name = "peakpvm-analytics"
+main = "worker.js"
+compatibility_date = "2026-09-28"
+
+# After `npx wrangler d1 create peakpvm-analytics`, paste the returned database_id below.
+routes = [
+  "peakpvm.com/api/*",
+  "www.peakpvm.com/api/*"
+]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "peakpvm-analytics"
+database_id = "538eacb0-fc94-47a5-bab5-ab94df1fe772"
