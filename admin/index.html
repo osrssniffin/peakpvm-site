@@ -256,7 +256,7 @@
       $("#loginError").textContent = "";
       e.currentTarget.classList.add("loading");
       try {
-        const res = await fetch("/api/login", {
+        const res = await fetch("https://peakpvm-analytics.bells-pvm.workers.dev/api/login", {
           method:"POST",
           headers:{"Content-Type":"application/json"},
           credentials:"same-origin",
@@ -278,7 +278,7 @@
     });
 
     $("#logout").addEventListener("click", async () => {
-      await fetch("/api/logout", { method:"POST", credentials:"same-origin" }).catch(() => {});
+      await fetch("https://peakpvm-analytics.bells-pvm.workers.dev/api/logout", { method:"POST", credentials:"same-origin" }).catch(() => {});
       $("#login").classList.remove("hidden");
       $("#password").focus();
     });
@@ -290,7 +290,7 @@
     async function load() {
       document.body.classList.add("loading");
       try {
-        const res = await fetch("/api/analytics?range=" + encodeURIComponent($("#range").value), {
+        const res = await fetch("https://peakpvm-analytics.bells-pvm.workers.dev/api/analytics?range=" + encodeURIComponent($("#range").value), {
           credentials:"same-origin",
           cache:"no-store"
         });
