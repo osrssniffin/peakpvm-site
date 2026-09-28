@@ -259,7 +259,7 @@
         const res = await fetch("https://peakpvm-analytics.bells-pvm.workers.dev/api/login", {
           method:"POST",
           headers:{"Content-Type":"application/json"},
-          credentials:"same-origin",
+          credentials: "include",
           body:JSON.stringify({
             username:$("#username").value,
             password:$("#password").value
@@ -278,7 +278,7 @@
     });
 
     $("#logout").addEventListener("click", async () => {
-      await fetch("https://peakpvm-analytics.bells-pvm.workers.dev/api/logout", { method:"POST", credentials:"same-origin" }).catch(() => {});
+      await fetch("https://peakpvm-analytics.bells-pvm.workers.dev/api/logout", { method:"POST", credentials: "include" }).catch(() => {});
       $("#login").classList.remove("hidden");
       $("#password").focus();
     });
@@ -291,7 +291,7 @@
       document.body.classList.add("loading");
       try {
         const res = await fetch("https://peakpvm-analytics.bells-pvm.workers.dev/api/analytics?range=" + encodeURIComponent($("#range").value), {
-          credentials:"same-origin",
+          credentials: "include",
           cache:"no-store"
         });
         if (res.status === 401) {
