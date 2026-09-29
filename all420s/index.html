@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#071009" />
+  <title>all 420s | Peak PvM</title>
+  <meta name="description" content="all 420s boss KC progress tracker for Peak PvM. 420 KC at every boss, tracked through Wise Old Man." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="smoke smoke-a"></div>
+  <div class="smoke smoke-b"></div>
+  <div class="leaf-field" aria-hidden="true" id="leafField"></div>
+
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="Peak PvM home">
+      <span class="brand-mark pot-leaf" aria-hidden="true"></span>
+      <span>PEAK <b>PvM</b></span>
+    </a>
+    <div class="top-actions">
+      <a class="ghost-btn" href="https://wiseoldman.net/players/all%20420s" target="_blank" rel="noreferrer">WOM PROFILE</a>
+      <button class="refresh-btn" id="refreshBtn" type="button">↻ BLAZE REFRESH</button>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="hero">
+      <div class="hero-kicker">PEAK PVM PRESENTS</div>
+      <h1><span>ALL</span> <strong>420s</strong></h1>
+      <p class="hero-sub">420 KC. EVERY BOSS. NO SURVIVORS.</p>
+      <div class="weed-divider"><span class="divider-leaf pot-leaf" aria-hidden="true"></span><i></i><span>420</span><i></i><span class="divider-leaf pot-leaf" aria-hidden="true"></span></div>
+
+      <div class="hero-grid">
+        <article class="stat-card main-stat">
+          <div class="stat-label">OVERALL BLAZE</div>
+          <div class="ring-wrap">
+            <div class="ring" id="overallRing" style="--progress: 0deg">
+              <div class="ring-inner">
+                <strong id="overallPercent">0%</strong>
+                <span>COMPLETE</span>
+              </div>
+            </div>
+          </div>
+          <div class="mega-progress"><span id="overallBar"></span></div>
+          <div class="stat-foot" id="overallKc">0 / 0 TARGET KC</div>
+        </article>
+
+        <article class="stat-card">
+          <div class="stat-icon">🔥</div>
+          <div class="stat-value" id="bossesDone">0</div>
+          <div class="stat-label">BOSSES COMPLETE</div>
+          <div class="stat-foot" id="bossesTotal">OUT OF 0 TOTAL</div>
+        </article>
+
+        <article class="stat-card">
+          <div class="stat-icon pot-leaf" aria-hidden="true"></div>
+          <div class="stat-value" id="remainingKc">0</div>
+          <div class="stat-label">KC LEFT TO GRIND</div>
+          <div class="stat-foot">THE BAG IS NOT EMPTY YET</div>
+        </article>
+
+        <article class="stat-card">
+          <div class="stat-icon">💨</div>
+          <div class="stat-value small" id="lastUpdated">--</div>
+          <div class="stat-label">WOM SNAPSHOT</div>
+          <div class="stat-foot" id="syncStatus">LOADING THE STASH...</div>
+        </article>
+      </div>
+    </section>
+
+    <section class="controls-panel">
+      <div class="search-wrap">
+        <span>⌕</span>
+        <input id="searchInput" type="search" placeholder="Search the stash..." autocomplete="off" />
+      </div>
+      <div class="filters" role="group" aria-label="Boss filters">
+        <button class="filter active" data-filter="all">ALL</button>
+        <button class="filter" data-filter="unfinished">UNFINISHED</button>
+        <button class="filter" data-filter="complete">BLAZED ✓</button>
+      </div>
+      <div class="sort-wrap">
+        <label for="sortSelect">SORT</label>
+        <select id="sortSelect">
+          <option value="progress-desc">Closest first</option>
+          <option value="progress-asc">Lowest first</option>
+          <option value="name">A → Z</option>
+          <option value="kc-desc">Highest KC</option>
+        </select>
+      </div>
+    </section>
+
+    <section class="specials">
+      <div class="special-card jad">
+        <span class="special-tag">SPECIAL BAG</span>
+        <strong>TzTok-Jad</strong>
+        <span>Goal: 20 KC</span>
+      </div>
+      <div class="special-card zuk">
+        <span class="special-tag">THE BIG NUG</span>
+        <strong>TzKal-Zuk</strong>
+        <span>Goal: 4 KC</span>
+      </div>
+      <div class="special-card standard">
+        <span class="special-tag">EVERYONE ELSE</span>
+        <strong>420 KC</strong>
+        <span>Across every WOM boss metric</span>
+      </div>
+    </section>
+
+    <section class="boss-section">
+      <div class="section-title-row">
+        <div>
+          <div class="eyebrow">THE FULL GROW</div>
+          <h2>Boss Progress</h2>
+        </div>
+        <div class="results-count" id="resultsCount">0 BOSSES</div>
+      </div>
+
+      <div class="loading-state" id="loadingState">
+        <div class="spinner pot-leaf" aria-hidden="true"></div>
+        <strong>ROLLING THE HISCORES...</strong>
+        <span>Pulling all 420s from Wise Old Man</span>
+      </div>
+
+      <div class="error-state hidden" id="errorState">
+        <div class="error-leaf">🥀</div>
+        <strong>THE STASH DIDN'T LOAD</strong>
+        <p id="errorText">Wise Old Man could not be reached.</p>
+        <button type="button" id="retryBtn">TRY AGAIN</button>
+      </div>
+
+      <div class="boss-grid hidden" id="bossGrid"></div>
+    </section>
+
+    <section class="legend">
+      <span><i class="dot complete-dot"></i>BLAZED = target reached</span>
+      <span><i class="dot active-dot"></i>GROWING = still grinding</span>
+      <span>Data source: Wise Old Man</span>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-leaf pot-leaf" aria-hidden="true"></div>
+    <strong>PEAK PvM</strong>
+    <span>420 KC EVERY BOSS</span>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
