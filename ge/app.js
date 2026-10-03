@@ -17,7 +17,20 @@
     'Anglerfish',
     'Divine super combat potion(4)',
     'Divine ranging potion(4)',
-    'Divine bastion potion(4)'
+    'Divine bastion potion(4)',
+    "Blood rune",
+    "Death rune",
+    "Chaos rune",
+    "Soul rune",
+    "Aether rune",
+    "Wrath rune",
+    "Astral rune",
+    "Demon tear",
+    "Zulrah's scales",
+    "Amethyst arrow",
+    "Dragon arrow",
+    "Steel cannonball",
+    "Manta ray"
   ];
 
   const $ = id => document.getElementById(id);
