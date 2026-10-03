@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0c0d0b" />
+  <title>GE Supply Guide | Peak PvM</title>
+  <meta name="description" content="A simple OSRS PvM supply buying guide using live RuneScape Wiki Grand Exchange price data." />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <a class="brand" href="/">Peak PvM</a>
+      <div class="title-wrap">
+        <h1>GE Supply Guide</h1>
+        <p>When should I stock up?</p>
+      </div>
+      <button id="refreshBtn" class="refresh" type="button">Refresh</button>
+    </header>
+
+    <section class="hero panel" aria-live="polite">
+      <div class="hero-row">
+        <span>Best day to buy</span>
+        <strong id="bestDay">Loading…</strong>
+      </div>
+      <div class="hero-row">
+        <span>Best time</span>
+        <strong id="bestTime">Loading…</strong>
+      </div>
+      <div class="hero-row">
+        <span>Current status</span>
+        <strong id="currentStatus" class="status neutral">Checking prices…</strong>
+      </div>
+      <div class="hero-row secondary">
+        <span>Overall supply prices</span>
+        <strong id="overallPrice">Loading…</strong>
+      </div>
+      <div class="hero-row secondary">
+        <span>Best buy right now</span>
+        <strong id="bestBuy">Loading…</strong>
+      </div>
+      <div class="hero-row secondary">
+        <span>Worst buy right now</span>
+        <strong id="worstBuy">Loading…</strong>
+      </div>
+    </section>
+
+    <section class="panel table-panel">
+      <div class="section-head">
+        <div>
+          <h2>Supplies</h2>
+          <p id="summaryText">Pulling recent Grand Exchange history…</p>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Supply</th>
+              <th>Price</th>
+              <th>Status</th>
+              <th>Usually cheapest</th>
+            </tr>
+          </thead>
+          <tbody id="supplyRows"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="note panel">
+      <strong>How this works</strong>
+      <p>It compares live prices with recent hourly trade history and looks for the weekday and time block where this PvM supply basket has tended to be cheapest. It is a historical buying signal, not a prediction of future prices.</p>
+      <p class="source">Live market data: RuneScape Wiki real-time prices API.</p>
+    </section>
+
+    <div id="errorBox" class="error hidden" role="alert"></div>
+  </main>
+
+  <script src="./app.js" defer></script>
+</body>
+</html>
