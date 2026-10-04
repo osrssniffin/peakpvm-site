@@ -1,0 +1,654 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#090806" />
+  <meta name="description" content="Peak PvM Catch Up - one dashboard for OSRS news, server status, Reddit, YouTube, polls, RuneLite, GE movement and community chatter." />
+  <title>Peak PvM Catch Up</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link href="https://fonts.cdnfonts.com/css/runescape-uf" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #080805;
+      --bg-2: #100e08;
+      --panel: rgba(18, 16, 10, .94);
+      --panel-2: rgba(27, 24, 14, .92);
+      --panel-3: rgba(255,255,255,.035);
+      --line: rgba(255, 233, 0, .18);
+      --line-soft: rgba(255,255,255,.08);
+      --gold: #ffeb33;
+      --gold-2: #cdb719;
+      --text: #f6f2d8;
+      --muted: #b9b194;
+      --muted-2: #8e856c;
+      --green: #57d880;
+      --red: #ff5d4d;
+      --orange: #ffad42;
+      --blue: #6db4ff;
+      --purple: #b99cff;
+      --shadow: 0 20px 60px rgba(0,0,0,.42);
+      --rune: 'RuneScape UF', 'Press Start 2P', serif;
+      --body: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      font-family: var(--body);
+      background:
+        radial-gradient(circle at 50% -12%, rgba(255, 228, 34, .11), transparent 30%),
+        radial-gradient(circle at 8% 34%, rgba(106, 45, 0, .12), transparent 22%),
+        linear-gradient(180deg, #0e0c07 0%, #080704 42%, #050503 100%);
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .11;
+      background-image:
+        linear-gradient(rgba(255,255,255,.022) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.022) 1px, transparent 1px);
+      background-size: 40px 40px;
+      mask-image: linear-gradient(to bottom, black, transparent 82%);
+      z-index: -1;
+    }
+    a { color: inherit; text-decoration: none; }
+    button, input { font: inherit; }
+    button { color: inherit; }
+    img { display: block; max-width: 100%; }
+    .wrap { width: min(1440px, calc(100% - 34px)); margin: 0 auto; }
+    .rune { font-family: var(--rune); color: var(--gold); text-shadow: -2px 0 #000, 0 2px #000, 2px 0 #000, 0 -2px #000; }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid var(--line-soft);
+      background: rgba(8,7,4,.86);
+      backdrop-filter: blur(16px);
+    }
+    .topbar-inner {
+      min-height: 68px;
+      display: grid;
+      grid-template-columns: auto minmax(220px, 520px) auto;
+      gap: 18px;
+      align-items: center;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+    .brand img { width: 42px; height: 42px; object-fit: cover; border-radius: 11px; border: 1px solid var(--line); background: #111; }
+    .brand-copy { display: flex; flex-direction: column; gap: 4px; line-height: 1; }
+    .brand-copy strong { font-family: var(--rune); color: var(--gold); font-size: 20px; }
+    .brand-copy span { color: #a99f82; text-transform: uppercase; font-size: 10px; font-weight: 900; letter-spacing: 1px; }
+    .searchbox { position: relative; }
+    .searchbox input {
+      width: 100%; min-height: 42px; padding: 0 42px 0 14px; color: var(--text);
+      border: 1px solid var(--line-soft); border-radius: 12px; outline: none;
+      background: rgba(255,255,255,.045);
+    }
+    .searchbox input:focus { border-color: rgba(255,233,0,.34); box-shadow: 0 0 0 3px rgba(255,233,0,.06); }
+    .searchbox span { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); color: var(--muted-2); }
+    .refresh {
+      min-height: 42px; padding: 0 14px; border-radius: 12px; border: 1px solid var(--line-soft);
+      background: rgba(255,255,255,.045); cursor: pointer; font-weight: 900;
+    }
+    .refresh:hover { border-color: var(--line); background: rgba(255,233,0,.06); }
+
+    .masthead { padding: 42px 0 22px; }
+    .masthead-row { display: flex; justify-content: space-between; align-items: end; gap: 24px; }
+    .eyebrow { color: #d2c9a8; text-transform: uppercase; letter-spacing: 1.4px; font-size: 11px; font-weight: 900; }
+    h1 { margin: 7px 0 7px; font: 400 clamp(48px, 7vw, 86px)/.92 var(--rune); color: var(--gold); text-shadow: -3px 0 #000,0 3px #000,3px 0 #000,0 -3px #000,0 10px 24px #000; }
+    .masthead p { max-width: 820px; margin: 0; color: var(--muted); line-height: 1.6; }
+    .last-updated { color: var(--muted-2); font-size: 12px; font-weight: 800; white-space: nowrap; }
+
+    .statusbar {
+      display: grid; grid-template-columns: 1.25fr repeat(3, minmax(130px,.55fr)); gap: 1px;
+      overflow: hidden; border: 1px solid var(--line-soft); background: var(--line-soft); box-shadow: var(--shadow);
+    }
+    .statuscell { min-height: 86px; padding: 16px 18px; background: linear-gradient(180deg, rgba(25,22,12,.96), rgba(14,13,8,.96)); display: flex; flex-direction: column; justify-content: center; }
+    .statuscell small { color: var(--muted-2); text-transform: uppercase; letter-spacing: 1px; font-size: 10px; font-weight: 900; }
+    .statuscell strong { margin-top: 6px; font-size: 20px; }
+    .live-status { display: flex; align-items: center; gap: 10px; }
+    .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--muted-2); box-shadow: 0 0 14px currentColor; }
+    .dot.online { background: var(--green); color: var(--green); }
+    .dot.offline { background: var(--red); color: var(--red); }
+    .dot.warn { background: var(--orange); color: var(--orange); }
+
+    .quicknav { display: flex; gap: 8px; padding: 14px 0 22px; overflow-x: auto; scrollbar-width: thin; }
+    .quicknav a { flex: 0 0 auto; padding: 9px 12px; border: 1px solid var(--line-soft); background: rgba(255,255,255,.03); color: #dcd5ba; font-size: 12px; font-weight: 800; }
+    .quicknav a:hover { color: var(--gold); border-color: var(--line); }
+
+    .summary {
+      position: relative; overflow: hidden; margin-bottom: 18px; padding: 22px 24px;
+      border: 1px solid rgba(255,233,0,.22); background: linear-gradient(135deg, rgba(255,233,0,.075), rgba(255,255,255,.022) 45%, rgba(0,0,0,.12));
+      box-shadow: var(--shadow);
+    }
+    .summary::after { content: "60 SEC"; position: absolute; right: 18px; top: 7px; font: 400 42px/1 var(--rune); color: rgba(255,233,0,.035); pointer-events: none; }
+    .summary-head { display: flex; justify-content: space-between; gap: 18px; align-items: center; margin-bottom: 14px; }
+    .summary h2 { margin: 0; font: 400 28px/1 var(--rune); color: var(--gold); }
+    .new-count { color: var(--green); font-size: 12px; font-weight: 900; }
+    .summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+    .summary-item { padding: 13px 14px; background: rgba(0,0,0,.2); border-left: 3px solid rgba(255,233,0,.4); min-width: 0; }
+    .summary-item span { display: block; color: var(--muted-2); text-transform: uppercase; font-size: 10px; font-weight: 900; letter-spacing: .7px; margin-bottom: 5px; }
+    .summary-item strong { display: block; font-size: 13px; line-height: 1.42; overflow: hidden; text-overflow: ellipsis; }
+
+    .dashboard { display: grid; grid-template-columns: minmax(0, 1.18fr) minmax(380px,.82fr); gap: 18px; align-items: start; }
+    .stack { display: grid; gap: 18px; min-width: 0; }
+    .panel { border: 1px solid var(--line-soft); background: var(--panel); box-shadow: var(--shadow); min-width: 0; }
+    .panel-head { min-height: 58px; display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 13px 16px; border-bottom: 1px solid var(--line-soft); background: rgba(255,255,255,.025); }
+    .panel-title { display: flex; align-items: center; gap: 10px; min-width: 0; }
+    .panel-title h2 { margin: 0; font-size: 16px; }
+    .panel-title small { display: block; margin-top: 3px; color: var(--muted-2); font-size: 10px; text-transform: uppercase; letter-spacing: .7px; }
+    .source-link { color: var(--gold-2); font-size: 11px; font-weight: 900; white-space: nowrap; }
+    .source-link:hover { color: var(--gold); }
+    .panel-body { padding: 16px; }
+    .empty { padding: 26px 18px; color: var(--muted); text-align: center; border: 1px dashed var(--line-soft); line-height: 1.55; }
+    .error { color: #ffb0a8; }
+    .new-badge { display: inline-flex; align-items: center; min-height: 18px; padding: 0 6px; margin-left: 7px; color: #07140a; background: var(--green); font-size: 9px; font-weight: 1000; vertical-align: 2px; }
+
+    .news-feature { display: grid; grid-template-columns: minmax(230px,.78fr) 1.22fr; min-height: 330px; }
+    .news-image { min-height: 250px; background: #15130d center/cover no-repeat; border-right: 1px solid var(--line-soft); position: relative; }
+    .news-image::after { content:""; position:absolute; inset:0; background: linear-gradient(90deg, transparent 55%, rgba(18,16,10,.74)); }
+    .news-copy { padding: 23px; min-width: 0; }
+    .meta { display: flex; flex-wrap: wrap; gap: 8px 12px; color: var(--muted-2); font-size: 11px; font-weight: 800; text-transform: uppercase; }
+    .news-copy h3 { margin: 10px 0 10px; font-size: clamp(24px, 3vw, 36px); line-height: 1.08; }
+    .news-copy p { color: var(--muted); line-height: 1.6; }
+    .tldr { margin: 16px 0 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+    .tldr li { position: relative; padding-left: 17px; color: #e6dfc4; line-height: 1.5; font-size: 13px; }
+    .tldr li::before { content:""; position:absolute; left:0; top:.62em; width:7px; height:7px; background: var(--gold-2); transform: rotate(45deg); }
+    .read-link { display: inline-flex; margin-top: 17px; color: var(--gold); font-weight: 900; font-size: 12px; }
+    .news-tabs, .tabbar { display: flex; gap: 7px; padding: 10px 12px; overflow-x: auto; border-top: 1px solid var(--line-soft); background: rgba(0,0,0,.14); }
+    .tabbtn { flex: 0 0 auto; cursor: pointer; border: 1px solid var(--line-soft); background: rgba(255,255,255,.03); color: var(--muted); padding: 8px 10px; font-size: 11px; font-weight: 900; }
+    .tabbtn.active, .tabbtn:hover { color: #171400; background: var(--gold); border-color: var(--gold); }
+
+    .notice-list, .poll-list, .reddit-list, .jmod-list, .runelite-list, .market-list { display: grid; gap: 1px; background: var(--line-soft); }
+    .notice, .poll, .reddit-post, .jmod, .runelite-item, .market-item { background: var(--panel); }
+    .notice, .poll, .jmod, .runelite-item { padding: 14px 16px; }
+    .notice { display: grid; grid-template-columns: 92px 1fr auto; gap: 13px; align-items: start; }
+    .notice-status { font-size: 10px; font-weight: 1000; text-transform: uppercase; color: var(--orange); }
+    .notice-status.resolved { color: var(--green); }
+    .notice h3, .poll h3, .jmod h3, .runelite-item h3 { margin: 0 0 5px; font-size: 13px; line-height: 1.35; }
+    .notice p, .poll p, .jmod p, .runelite-item p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
+    .tiny { color: var(--muted-2); font-size: 10px; }
+
+    .reddit-post { display: grid; grid-template-columns: 62px 1fr auto; gap: 13px; padding: 13px 15px; align-items: center; }
+    .reddit-score { text-align: center; }
+    .reddit-score strong { display: block; color: var(--gold); font-size: 15px; }
+    .reddit-score span { color: var(--muted-2); font-size: 9px; text-transform: uppercase; }
+    .reddit-post h3 { margin: 0 0 5px; font-size: 13px; line-height: 1.38; }
+    .reddit-meta { color: var(--muted-2); font-size: 10px; }
+    .reddit-comments { min-width: 54px; text-align: right; color: var(--blue); font-size: 11px; font-weight: 900; }
+
+    .video-list { display: grid; gap: 1px; background: var(--line-soft); }
+    .video { display: grid; grid-template-columns: 150px 1fr; gap: 13px; padding: 12px; background: var(--panel); }
+    .thumb { aspect-ratio: 16/9; background: #111 center/cover no-repeat; position: relative; overflow: hidden; }
+    .rank { position:absolute; left:6px; top:6px; min-width: 26px; height:26px; display:grid; place-items:center; background: rgba(0,0,0,.78); color: var(--gold); font-weight: 1000; font-size: 11px; border: 1px solid rgba(255,233,0,.3); }
+    .video h3 { margin: 1px 0 6px; font-size: 13px; line-height: 1.4; }
+    .video .creator { color: #d8d0b4; font-size: 11px; font-weight: 800; }
+    .stats { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 7px; color: var(--muted-2); font-size: 10px; }
+
+    .behemeth { display: grid; grid-template-columns: minmax(210px,.92fr) 1.08fr; gap: 0; }
+    .behemeth-media { aspect-ratio: 16/9; background: #111 center/cover no-repeat; min-height: 210px; }
+    .behemeth-copy { padding: 20px; }
+    .behemeth-copy h3 { margin: 8px 0; font-size: 21px; line-height: 1.2; }
+    .behemeth-copy p { color: var(--muted); font-size: 12px; line-height: 1.55; }
+
+    .lower-grid { margin-top: 18px; display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 18px; align-items: start; }
+    .topic-cloud { display: flex; flex-wrap: wrap; gap: 8px; }
+    .topic { padding: 9px 10px; border: 1px solid var(--line-soft); background: var(--panel-3); color: #e6dfc3; font-size: 11px; font-weight: 800; }
+    .topic b { color: var(--gold); margin-left: 6px; }
+    .jmod p { color: #ddd6bc; }
+    .jmod .quote { margin-top: 7px; padding-left: 10px; border-left: 2px solid var(--purple); }
+    .market-item { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; padding: 12px 14px; }
+    .market-item strong { font-size: 12px; }
+    .market-item small { display:block; color:var(--muted-2); margin-top:3px; }
+    .change { font-weight: 1000; font-size: 12px; }
+    .change.up { color: var(--green); }
+    .change.down { color: var(--red); }
+    .schedule { display: grid; gap: 10px; }
+    .schedule-row { display:grid; grid-template-columns: 94px 1fr; gap: 10px; padding: 11px 0; border-bottom: 1px solid var(--line-soft); }
+    .schedule-row:last-child { border-bottom: 0; }
+    .schedule-row strong { color: var(--gold); font-size: 11px; }
+    .schedule-row span { color: var(--muted); font-size: 11px; line-height: 1.45; }
+
+    .links-strip { margin: 18px 0 40px; display: flex; flex-wrap: wrap; gap: 8px; }
+    .links-strip a { padding: 10px 12px; border: 1px solid var(--line-soft); background: rgba(255,255,255,.025); color: var(--muted); font-size: 11px; font-weight: 900; }
+    .links-strip a:hover { color: var(--gold); border-color: var(--line); }
+    footer { padding: 0 0 42px; color: var(--muted-2); font-size: 11px; line-height: 1.6; }
+
+    [data-hidden="true"] { display: none !important; }
+    .loading-line { height: 12px; width: 72%; margin: 10px 0; background: linear-gradient(90deg, rgba(255,255,255,.03), rgba(255,255,255,.08), rgba(255,255,255,.03)); background-size: 220% 100%; animation: load 1.2s linear infinite; }
+    @keyframes load { to { background-position: -220% 0; } }
+
+    @media (max-width: 1100px) {
+      .dashboard { grid-template-columns: 1fr; }
+      .lower-grid { grid-template-columns: 1fr 1fr; }
+      .summary-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 780px) {
+      .topbar-inner { grid-template-columns: auto 1fr auto; }
+      .brand-copy span { display:none; }
+      .brand-copy strong { font-size: 17px; }
+      .statusbar { grid-template-columns: 1fr 1fr; }
+      .news-feature, .behemeth { grid-template-columns: 1fr; }
+      .news-image { border-right: 0; border-bottom: 1px solid var(--line-soft); }
+      .lower-grid { grid-template-columns: 1fr; }
+      .masthead-row { display:block; }
+      .last-updated { margin-top: 10px; }
+    }
+    @media (max-width: 560px) {
+      .wrap { width: min(100% - 18px, 1440px); }
+      .topbar-inner { min-height: 62px; gap: 8px; }
+      .brand img { width: 36px; height: 36px; }
+      .brand-copy strong { display:none; }
+      .searchbox input { min-height: 38px; }
+      .refresh { min-height:38px; padding:0 11px; }
+      .masthead { padding-top: 28px; }
+      h1 { font-size: 50px; }
+      .statusbar { grid-template-columns: 1fr; }
+      .summary-grid { grid-template-columns: 1fr; }
+      .notice { grid-template-columns: 1fr; }
+      .reddit-post { grid-template-columns: 50px 1fr; }
+      .reddit-comments { grid-column: 2; text-align:left; }
+      .video { grid-template-columns: 120px 1fr; }
+      .panel-head { align-items:flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <a class="brand" href="../" aria-label="Peak PvM home">
+        <img src="../peakpvm-logo.png" alt="Peak PvM" onerror="this.style.display='none'">
+        <div class="brand-copy"><strong>Peak PvM</strong><span>OSRS Catch Up</span></div>
+      </a>
+      <label class="searchbox">
+        <input id="search" type="search" autocomplete="off" placeholder="Search everything loaded..." aria-label="Search dashboard">
+        <span>⌕</span>
+      </label>
+      <button class="refresh" id="refresh" type="button">Refresh</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="masthead">
+      <div class="masthead-row">
+        <div>
+          <div class="eyebrow">One tab. The whole OSRS pulse.</div>
+          <h1>Catch Up</h1>
+          <p>Official news, server status, Reddit, YouTube, Behemeth, polls, J-Mod comments, RuneLite changes, GE movement and the topics getting talked about right now.</p>
+        </div>
+        <div class="last-updated" id="updated">Loading live data...</div>
+      </div>
+    </section>
+
+    <section class="statusbar" aria-label="OSRS live overview">
+      <div class="statuscell"><small>Game status</small><strong class="live-status"><span class="dot" id="status-dot"></span><span id="game-status">Checking...</span></strong></div>
+      <div class="statuscell"><small>Players online</small><strong id="player-count">...</strong></div>
+      <div class="statuscell"><small>Active notices</small><strong id="issue-count">...</strong></div>
+      <div class="statuscell"><small>Since last visit</small><strong id="since-count">...</strong></div>
+    </section>
+
+    <nav class="quicknav" aria-label="Dashboard sections">
+      <a href="#official">Official</a><a href="#servers">Server Watch</a><a href="#reddit">Reddit</a><a href="#youtube">YouTube</a><a href="#behemeth">Behemeth</a><a href="#jmods">J-Mod Watch</a><a href="#market">GE Pulse</a><a href="#runelite">RuneLite</a><a href="#pulse">Community Pulse</a>
+    </nav>
+
+    <section class="summary" id="summary">
+      <div class="summary-head"><h2>60-Second Catch Up</h2><div class="new-count" id="new-count"></div></div>
+      <div class="summary-grid" id="summary-grid">
+        <div class="summary-item"><span>Loading</span><strong>Pulling the newest OSRS activity...</strong></div>
+      </div>
+    </section>
+
+    <div class="dashboard">
+      <div class="stack">
+        <section class="panel searchable" id="official" data-search="official jagex news updates blog">
+          <div class="panel-head"><div class="panel-title"><div>📰</div><div><h2>Jagex TL;DR</h2><small>Newest official posts</small></div></div><a class="source-link" href="https://oldschool.runescape.com/" target="_blank" rel="noopener">Official site ↗</a></div>
+          <div id="news-content"><div class="panel-body"><div class="loading-line"></div><div class="loading-line"></div><div class="loading-line"></div></div></div>
+          <div class="news-tabs" id="news-tabs"></div>
+        </section>
+
+        <section class="panel searchable" id="servers" data-search="server status maintenance outage issues jagex">
+          <div class="panel-head"><div class="panel-title"><div>🚨</div><div><h2>Server Watch</h2><small>Jagex-reported status and notices</small></div></div><a class="source-link" href="https://secure.runescape.com/m=news/game-status-information-centre?oldschool=1" target="_blank" rel="noopener">Status centre ↗</a></div>
+          <div class="notice-list" id="notice-list"></div>
+        </section>
+
+        <section class="panel searchable" id="reddit" data-search="reddit 2007scape hot rising top community">
+          <div class="panel-head"><div class="panel-title"><div>🔥</div><div><h2>Reddit Right Now</h2><small>r/2007scape, stickies excluded</small></div></div><a class="source-link" href="https://www.reddit.com/r/2007scape/" target="_blank" rel="noopener">Open Reddit ↗</a></div>
+          <div class="tabbar" id="reddit-tabs"><button class="tabbtn active" data-reddit="hot">Hot</button><button class="tabbtn" data-reddit="rising">Rising</button><button class="tabbtn" data-reddit="top">Top 24h</button></div>
+          <div class="reddit-list" id="reddit-list"></div>
+        </section>
+      </div>
+
+      <div class="stack">
+        <section class="panel searchable" id="behemeth" data-search="behemeth daily youtube streamer highlights news">
+          <div class="panel-head"><div class="panel-title"><div>👑</div><div><h2>Newest Behemeth</h2><small>Latest upload, not a hardcoded day</small></div></div><a class="source-link" href="https://www.youtube.com/@behemethOSRS" target="_blank" rel="noopener">Channel ↗</a></div>
+          <div id="behemeth-content" class="panel-body"><div class="loading-line"></div><div class="loading-line"></div></div>
+        </section>
+
+        <section class="panel searchable" id="youtube" data-search="youtube videos osrs creators popular views comments">
+          <div class="panel-head"><div class="panel-title"><div>📺</div><div><h2>OSRS YouTube</h2><small>Most popular uploads from the last 7 days</small></div></div><a class="source-link" href="https://www.youtube.com/results?search_query=osrs" target="_blank" rel="noopener">YouTube ↗</a></div>
+          <div class="tabbar" id="youtube-tabs"><button class="tabbtn active" data-sort="views">By views</button><button class="tabbtn" data-sort="comments">By comments</button></div>
+          <div class="video-list" id="video-list"></div>
+        </section>
+
+        <section class="panel searchable" data-search="polls survey vote osrs">
+          <div class="panel-head"><div class="panel-title"><div>🗳️</div><div><h2>Polls</h2><small>Latest official polling activity</small></div></div><a class="source-link" href="https://oldschool.runescape.com/polls/" target="_blank" rel="noopener">Poll archive ↗</a></div>
+          <div class="poll-list" id="poll-list"></div>
+        </section>
+      </div>
+    </div>
+
+    <div class="lower-grid">
+      <section class="panel searchable" id="pulse" data-search="community pulse trending topics">
+        <div class="panel-head"><div class="panel-title"><div>📡</div><div><h2>Community Pulse</h2><small>Repeated topics across loaded sources</small></div></div></div>
+        <div class="panel-body"><div class="topic-cloud" id="topic-cloud"></div></div>
+      </section>
+
+      <section class="panel searchable" id="jmods" data-search="jmod jagex reddit comments mods">
+        <div class="panel-head"><div class="panel-title"><div>🟨</div><div><h2>J-Mod Watch</h2><small>Jagex comments found in hot Reddit threads</small></div></div></div>
+        <div class="jmod-list" id="jmod-list"></div>
+      </section>
+
+      <section class="panel searchable" id="market" data-search="ge grand exchange prices market movers items">
+        <div class="panel-head"><div class="panel-title"><div>💰</div><div><h2>GE Pulse</h2><small>Meaningful short-term price movement</small></div></div><a class="source-link" href="https://prices.runescape.wiki/osrs/" target="_blank" rel="noopener">Wiki prices ↗</a></div>
+        <div class="market-list" id="market-list"></div>
+      </section>
+
+      <section class="panel searchable" id="runelite" data-search="runelite client commits releases updates github">
+        <div class="panel-head"><div class="panel-title"><div>🧑‍💻</div><div><h2>RuneLite Watch</h2><small>Recent official repository changes</small></div></div><a class="source-link" href="https://github.com/runelite/runelite" target="_blank" rel="noopener">GitHub ↗</a></div>
+        <div class="runelite-list" id="runelite-list"></div>
+      </section>
+
+      <section class="panel searchable" data-search="weekly update maintenance schedule tuesday wednesday">
+        <div class="panel-head"><div class="panel-title"><div>📅</div><div><h2>Weekly Rhythm</h2><small>Usual Jagex maintenance/update windows</small></div></div></div>
+        <div class="panel-body"><div class="schedule" id="schedule"></div></div>
+      </section>
+
+      <section class="panel searchable" data-search="official youtube old school runescape jagex video">
+        <div class="panel-head"><div class="panel-title"><div>🎬</div><div><h2>Official Video</h2><small>Newest Old School RuneScape upload</small></div></div><a class="source-link" href="https://www.youtube.com/@OldSchoolRuneScape" target="_blank" rel="noopener">Channel ↗</a></div>
+        <div id="official-video" class="panel-body"></div>
+      </section>
+    </div>
+
+    <div class="links-strip" aria-label="Useful OSRS links">
+      <a href="https://oldschool.runescape.com/" target="_blank" rel="noopener">OSRS Home</a>
+      <a href="https://secure.runescape.com/m=news/archive?oldschool=1" target="_blank" rel="noopener">News Archive</a>
+      <a href="https://secure.runescape.com/m=news/game-status-information-centre?oldschool=1" target="_blank" rel="noopener">Status</a>
+      <a href="https://oldschool.runescape.com/polls/" target="_blank" rel="noopener">Polls</a>
+      <a href="https://secure.runescape.com/m=news/roadmap?oldschool=1" target="_blank" rel="noopener">Roadmap</a>
+      <a href="https://oldschool.runescape.wiki/" target="_blank" rel="noopener">OSRS Wiki</a>
+      <a href="https://runelite.net/" target="_blank" rel="noopener">RuneLite</a>
+      <a href="https://www.reddit.com/r/2007scape/" target="_blank" rel="noopener">r/2007scape</a>
+    </div>
+
+    <footer>
+      Peak PvM Catch Up pulls public information from official Jagex pages, Reddit, YouTube, RuneLite GitHub and the OSRS Wiki price API. Jagex's status page is manually updated, so it can lag behind real events. Peak PvM is not affiliated with Jagex.
+    </footer>
+  </main>
+
+  <script>
+    const API_URL = 'https://peakpvm-catchup.bells-pvm.workers.dev/api/catchup';
+    const state = { data: null, newsIndex: 0, redditMode: 'hot', youtubeSort: 'views', lastVisit: Number(localStorage.getItem('peakCatchupLastVisit') || 0) };
+
+    const $ = id => document.getElementById(id);
+    const fmt = new Intl.NumberFormat('en-US');
+    const safeUrl = value => {
+      try { const u = new URL(value, location.origin); return /^https?:$/.test(u.protocol) ? u.href : '#'; }
+      catch { return '#'; }
+    };
+    const esc = value => String(value ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+    const ago = value => {
+      if (!value) return 'unknown time';
+      const ms = Date.now() - new Date(value).getTime();
+      if (!Number.isFinite(ms)) return value;
+      const min = Math.max(0, Math.floor(ms / 60000));
+      if (min < 1) return 'just now';
+      if (min < 60) return `${min}m ago`;
+      const hr = Math.floor(min / 60);
+      if (hr < 48) return `${hr}h ago`;
+      return `${Math.floor(hr / 24)}d ago`;
+    };
+    const isNew = item => state.lastVisit && item && new Date(item).getTime() > state.lastVisit;
+    const badge = date => isNew(date) ? '<span class="new-badge">NEW</span>' : '';
+    const empty = text => `<div class="empty">${esc(text)}</div>`;
+    const strip = value => String(value || '').replace(/\s+/g, ' ').trim();
+
+    async function load(force = false) {
+      $('refresh').disabled = true;
+      $('refresh').textContent = 'Loading...';
+      try {
+        const url = force ? `${API_URL}?refresh=${Date.now()}` : API_URL;
+        const res = await fetch(url, { headers: { 'accept': 'application/json' }, cache: force ? 'reload' : 'default' });
+        if (!res.ok) throw new Error(`Catch Up API returned ${res.status}`);
+        state.data = await res.json();
+        render();
+        localStorage.setItem('peakCatchupLastVisit', String(Date.now()));
+      } catch (err) {
+        showFatal(err.message || 'Unable to load Catch Up data.');
+      } finally {
+        $('refresh').disabled = false;
+        $('refresh').textContent = 'Refresh';
+      }
+    }
+
+    function showFatal(message) {
+      $('updated').textContent = 'Live feed unavailable';
+      $('summary-grid').innerHTML = `<div class="summary-item"><span>API error</span><strong>${esc(message)}</strong></div>`;
+      ['news-content','notice-list','reddit-list','video-list','poll-list','jmod-list','market-list','runelite-list','behemeth-content','official-video'].forEach(id => { if ($(id)) $(id).innerHTML = empty('This section could not load.'); });
+    }
+
+    function render() {
+      const d = state.data || {};
+      renderOverview(d);
+      renderSummary(d);
+      renderNews(d.jagex?.news || []);
+      renderNotices(d.jagex?.status);
+      renderReddit(d.reddit);
+      renderYouTube(d.youtube);
+      renderPolls(d.jagex?.polls || []);
+      renderTopics(d);
+      renderJmods(d.reddit?.jmods || []);
+      renderMarket(d.market);
+      renderRuneLite(d.runelite);
+      renderSchedule();
+      applySearch();
+    }
+
+    function renderOverview(d) {
+      const status = (d.jagex?.status?.value || 'UNKNOWN').toUpperCase();
+      $('game-status').textContent = status;
+      $('status-dot').className = `dot ${status === 'ONLINE' ? 'online' : status === 'OFFLINE' ? 'offline' : 'warn'}`;
+      $('player-count').textContent = d.jagex?.playerCount ? fmt.format(d.jagex.playerCount) : 'Unavailable';
+      const notices = (d.jagex?.status?.notices || []).filter(n => !/resolved/i.test(n.status || ''));
+      $('issue-count').textContent = fmt.format(notices.length);
+      $('updated').textContent = d.generatedAt ? `Updated ${ago(d.generatedAt)}` : 'Loaded';
+
+      const dates = [];
+      (d.jagex?.news || []).forEach(x => dates.push(x.publishedAt));
+      (d.reddit?.hot || []).forEach(x => dates.push(x.createdAt));
+      (d.youtube?.videos || []).forEach(x => dates.push(x.publishedAt));
+      (d.runelite?.items || []).forEach(x => dates.push(x.date));
+      const count = state.lastVisit ? dates.filter(isNew).length : 0;
+      $('since-count').textContent = state.lastVisit ? fmt.format(count) : 'First visit';
+      $('new-count').textContent = state.lastVisit ? `${count} new loaded items since your last visit` : 'Your next visit will track what changed';
+    }
+
+    function renderSummary(d) {
+      const news = d.jagex?.news?.[0];
+      const reddit = d.reddit?.hot?.[0];
+      const video = [...(d.youtube?.videos || [])].sort((a,b) => (b.views || 0) - (a.views || 0))[0];
+      const status = d.jagex?.status;
+      const items = [
+        ['Jagex', news?.title || 'No official post loaded'],
+        ['Reddit', reddit?.title || 'No Reddit post loaded'],
+        ['YouTube', video ? `${video.title} · ${fmt.format(video.views || 0)} views` : 'YouTube feed not configured or unavailable'],
+        ['Servers', status ? `${status.value || 'Unknown'} · ${(status.notices || []).filter(n => !/resolved/i.test(n.status || '')).length} active notices` : 'Status unavailable']
+      ];
+      $('summary-grid').innerHTML = items.map(([label,text]) => `<div class="summary-item"><span>${esc(label)}</span><strong>${esc(text)}</strong></div>`).join('');
+    }
+
+    function renderNews(news) {
+      if (!news.length) {
+        $('news-content').innerHTML = empty('No official OSRS posts were returned.');
+        $('news-tabs').innerHTML = '';
+        return;
+      }
+      state.newsIndex = Math.min(state.newsIndex, news.length - 1);
+      const n = news[state.newsIndex];
+      const image = n.image ? `style="background-image:url('${esc(safeUrl(n.image))}')"` : '';
+      const bullets = (n.tldr?.length ? n.tldr : [n.description].filter(Boolean)).slice(0,4);
+      $('news-content').innerHTML = `
+        <article class="news-feature" data-search="${esc([n.title,n.category,n.description,...bullets].join(' '))}">
+          <div class="news-image" ${image}></div>
+          <div class="news-copy">
+            <div class="meta"><span>${esc(n.category || 'Official')}</span><span>${esc(n.publishedAt ? ago(n.publishedAt) : '')}</span></div>
+            <h3>${esc(n.title)}${badge(n.publishedAt)}</h3>
+            ${n.description ? `<p>${esc(n.description)}</p>` : ''}
+            <ul class="tldr">${bullets.map(x => `<li>${esc(x)}</li>`).join('')}</ul>
+            <a class="read-link" href="${safeUrl(n.url)}" target="_blank" rel="noopener">Read the full Jagex post ↗</a>
+          </div>
+        </article>`;
+      $('news-tabs').innerHTML = news.slice(0,5).map((x,i) => `<button class="tabbtn ${i === state.newsIndex ? 'active' : ''}" data-news-index="${i}">${i+1}. ${esc(x.title.slice(0,28))}${x.title.length > 28 ? '…' : ''}</button>`).join('');
+      $('news-tabs').querySelectorAll('[data-news-index]').forEach(btn => btn.addEventListener('click', () => { state.newsIndex = Number(btn.dataset.newsIndex); renderNews(news); applySearch(); }));
+    }
+
+    function renderNotices(status) {
+      const list = status?.notices || [];
+      if (!list.length) { $('notice-list').innerHTML = empty(status?.value === 'ONLINE' ? 'No active server notices found on the Jagex status page.' : 'No status notices could be parsed.'); return; }
+      $('notice-list').innerHTML = list.slice(0,10).map(n => `
+        <a class="notice" href="${safeUrl(n.url || 'https://secure.runescape.com/m=news/game-status-information-centre?oldschool=1')}" target="_blank" rel="noopener" data-search="${esc([n.title,n.status,n.body,n.date].join(' '))}">
+          <div class="notice-status ${/resolved/i.test(n.status || '') ? 'resolved' : ''}">${esc(n.status || 'Notice')}</div>
+          <div><h3>${esc(n.title || 'Jagex notice')}</h3><p>${esc(n.body || '')}</p></div>
+          <div class="tiny">${esc(n.date || '')}</div>
+        </a>`).join('');
+    }
+
+    function renderReddit(reddit) {
+      if (!reddit) { $('reddit-list').innerHTML = empty('Reddit feed unavailable.'); return; }
+      const posts = reddit[state.redditMode] || [];
+      if (!posts.length) { $('reddit-list').innerHTML = empty(reddit.error || 'No Reddit posts returned.'); return; }
+      $('reddit-list').innerHTML = posts.slice(0,12).map(p => `
+        <a class="reddit-post" href="${safeUrl(p.url)}" target="_blank" rel="noopener" data-search="${esc([p.title,p.flair,p.author].join(' '))}">
+          <div class="reddit-score"><strong>${fmt.format(p.score || 0)}</strong><span>score</span></div>
+          <div><h3>${esc(p.title)}${badge(p.createdAt)}</h3><div class="reddit-meta">${esc(p.flair || 'r/2007scape')} · u/${esc(p.author || 'unknown')} · ${esc(ago(p.createdAt))}</div></div>
+          <div class="reddit-comments">${fmt.format(p.comments || 0)} 💬</div>
+        </a>`).join('');
+    }
+
+    function renderYouTube(youtube) {
+      if (!youtube?.configured) {
+        $('video-list').innerHTML = empty(youtube?.error || 'YouTube needs the YOUTUBE_API_KEY Worker secret before this section can load real data.');
+        $('behemeth-content').innerHTML = empty('YouTube API key not configured.');
+        $('official-video').innerHTML = empty('YouTube API key not configured.');
+        return;
+      }
+      const videos = [...(youtube.videos || [])].sort((a,b) => state.youtubeSort === 'comments' ? (b.comments || 0) - (a.comments || 0) : (b.views || 0) - (a.views || 0));
+      $('video-list').innerHTML = videos.length ? videos.slice(0,10).map((v,i) => `
+        <a class="video" href="${safeUrl(v.url)}" target="_blank" rel="noopener" data-search="${esc([v.title,v.channel].join(' '))}">
+          <div class="thumb" style="background-image:url('${esc(safeUrl(v.thumbnail))}')"><span class="rank">${i+1}</span></div>
+          <div><h3>${esc(v.title)}${badge(v.publishedAt)}</h3><div class="creator">${esc(v.channel || '')}</div><div class="stats"><span>${fmt.format(v.views || 0)} views</span><span>${fmt.format(v.comments || 0)} comments</span><span>${fmt.format(v.likes || 0)} likes</span><span>${esc(ago(v.publishedAt))}</span></div></div>
+        </a>`).join('') : empty('No matching OSRS videos were returned for the last seven days.');
+      renderFeaturedVideo('behemeth-content', youtube.behemeth, true);
+      renderFeaturedVideo('official-video', youtube.official, false);
+    }
+
+    function renderFeaturedVideo(id, v, large) {
+      if (!v) { $(id).innerHTML = empty('No upload returned.'); return; }
+      if (large) {
+        $(id).className = '';
+        $(id).innerHTML = `<a class="behemeth" href="${safeUrl(v.url)}" target="_blank" rel="noopener" data-search="${esc([v.title,v.channel].join(' '))}"><div class="behemeth-media" style="background-image:url('${esc(safeUrl(v.thumbnail))}')"></div><div class="behemeth-copy"><div class="meta"><span>${esc(v.channel || 'Behemeth')}</span><span>${esc(ago(v.publishedAt))}</span></div><h3>${esc(v.title)}${badge(v.publishedAt)}</h3><p>${fmt.format(v.views || 0)} views · ${fmt.format(v.comments || 0)} comments · ${fmt.format(v.likes || 0)} likes</p><span class="read-link">Watch newest upload ↗</span></div></a>`;
+      } else {
+        $(id).innerHTML = `<a class="video" href="${safeUrl(v.url)}" target="_blank" rel="noopener" data-search="${esc([v.title,v.channel].join(' '))}"><div class="thumb" style="background-image:url('${esc(safeUrl(v.thumbnail))}')"></div><div><h3>${esc(v.title)}${badge(v.publishedAt)}</h3><div class="creator">${esc(v.channel || '')}</div><div class="stats"><span>${fmt.format(v.views || 0)} views</span><span>${fmt.format(v.comments || 0)} comments</span><span>${esc(ago(v.publishedAt))}</span></div></div></a>`;
+      }
+    }
+
+    function renderPolls(polls) {
+      if (!polls.length) { $('poll-list').innerHTML = empty('No polls were returned.'); return; }
+      $('poll-list').innerHTML = polls.slice(0,6).map(p => `<a class="poll" href="${safeUrl(p.url)}" target="_blank" rel="noopener" data-search="${esc([p.title,p.status,p.dates].join(' '))}"><h3>${esc(p.title)}</h3><p>${esc(p.status || 'Latest poll')} · ${esc(p.dates || '')}</p></a>`).join('');
+    }
+
+    function renderTopics(d) {
+      const titles = [];
+      (d.jagex?.news || []).forEach(x => titles.push(x.title));
+      (d.reddit?.hot || []).forEach(x => titles.push(x.title));
+      (d.youtube?.videos || []).forEach(x => titles.push(x.title));
+      const stop = new Set('the and for with from this that your you are was were have has into about new old school runescape osrs update video guide gets got its just more what how why when now week today reddit official game'.split(' '));
+      const counts = new Map();
+      for (const title of titles) {
+        const words = strip(title).toLowerCase().replace(/[^a-z0-9' -]/g,' ').split(/\s+/).filter(w => w.length >= 4 && !stop.has(w) && !/^\d+$/.test(w));
+        [...new Set(words)].forEach(w => counts.set(w, (counts.get(w) || 0) + 1));
+      }
+      const top = [...counts.entries()].filter(([,n]) => n >= 2).sort((a,b) => b[1]-a[1] || a[0].localeCompare(b[0])).slice(0,18);
+      $('topic-cloud').innerHTML = top.length ? top.map(([w,n]) => `<span class="topic">${esc(w)} <b>${n}</b></span>`).join('') : '<span class="tiny">Not enough repeated topics in the current feed yet.</span>';
+    }
+
+    function renderJmods(items) {
+      if (!items.length) { $('jmod-list').innerHTML = empty('No Jagex comments were found in the hot Reddit threads scanned this refresh.'); return; }
+      $('jmod-list').innerHTML = items.slice(0,8).map(x => `<a class="jmod" href="${safeUrl(x.url)}" target="_blank" rel="noopener" data-search="${esc([x.author,x.postTitle,x.body].join(' '))}"><h3>${esc(x.author)} on: ${esc(x.postTitle)}</h3><p class="quote">${esc(x.body)}</p><div class="tiny" style="margin-top:7px">${esc(ago(x.createdAt))}</div></a>`).join('');
+    }
+
+    function renderMarket(market) {
+      const items = market?.movers || [];
+      if (!items.length) { $('market-list').innerHTML = empty(market?.error || 'GE movement unavailable.'); return; }
+      $('market-list').innerHTML = items.slice(0,10).map(x => `<a class="market-item" href="${safeUrl(x.url)}" target="_blank" rel="noopener" data-search="${esc(x.name)}"><div><strong>${esc(x.name)}</strong><small>${fmt.format(x.price || 0)} gp · ${fmt.format(x.hourVolume || 0)} 1h volume</small></div><div class="change ${x.change >= 0 ? 'up' : 'down'}">${x.change >= 0 ? '+' : ''}${Number(x.change).toFixed(1)}%</div></a>`).join('');
+    }
+
+    function renderRuneLite(runelite) {
+      const items = runelite?.items || [];
+      if (!items.length) { $('runelite-list').innerHTML = empty(runelite?.error || 'RuneLite changes unavailable.'); return; }
+      $('runelite-list').innerHTML = items.slice(0,8).map(x => `<a class="runelite-item" href="${safeUrl(x.url)}" target="_blank" rel="noopener" data-search="${esc(x.message)}"><h3>${esc(x.message)}${badge(x.date)}</h3><p>${esc(x.author || 'RuneLite')} · ${esc(ago(x.date))}</p></a>`).join('');
+    }
+
+    function nextWeekdayUtc(day, hour, minute = 0) {
+      const now = new Date();
+      const d = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), hour, minute));
+      let delta = (day - d.getUTCDay() + 7) % 7;
+      if (delta === 0 && d <= now) delta = 7;
+      d.setUTCDate(d.getUTCDate() + delta);
+      return d;
+    }
+    function renderSchedule() {
+      const maint = nextWeekdayUtc(2, 9, 0);
+      const update = nextWeekdayUtc(3, 10, 30);
+      const local = d => new Intl.DateTimeFormat(undefined,{weekday:'short',month:'short',day:'numeric',hour:'numeric',minute:'2-digit',timeZoneName:'short'}).format(d);
+      $('schedule').innerHTML = `
+        <div class="schedule-row"><strong>Maintenance</strong><span>Usually Tuesdays around 09:00 UTC. Next usual window: ${esc(local(maint))}. Jagex notes that some weeks use a later maintenance window.</span></div>
+        <div class="schedule-row"><strong>Game update</strong><span>Usually Wednesdays around 10:30 UTC, after the in-game shutdown timer. Next usual window: ${esc(local(update))}.</span></div>
+        <div class="schedule-row"><strong>Important</strong><span>These are the normal weekly windows, not a promise. Server Watch above takes priority when Jagex posts a specific notice.</span></div>`;
+    }
+
+    function applySearch() {
+      const q = $('search').value.trim().toLowerCase();
+      document.querySelectorAll('.searchable').forEach(section => {
+        if (!q) { section.dataset.hidden = 'false'; return; }
+        const hay = `${section.dataset.search || ''} ${section.textContent}`.toLowerCase();
+        section.dataset.hidden = hay.includes(q) ? 'false' : 'true';
+      });
+    }
+
+    $('reddit-tabs').addEventListener('click', e => {
+      const btn = e.target.closest('[data-reddit]'); if (!btn) return;
+      state.redditMode = btn.dataset.reddit;
+      $('reddit-tabs').querySelectorAll('.tabbtn').forEach(x => x.classList.toggle('active', x === btn));
+      renderReddit(state.data?.reddit); applySearch();
+    });
+    $('youtube-tabs').addEventListener('click', e => {
+      const btn = e.target.closest('[data-sort]'); if (!btn) return;
+      state.youtubeSort = btn.dataset.sort;
+      $('youtube-tabs').querySelectorAll('.tabbtn').forEach(x => x.classList.toggle('active', x === btn));
+      renderYouTube(state.data?.youtube); applySearch();
+    });
+    $('search').addEventListener('input', applySearch);
+    $('refresh').addEventListener('click', () => load(true));
+
+    load();
+  </script>
+</body>
+</html>
