@@ -296,7 +296,7 @@
     </section>
 
     <nav class="quicknav" aria-label="Dashboard sections">
-      <a href="#official">Official</a><a href="#servers">Server Watch</a><a href="#reddit">Reddit</a><a href="#youtube">YouTube</a><a href="#behemeth">Behemeth</a><a href="#jmods">J-Mod Watch</a><a href="#market">GE Pulse</a><a href="#runelite">RuneLite</a><a href="#pulse">Community Pulse</a>
+      <a href="#official">Official</a><a href="#servers">Server Watch</a><a href="#reddit">Reddit</a><a href="#youtube">YouTube</a><a href="#behemeth">Behemeth</a><a href="#market">GE Pulse</a><a href="#runelite">RuneLite</a><a href="#pulse">Community Pulse</a>
     </nav>
 
     <section class="summary" id="summary">
@@ -320,21 +320,20 @@
         </section>
 
         <section class="panel searchable" id="reddit" data-search="reddit 2007scape hot rising top community">
-          <div class="panel-head"><div class="panel-title"><div>🔥</div><div><h2>Reddit Right Now</h2><small>r/2007scape, stickies excluded</small></div></div><a class="source-link" href="https://www.reddit.com/r/2007scape/" target="_blank" rel="noopener">Open Reddit ↗</a></div>
-          <div class="tabbar" id="reddit-tabs"><button class="tabbtn active" data-reddit="hot">Hot</button><button class="tabbtn" data-reddit="rising">Rising</button><button class="tabbtn" data-reddit="top">Top 24h</button></div>
+          <div class="panel-head"><div class="panel-title"><div>🔥</div><div><h2>Reddit Right Now</h2><small>r/2007scape</small></div></div><a class="source-link" href="https://www.reddit.com/r/2007scape/" target="_blank" rel="noopener">Open Reddit ↗</a></div>
+          <div class="tabbar" id="reddit-tabs"><button class="tabbtn active" data-reddit="hot">Hot</button><button class="tabbtn" data-reddit="top">Top 24h</button></div>
           <div class="reddit-list" id="reddit-list"></div>
         </section>
       </div>
 
       <div class="stack">
         <section class="panel searchable" id="behemeth" data-search="behemeth daily youtube streamer highlights news">
-          <div class="panel-head"><div class="panel-title"><div>👑</div><div><h2>Newest Behemeth</h2><small>Latest upload, not a hardcoded day</small></div></div><a class="source-link" href="https://www.youtube.com/@behemethOSRS" target="_blank" rel="noopener">Channel ↗</a></div>
+          <div class="panel-head"><div class="panel-title"><div>👑</div><div><h2>Newest Behemeth</h2><small>Latest upload</small></div></div><a class="source-link" href="https://www.youtube.com/@behemethOSRS" target="_blank" rel="noopener">Channel ↗</a></div>
           <div id="behemeth-content" class="panel-body"><div class="loading-line"></div><div class="loading-line"></div></div>
         </section>
 
-        <section class="panel searchable" id="youtube" data-search="youtube videos osrs creators popular views comments">
-          <div class="panel-head"><div class="panel-title"><div>📺</div><div><h2>OSRS YouTube</h2><small>Most popular uploads from the last 7 days</small></div></div><a class="source-link" href="https://www.youtube.com/results?search_query=osrs" target="_blank" rel="noopener">YouTube ↗</a></div>
-          <div class="tabbar" id="youtube-tabs"><button class="tabbtn active" data-sort="views">By views</button><button class="tabbtn" data-sort="comments">By comments</button></div>
+        <section class="panel searchable" id="youtube" data-search="youtube videos osrs creators uploads recent">
+          <div class="panel-head"><div class="panel-title"><div>📺</div><div><h2>OSRS YouTube</h2><small>Latest uploads from the last 7 days</small></div></div><a class="source-link" href="https://www.youtube.com/results?search_query=osrs" target="_blank" rel="noopener">YouTube ↗</a></div>
           <div class="video-list" id="video-list"></div>
         </section>
 
@@ -349,11 +348,6 @@
       <section class="panel searchable" id="pulse" data-search="community pulse trending topics">
         <div class="panel-head"><div class="panel-title"><div>📡</div><div><h2>Community Pulse</h2><small>Repeated topics across loaded sources</small></div></div></div>
         <div class="panel-body"><div class="topic-cloud" id="topic-cloud"></div></div>
-      </section>
-
-      <section class="panel searchable" id="jmods" data-search="jmod jagex reddit comments mods">
-        <div class="panel-head"><div class="panel-title"><div>🟨</div><div><h2>J-Mod Watch</h2><small>Jagex comments found in hot Reddit threads</small></div></div></div>
-        <div class="jmod-list" id="jmod-list"></div>
       </section>
 
       <section class="panel searchable" id="market" data-search="ge grand exchange prices market movers items">
@@ -441,7 +435,7 @@
     function showFatal(message) {
       $('updated').textContent = 'Live feed unavailable';
       $('summary-grid').innerHTML = `<div class="summary-item"><span>API error</span><strong>${esc(message)}</strong></div>`;
-      ['news-content','notice-list','reddit-list','video-list','poll-list','jmod-list','market-list','runelite-list','behemeth-content','official-video'].forEach(id => { if ($(id)) $(id).innerHTML = empty('This section could not load.'); });
+      ['news-content','notice-list','reddit-list','video-list','poll-list','market-list','runelite-list','behemeth-content','official-video'].forEach(id => { if ($(id)) $(id).innerHTML = empty('This section could not load.'); });
     }
 
     function render() {
@@ -454,7 +448,6 @@
       renderYouTube(d.youtube);
       renderPolls(d.jagex?.polls || []);
       renderTopics(d);
-      renderJmods(d.reddit?.jmods || []);
       renderMarket(d.market);
       renderRuneLite(d.runelite);
       renderSchedule();
@@ -483,12 +476,12 @@
     function renderSummary(d) {
       const news = d.jagex?.news?.[0];
       const reddit = d.reddit?.hot?.[0];
-      const video = [...(d.youtube?.videos || [])].sort((a,b) => (b.views || 0) - (a.views || 0))[0];
+      const video = (d.youtube?.videos || [])[0];
       const status = d.jagex?.status;
       const items = [
         ['Jagex', news?.title || 'No official post loaded'],
         ['Reddit', reddit?.title || 'No Reddit post loaded'],
-        ['YouTube', video ? `${video.title} · ${fmt.format(video.views || 0)} views` : 'YouTube feed not configured or unavailable'],
+        ['YouTube', video ? `${video.title} · ${video.channel || 'YouTube'}` : 'No recent YouTube uploads loaded'],
         ['Servers', status ? `${status.value || 'Unknown'} · ${(status.notices || []).filter(n => !/resolved/i.test(n.status || '')).length} active notices` : 'Status unavailable']
       ];
       $('summary-grid').innerHTML = items.map(([label,text]) => `<div class="summary-item"><span>${esc(label)}</span><strong>${esc(text)}</strong></div>`).join('');
@@ -536,36 +529,30 @@
       if (!posts.length) { $('reddit-list').innerHTML = empty(reddit.error || 'No Reddit posts returned.'); return; }
       $('reddit-list').innerHTML = posts.slice(0,12).map(p => `
         <a class="reddit-post" href="${safeUrl(p.url)}" target="_blank" rel="noopener" data-search="${esc([p.title,p.flair,p.author].join(' '))}">
-          <div class="reddit-score"><strong>${fmt.format(p.score || 0)}</strong><span>score</span></div>
+          ${p.score != null ? `<div class="reddit-score"><strong>${fmt.format(p.score)}</strong><span>score</span></div>` : ''}
           <div><h3>${esc(p.title)}${badge(p.createdAt)}</h3><div class="reddit-meta">${esc(p.flair || 'r/2007scape')} · u/${esc(p.author || 'unknown')} · ${esc(ago(p.createdAt))}</div></div>
-          <div class="reddit-comments">${fmt.format(p.comments || 0)} 💬</div>
+          ${p.comments != null ? `<div class="reddit-comments">${fmt.format(p.comments)} 💬</div>` : ''}
         </a>`).join('');
     }
 
     function renderYouTube(youtube) {
-      if (!youtube?.configured) {
-        $('video-list').innerHTML = empty(youtube?.error || 'YouTube needs the YOUTUBE_API_KEY Worker secret before this section can load real data.');
-        $('behemeth-content').innerHTML = empty('YouTube API key not configured.');
-        $('official-video').innerHTML = empty('YouTube API key not configured.');
-        return;
-      }
-      const videos = [...(youtube.videos || [])].sort((a,b) => state.youtubeSort === 'comments' ? (b.comments || 0) - (a.comments || 0) : (b.views || 0) - (a.views || 0));
-      $('video-list').innerHTML = videos.length ? videos.slice(0,10).map((v,i) => `
+      const videos = youtube?.videos || [];
+      $('video-list').innerHTML = videos.length ? videos.slice(0,10).map((v) => `
         <a class="video" href="${safeUrl(v.url)}" target="_blank" rel="noopener" data-search="${esc([v.title,v.channel].join(' '))}">
-          <div class="thumb" style="background-image:url('${esc(safeUrl(v.thumbnail))}')"><span class="rank">${i+1}</span></div>
-          <div><h3>${esc(v.title)}${badge(v.publishedAt)}</h3><div class="creator">${esc(v.channel || '')}</div><div class="stats"><span>${fmt.format(v.views || 0)} views</span><span>${fmt.format(v.comments || 0)} comments</span><span>${fmt.format(v.likes || 0)} likes</span><span>${esc(ago(v.publishedAt))}</span></div></div>
+          <div class="thumb" style="background-image:url('${esc(safeUrl(v.thumbnail))}')"></div>
+          <div><h3>${esc(v.title)}${badge(v.publishedAt)}</h3><div class="creator">${esc(v.channel || '')}</div><div class="stats"><span>${esc(ago(v.publishedAt))}</span></div></div>
         </a>`).join('') : empty('No matching OSRS videos were returned for the last seven days.');
-      renderFeaturedVideo('behemeth-content', youtube.behemeth, true);
-      renderFeaturedVideo('official-video', youtube.official, false);
+      renderFeaturedVideo('behemeth-content', youtube?.behemeth, true);
+      renderFeaturedVideo('official-video', youtube?.official, false);
     }
 
     function renderFeaturedVideo(id, v, large) {
       if (!v) { $(id).innerHTML = empty('No upload returned.'); return; }
       if (large) {
         $(id).className = '';
-        $(id).innerHTML = `<a class="behemeth" href="${safeUrl(v.url)}" target="_blank" rel="noopener" data-search="${esc([v.title,v.channel].join(' '))}"><div class="behemeth-media" style="background-image:url('${esc(safeUrl(v.thumbnail))}')"></div><div class="behemeth-copy"><div class="meta"><span>${esc(v.channel || 'Behemeth')}</span><span>${esc(ago(v.publishedAt))}</span></div><h3>${esc(v.title)}${badge(v.publishedAt)}</h3><p>${fmt.format(v.views || 0)} views · ${fmt.format(v.comments || 0)} comments · ${fmt.format(v.likes || 0)} likes</p><span class="read-link">Watch newest upload ↗</span></div></a>`;
+        $(id).innerHTML = `<a class="behemeth" href="${safeUrl(v.url)}" target="_blank" rel="noopener" data-search="${esc([v.title,v.channel].join(' '))}"><div class="behemeth-media" style="background-image:url('${esc(safeUrl(v.thumbnail))}')"></div><div class="behemeth-copy"><div class="meta"><span>${esc(v.channel || 'Behemeth')}</span><span>${esc(ago(v.publishedAt))}</span></div><h3>${esc(v.title)}${badge(v.publishedAt)}</h3><span class="read-link">Watch newest upload ↗</span></div></a>`;
       } else {
-        $(id).innerHTML = `<a class="video" href="${safeUrl(v.url)}" target="_blank" rel="noopener" data-search="${esc([v.title,v.channel].join(' '))}"><div class="thumb" style="background-image:url('${esc(safeUrl(v.thumbnail))}')"></div><div><h3>${esc(v.title)}${badge(v.publishedAt)}</h3><div class="creator">${esc(v.channel || '')}</div><div class="stats"><span>${fmt.format(v.views || 0)} views</span><span>${fmt.format(v.comments || 0)} comments</span><span>${esc(ago(v.publishedAt))}</span></div></div></a>`;
+        $(id).innerHTML = `<a class="video" href="${safeUrl(v.url)}" target="_blank" rel="noopener" data-search="${esc([v.title,v.channel].join(' '))}"><div class="thumb" style="background-image:url('${esc(safeUrl(v.thumbnail))}')"></div><div><h3>${esc(v.title)}${badge(v.publishedAt)}</h3><div class="creator">${esc(v.channel || '')}</div><div class="stats"><span>${esc(ago(v.publishedAt))}</span></div></div></a>`;
       }
     }
 
