@@ -389,7 +389,7 @@
 
   <script>
     const API_URL = 'https://peakpvm-catchup.bells-pvm.workers.dev/api/catchup';
-    const state = { data: null, newsIndex: 0, redditMode: 'hot', youtubeSort: 'views', lastVisit: Number(localStorage.getItem('peakCatchupLastVisit') || 0) };
+    const state = { data: null, newsIndex: 0, redditMode: 'hot', lastVisit: Number(localStorage.getItem('peakCatchupLastVisit') || 0) };
 
     const $ = id => document.getElementById(id);
     const fmt = new Intl.NumberFormat('en-US');
@@ -419,7 +419,7 @@
       $('refresh').textContent = 'Loading...';
       try {
         const url = force ? `${API_URL}?refresh=${Date.now()}` : API_URL;
-        const res = await fetch(url, { headers: { 'accept': 'application/json' }, cache: force ? 'reload' : 'default' });
+        const res = await fetch(url, { headers: { 'accept': 'application/json' }, cache: force ? 'reload' : 'default', signal: AbortSignal.timeout(30000) });
         if (!res.ok) throw new Error(`Catch Up API returned ${res.status}`);
         state.data = await res.json();
         render();
@@ -434,6 +434,12 @@
 
     function showFatal(message) {
       $('updated').textContent = 'Live feed unavailable';
+      $('game-status').textContent = 'UNKNOWN';
+      $('status-dot').className = 'dot warn';
+      ['player-count','issue-count','since-count'].forEach(id => $(id).textContent = 'Unavailable');
+      $('new-count').textContent = '';
+      $('topic-cloud').innerHTML = empty('Community feed unavailable.');
+      renderSchedule();
       $('summary-grid').innerHTML = `<div class="summary-item"><span>API error</span><strong>${esc(message)}</strong></div>`;
       ['news-content','notice-list','reddit-list','video-list','poll-list','market-list','runelite-list','behemeth-content','official-video'].forEach(id => { if ($(id)) $(id).innerHTML = empty('This section could not load.'); });
     }
@@ -625,12 +631,6 @@
       state.redditMode = btn.dataset.reddit;
       $('reddit-tabs').querySelectorAll('.tabbtn').forEach(x => x.classList.toggle('active', x === btn));
       renderReddit(state.data?.reddit); applySearch();
-    });
-    $('youtube-tabs').addEventListener('click', e => {
-      const btn = e.target.closest('[data-sort]'); if (!btn) return;
-      state.youtubeSort = btn.dataset.sort;
-      $('youtube-tabs').querySelectorAll('.tabbtn').forEach(x => x.classList.toggle('active', x === btn));
-      renderYouTube(state.data?.youtube); applySearch();
     });
     $('search').addEventListener('input', applySearch);
     $('refresh').addEventListener('click', () => load(true));

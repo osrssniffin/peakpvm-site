@@ -1,0 +1,5 @@
+name = "peakpvm-catchup"
+main = "worker.js"
+account_id = "6b7e4b442028b0406660b625de88e494"
+compatibility_date = "2026-10-04"
+workers_dev = true
