@@ -1,19 +1,521 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#070a0b"><meta name="description" content="SNIFFIN — the s niffin OSRS pet log. Boss KC, pet grinds, drop odds, and collection log tracking."><title>SNIFFIN // Peak PvM</title><link rel="icon" href="https://peakpvm.com/assets/peak-pvm-enh.png"><link rel="preconnect" href="https://oldschool.runescape.wiki"><link rel="stylesheet" href="./styles.css?v=20261107-4"></head>
-<body>
-<div class="atmosphere" aria-hidden="true"><i></i><i></i><i></i></div>
-<div class="noise" aria-hidden="true"></div><div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div><div class="scanline" aria-hidden="true"></div>
-<header class="topbar"><a class="logo" href="https://peakpvm.com/" aria-label="Peak PvM home"><span class="logo-symbol">✦</span> PEAK<span>PVM</span><small> / SNIFFIN</small></a><div class="nav-meta"><span class="live-dot"></span><span id="syncLabel">CONNECTING TO WOM</span></div><div class="top-buttons"><a class="top-link" href="#huntSection">CURRENT HUNT ↓</a><button id="refreshBtn" class="icon-button" title="Refresh KC from Wise Old Man">↻ <span>SYNC</span></button><button id="editBtn" class="edit-button hidden" type="button">⚙ EDIT</button></div></header>
-<main class="shell">
-<section class="hero"><div class="hero-eyebrow"><i></i> THE s niffin COLLECTION LOG <i></i></div><div class="hero-big"><span class="hero-back">THE CLOG</span><h1>SNIFFIN<span class="dot">.</span></h1></div><p class="hero-tag">PETS TO GET <span>✦</span> GRASS TO IGNORE</p><p class="hero-desc"><strong>s niffin</strong>’s pet collection and current grinds. Keeping receipts for the next “I’m due” conversation.</p><div class="hero-accent"><span></span><b>BOSS KC // PET ROLLS // CLOG SLOTS</b><span></span></div></section>
-<section class="sync-strip" aria-label="Tracking sources"><div><span class="sync-eyebrow">PET CLOG / TEMPLEOSRS</span><strong id="templeSyncStatus" role="status">Checking the clog…</strong><small id="petLastSync">Waiting for a confirmed pet-log sync</small></div><div><span class="sync-eyebrow">BOSS KC / WISE OLD MAN</span><strong id="kcSyncStatus" role="status">Checking the hiscores for s niffin…</strong><small id="lastRefresh">KC and clog checks every 5 minutes</small></div><a href="https://templeosrs.com/collection-log/" target="_blank" rel="noopener noreferrer">SYNC YOUR CLOG <span>↗</span></a></section><p id="syncHelp" class="sync-help">Tracker DC? Manually confirmed pets stay in the log.</p>
-<section class="stat-strip"><div class="stat"><span class="stat-title">PETS OWNED</span><div class="stat-value" id="ownedNum">—</div><small id="ownedSub">OF — PETS</small></div><div class="stat"><span class="stat-title">PETS MISSING</span><div class="stat-value" id="missingNum">—</div><small>THEY DECLINED THE INVITATION.</small></div><div class="stat"><span class="stat-title">TOTAL BOSS KC</span><div class="stat-value" id="kcTotal">—</div><small>KC FROM WISE OLD MAN</small></div><div class="stat"><span class="stat-title">COLLECTION PROGRESS</span><div class="stat-value" id="completionNum">—</div><div class="mini-progress"><span id="completionBar"></span></div></div></section>
-<section class="section target-section" id="huntSection"><div class="section-head"><div><div class="eyebrow">01 / CURRENT GRIND</div><h2>CURRENT PET HUNT<span>.</span></h2></div><span class="status-indicator"><i></i> ONE MORE KILL, APPARENTLY</span></div><div class="hunt-card"><div class="hunt-art"><div class="hunt-aura"></div><div class="hunt-cross cross-a">+</div><div class="hunt-cross cross-b">+</div><img id="targetImage" alt="Current target pet" fetchpriority="high"><div class="hunt-art-label">ONE MORE KC</div></div><div class="hunt-info"><div class="hunt-kicker">CAMPING FOR THE PET <span class="target-line"></span> <b>KC CHECK</b></div><h3 id="targetName">PICK A BOSS TO CAMP</h3><p id="targetPet">Choose the next pet hunt in Owner Settings.</p><div class="hunt-metrics"><div><span>BOSS KC</span><strong id="targetKC">—</strong></div><div><span>PET RATE</span><strong id="targetRate">—</strong></div><div><span>CHANCE BY NOW</span><strong id="targetChance">—</strong></div></div><div class="chance-label"><span>CHANCE OF FILLING THE SLOT BY THIS KC</span><b id="targetPercent">—</b></div><div class="hunt-bar"><span id="targetBar"></span></div><p id="targetRateNote" class="rate-note"></p><div class="hunt-bottom"><span id="targetSummary">Checking the boss KC…</span><a id="targetWiki" target="_blank" rel="noopener noreferrer" href="https://oldschool.runescape.wiki">CHECK THE WIKI ↗</a></div></div></div></section>
-<section class="section vault" id="vaultSection"><div class="section-head"><div><div class="eyebrow">02 / THE COLLECTION LOG</div><h2>PET COLLECTION<span>.</span></h2><p class="section-caption">The ones that followed me home, and the ones apparently seeing other players.</p></div><span class="vault-count" id="vaultCount">— / — OWNED</span></div><div class="vault-toolbar"><div class="tabs" id="filterTabs"><button class="active" data-filter="all">ALL PETS</button><button data-filter="owned">OWNED</button><button data-filter="missing">MISSING</button></div><div class="vault-tools"><input id="searchPets" type="search" placeholder="⌕  Search pets or bosses..." aria-label="Search pets"><select id="sortPets" aria-label="Sort pets"><option value="default">OWNED FIRST</option><option value="name">NAME A–Z</option><option value="kc">MOST KC</option><option value="chance">HIGHEST DROP CHANCE</option></select></div></div><div class="vault-legend"><span><i class="legend-gold"></i> OWNED</span><span><i></i> NOT OWNED</span><span id="visiblePets">Opening the pet tab…</span></div><div class="pet-grid" id="petGrid"></div><div class="vault-footer">Collection-log pets are counted once per species, including alternate forms. Ownership combines TempleOSRS records with confirmed manual entries. Follower renders © Jagex, sourced from the OSRS Wiki. <a href="./catalog.json" target="_blank" rel="noopener">Image &amp; rate provenance ↗</a></div></section>
-
-<section class="two-col"><div class="section rng-section"><div class="section-head"><div><div class="eyebrow">03 / HOW DRY IS DRY?</div><h2>DROP CALCULATOR<span>.</span></h2></div><span class="tiny-badge">MATH, NOT A PROMISE</span></div><div class="rng-panel"><p>Enter the drop rate and your kills or rolls. Find out whether to complain quietly or bring a spreadsheet.</p><div class="input-row"><label>DROP RATE <div class="field-prefix">1 IN <input id="rngRate" type="number" min="1" value="3000"></div></label><label>KILLS / ROLLS <input id="rngKills" type="number" min="0" value="2000"></label></div><div class="rng-result"><div><span>CHANCE OF AT LEAST ONE DROP</span><strong id="rngSuccess">48.66%</strong></div><div><span>CHANCE OF NO DROP</span><strong id="rngDry">51.34%</strong></div></div><div class="rng-verdict" id="rngVerdict">The complaint is still in the drafts folder.</div><small class="fineprint">Each roll is independent. Mechanics vary by boss or activity. Going dry does not buff your next roll.</small></div></div><div class="section feed-section"><div class="section-head"><div><div class="eyebrow">04 / THE GRIND LOG</div><h2>HUNT NOTES<span>.</span></h2></div><span class="tiny-badge">THINGS TO MENTION AT THE BANK</span></div><div class="feed-panel" id="feedItems"><div class="empty">No notes yet. “Surely next kill” is not a filing system.</div></div><div class="feed-footer">For drops, milestones, and promises to log off.</div></div></section>
-
-<footer><div class="footer-brand">SNIFFIN<span>.</span></div><p>s niffin // PEAK PVM</p><div class="footer-links"><a href="https://peakpvm.com/">PEAK PVM ↗</a><a href="https://templeosrs.com/collection-log/" target="_blank" rel="noopener noreferrer">TEMPLEOSRS ↗</a><a href="https://wiseoldman.net" target="_blank" rel="noopener noreferrer">WISE OLD MAN ↗</a></div></footer>
-</main>
-<div class="modal hidden" id="editorModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal-backdrop" id="modalBackdrop"></div><div class="modal-content"><div class="modal-top"><div><div class="eyebrow">RESTRICTED ACCESS</div><h2 id="modalTitle">OWNER SETTINGS<span>.</span></h2></div><button class="modal-close" id="closeModal" aria-label="Close">×</button></div><div id="loginPanel"><p class="modal-help">OWNER PIN REQUIRED. YOUR IP MUST ALSO BE ALLOWLISTED.</p><label class="form-label">ACCESS PIN<input id="pinInput" type="password" inputmode="numeric" autocomplete="off" maxlength="32" placeholder="••••"></label><button class="primary-button" id="loginBtn">UNLOCK EDITOR →</button><p id="loginError" class="error"></p></div><div id="editPanel" class="hidden"><div class="edit-grid"><label class="form-label">TRACKED RSN<input id="editUsername" maxlength="40" readonly placeholder="Your in-game name"></label><label class="form-label">NEXT BOSS TO CAMP<select id="editTarget"></select></label><label class="form-label">KC WHEN THIS GRIND STARTED <input id="editStartKC" type="number" min="0" value="0"><small>Set the KC you started this grind at. Total boss KC still tracks automatically.</small></label><label class="form-label">GRIND NOTE<input id="editHuntNote" maxlength="140" placeholder="One more trip. Surely..."></label></div><div class="edit-subhead">PETS / MANUAL KC / DROP DETAILS</div><p class="modal-help">Checked ownership is a manual confirmation, preserved even when Temple is incomplete. Unchecking removes the manual confirmation; a verified Temple record still counts. Manual KC is used where live KC is unavailable. Rate overrides apply to the displayed KC.</p><div class="edit-pets" id="editPets"></div><div class="edit-subhead">HUNT NOTES</div><div class="edit-notes" id="editNotes"></div><button id="addNoteBtn" class="secondary-button">+ ADD A NOTE</button><p id="saveError" class="error"></p><div class="modal-actions"><button id="logoutBtn" class="secondary-button">LOCK EDITOR</button><button id="saveBtn" class="primary-button">SAVE CHANGES →</button></div></div></div></div>
-<div class="toast hidden" id="toast" role="status"></div><script src="./app.js?v=20261107-7" defer></script></body></html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#0b0b0b" />
+    <meta
+      name="description"
+      content="SNIFFIN // THE MENAGERIE. s niffin's Old School RuneScape pet archive, current hunt, and trophy room."
+    />
+    <title>SNIFFIN // THE MENAGERIE</title>
+    <link rel="icon" href="../favicon.ico" />
+    <link
+      rel="preload"
+      href="./media/barlow-black.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin
+    />
+    <link rel="stylesheet" href="./styles.css?v=menagerie-1" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to archive</a>
+    <div id="modeBanner" class="mode-banner hidden" role="status"></div>
+    <header class="topbar">
+      <a class="logo" href="#" aria-label="SNIFFIN home"
+        ><span class="brand-seal">S</span
+        ><span>SNIFFIN<small>THE MENAGERIE</small></span></a
+      >
+      <nav aria-label="Main navigation">
+        <a href="#huntSection">THE HUNT</a><a href="#vaultSection">COLLECTION</a
+        ><a href="#trophySection">TROPHIES</a
+        ><a href="#plannerSection">NEXT VICTIM</a>
+      </nav>
+      <div class="top-buttons">
+        <a class="peak-link" href="../">PEAK PVM ↗</a
+        ><button id="refreshBtn" class="icon-button" title="Check account data">
+          ↻ <span>SYNC</span></button
+        ><button id="editBtn" class="edit-button hidden">EDIT</button>
+      </div>
+    </header>
+    <main class="shell" id="main">
+      <section class="hero">
+        <div class="hero-copy">
+          <div class="eyebrow">
+            <span class="red-rule"></span> PERSONAL ARCHIVE / OLD SCHOOL
+            RUNESCAPE
+          </div>
+          <h1>SNIFFIN<span>.</span></h1>
+          <div class="hero-subtitle">
+            THE MENAGERIE <span>//</span> PET HUNTING ARCHIVE
+          </div>
+          <p class="hero-motto">
+            Every boss. <br />Every pet. <br /><em>Eventually.</em>
+          </p>
+          <p class="hero-desc">
+            Some collect wealth. I collect things <br />that refuse to follow me
+            home.
+          </p>
+          <div class="hero-actions">
+            <a class="primary-button" href="#vaultSection"
+              >ENTER THE MENAGERIE <span>↗</span></a
+            ><a class="text-link" href="#huntSection">CURRENT VICTIM ↓</a>
+          </div>
+          <a class="hero-contract" href="#huntSection"
+            ><span>CURRENT CONTRACT</span
+            ><strong id="heroHuntLabel">Checking current hunt…</strong></a
+          >
+          <div class="account-line">
+            <span class="live-dot"></span
+            ><span id="syncLabel">CHECKING S NIFFIN…</span>
+          </div>
+        </div>
+        <div class="hero-stage">
+          <div class="portrait-frame">
+            <img
+              id="portrait"
+              src="./media/portrait.jpg"
+              width="900"
+              height="900"
+              alt="s niffin's character in Torva armour with a rancour necklace and scythe"
+              fetchpriority="high"
+            /><span class="frame-corner corner-a"></span
+            ><span class="frame-corner corner-b"></span>
+            <div class="portrait-caption">
+              <span>THE KEEPER</span><b>s niffin</b
+              ><small>NO BANK SPACE. NO REGRETS.</small>
+            </div>
+          </div>
+          <div class="hero-pets" aria-label="Residents of the menagerie">
+            <img
+              src="./pets/snakeling.png"
+              width="600"
+              height="600"
+              alt="Pet Snakeling follower"
+            /><img
+              src="./pets/baby-mole.png"
+              width="600"
+              height="358"
+              alt="Baby Mole follower"
+            /><img
+              src="./pets/chaos-elemental.png"
+              width="600"
+              height="563"
+              alt="Pet chaos elemental follower"
+            />
+          </div>
+          <span class="stage-number">ARCHIVE № 001</span>
+        </div>
+      </section>
+      <section class="stat-strip" aria-label="Account statistics">
+        <div class="stat">
+          <span class="stat-title">01 / RESIDENTS</span>
+          <div class="stat-value" id="ownedNum">—</div>
+          <small id="ownedSub">VERIFYING COLLECTION</small>
+        </div>
+        <div class="stat">
+          <span class="stat-title">02 / STILL OUT THERE</span>
+          <div class="stat-value" id="missingNum">—</div>
+          <small>UNCLAIMED SPECIES</small>
+        </div>
+        <div class="stat">
+          <span class="stat-title">03 / THE OBSESSION</span>
+          <div class="stat-value" id="completionNum">—</div>
+          <div class="mini-progress"><span id="completionBar"></span></div>
+        </div>
+        <div class="stat">
+          <span class="stat-title">04 / TRACKED BOSS COUNTERS</span>
+          <div class="stat-value" id="kcTotal">—</div>
+          <small
+            title="Sum of reported WOM boss counters; mode counters may overlap. Not a unique lifetime kill total."
+            >REPORTED SUM · MODES MAY OVERLAP</small
+          >
+        </div>
+      </section>
+      <details class="data-ledger">
+        <summary>
+          THE RECEIPTS <span>Account data &amp; provenance +</span>
+        </summary>
+        <div class="sync-strip">
+          <div>
+            <span class="eyebrow">OWNERSHIP / TEMPLEOSRS</span
+            ><strong id="templeSyncStatus" role="status"
+              >Checking collection log…</strong
+            ><small id="petLastSync">No verified log loaded</small>
+          </div>
+          <div>
+            <span class="eyebrow">BOSS KC / WISE OLD MAN</span
+            ><strong id="kcSyncStatus" role="status">Checking s niffin…</strong
+            ><small id="lastRefresh">Checks every five minutes</small>
+          </div>
+          <a
+            href="https://templeosrs.com/collection-log/"
+            target="_blank"
+            rel="noopener"
+            >COLLECTION LOG SETUP ↗</a
+          >
+        </div>
+        <p id="syncHelp" class="fineprint">
+          Ownership is never inferred from kill count. Temple requires a
+          user-uploaded collection log.
+        </p>
+      </details>
+      <section class="section" id="huntSection">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">01 / AN UNFINISHED CONVERSATION</div>
+            <h2>CURRENT <em>VICTIM.</em></h2>
+          </div>
+          <span class="tiny-badge">ONE MORE TRIP. APPARENTLY.</span>
+        </div>
+        <div class="hunt-card">
+          <div class="hunt-art">
+            <span class="art-index">WANTED / ALIVE, IDEALLY</span
+            ><span class="boss-watermark" aria-hidden="true">HUNTED</span
+            ><img
+              id="bossImage"
+              src="./media/sarachnis.png"
+              alt="Sarachnis in-game boss model"
+              width="900"
+              height="700"
+            />
+            <div class="wanted-pet">
+              <img id="targetImage" alt="Target pet follower" /><span
+                >THE ONE THAT GETS TO STAY</span
+              >
+            </div>
+          </div>
+          <div class="hunt-info">
+            <div class="eyebrow">
+              ACTIVE CONTRACT <span class="red-rule"></span>
+            </div>
+            <h3 id="targetName">SARACHNIS</h3>
+            <p id="targetPet">Loading current hunt…</p>
+            <div class="hunt-metrics">
+              <div><span>CURRENT KC</span><strong id="targetKC">—</strong></div>
+              <div>
+                <span id="targetRateLabel">BASE PET RATE</span><strong id="targetRate">—</strong>
+              </div>
+              <div>
+                <span>≥ 1 BY THIS KC</span><strong id="targetChance">—</strong>
+              </div>
+            </div>
+            <div class="chance-label">
+              <span>DRYNESS PERCENTILE</span><b id="targetPercent">—</b>
+            </div>
+            <div class="hunt-bar"><span id="targetBar"></span></div>
+            <p id="dryExplanation" class="fineprint"></p>
+            <div class="hunt-extra">
+              <div>
+                <span>ZERO DROPS BY NOW</span><strong id="targetZero">—</strong>
+              </div>
+              <label
+                >SUSTAINABLE KILLS / HOUR<input
+                  id="huntKph"
+                  type="number"
+                  min="0.1"
+                  max="10000"
+                  step="0.1"
+                  placeholder="Enter your pace"
+              /></label>
+            </div>
+            <div id="huntMilestones" class="milestone-strip"></div>
+            <p id="targetRateNote" class="rate-note"></p>
+            <div class="hunt-bottom">
+              <span id="targetSummary"></span
+              ><a
+                id="targetWiki"
+                href="https://oldschool.runescape.wiki/w/Sarachnis"
+                target="_blank"
+                rel="noopener"
+                >METHOD &amp; RATES ↗</a
+              >
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="section vault" id="vaultSection">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">02 / THE ONES THAT FOLLOWED ME HOME</div>
+            <h2>THE <em>MENAGERIE.</em></h2>
+            <p class="section-caption">
+              A little company. An unreasonable amount of effort.
+            </p>
+          </div>
+          <span class="vault-count" id="vaultCount">— / — OWNED</span>
+        </div>
+        <div id="categoryProgress" class="category-progress"></div>
+        <div class="vault-toolbar">
+          <div class="tabs" id="filterTabs">
+            <button class="active" aria-pressed="true" data-filter="all">
+              ALL PETS</button
+            ><button aria-pressed="false" data-filter="owned">RESIDENTS</button
+            ><button aria-pressed="false" data-filter="missing">
+              UNCLAIMED
+            </button>
+          </div>
+          <div class="vault-tools">
+            <input
+              id="searchPets"
+              type="search"
+              placeholder="Search pet or source…"
+              aria-label="Search pets"
+            /><select id="categoryPets" aria-label="Filter pet category">
+              <option value="all">All categories</option></select
+            ><select id="sortPets" aria-label="Sort pets">
+              <option value="default">Owned first</option>
+              <option value="name">Name A–Z</option>
+              <option value="kc">Highest KC</option>
+              <option value="chance">Highest base-model percentile</option>
+            </select>
+          </div>
+        </div>
+        <div class="vault-legend">
+          <span><i></i> CONFIRMED RESIDENT</span
+          ><span id="visiblePets" role="status"></span>
+        </div>
+        <div class="pet-grid" id="petGrid" aria-live="polite"></div>
+        <p class="vault-footer">
+          Species count once; alternate forms do not inflate the archive.
+          Darkened renders are unclaimed or unverified, as labelled. Game art ©
+          Jagex, via the OSRS Wiki.
+          <a href="./catalog.json">Render &amp; rate provenance ↗</a>
+        </p>
+      </section>
+      <section class="section" id="trophySection">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">03 / EVIDENCE OF A LIFE WELL WASTED</div>
+            <h2>THE <em>TROPHY ROOM.</em></h2>
+          </div>
+          <span class="tiny-badge">RECEIPTS REQUIRED</span>
+        </div>
+        <div id="trophyWall" class="trophy-wall"></div>
+      </section>
+      <section class="section" id="plannerSection">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">04 / STILL EVADING CAPTURE</div>
+            <h2>NEXT ON THE <em>HIT LIST.</em></h2>
+            <p class="section-caption">
+              Compare the commitment. Pick your next bad decision.
+            </p>
+          </div>
+        </div>
+        <div class="planner-controls">
+          <label
+            >FUTURE CHANCE TARGET<select id="planTarget">
+              <option value="0.5">50%</option>
+              <option value="0.75">75%</option>
+              <option value="0.9">90%</option>
+              <option value="0.95">95%</option>
+              <option value="0.99">99%</option>
+            </select></label
+          ><label
+            >COMPARE<select id="planSort">
+              <option value="name">Pet name</option>
+              <option value="hours">Estimated hours (entered pace only)</option>
+            </select></label
+          >
+        </div>
+        <p class="fineprint">
+          Targets apply to additional eligible rolls starting now. Past KC does
+          not improve the next independent roll. KPH is your editable estimate,
+          including banking and downtime. No pace is assumed.
+        </p>
+        <div class="planner-scroll">
+          <table class="planner-table">
+            <thead>
+              <tr>
+                <th scope="col">TARGET / METHOD</th>
+                <th scope="col">CURRENT KC</th>
+                <th scope="col">BASE RATE</th>
+                <th scope="col">KILLS OR ROLLS / HOUR</th>
+                <th scope="col">EXPECTED MORE</th>
+                <th scope="col">TARGET ROLLS / HOURS</th>
+              </tr>
+            </thead>
+            <tbody id="plannerBody"></tbody>
+          </table>
+        </div>
+        <p class="fineprint">
+          Fixed-rate rows use a geometric model: mean additional kills = 1/p;
+          target kills = ceil(log(1−target) / log(1−p)). Special mechanics, team
+          contribution, reward rolls and skilling methods require an explicit
+          method; those rows link to the Wiki instead of estimating.
+        </p>
+      </section>
+      <section class="section two-col">
+        <div id="historySection">
+          <div class="section-head">
+            <div>
+              <div class="eyebrow">05 / THE PAPER TRAIL</div>
+              <h2>HUNT <em>HISTORY.</em></h2>
+            </div>
+          </div>
+          <div id="historyItems" class="history-items"></div>
+          <div class="feed-panel" id="feedItems"></div>
+          <p class="fineprint">
+            Drop dates and drop KC appear only in curated records. A Temple sync
+            date is never presented as an acquisition date.
+          </p>
+        </div>
+        <div class="rng-section">
+          <div class="section-head">
+            <div>
+              <div class="eyebrow">06 / STATISTICALLY UNFORTUNATE</div>
+              <h2>THE <em>ODDS.</em></h2>
+            </div>
+          </div>
+          <div class="rng-panel">
+            <p>For a known, independent roll. The boss has no memory.</p>
+            <div class="input-row">
+              <label
+                >1 IN N<input
+                  id="rngRate"
+                  type="number"
+                  min="1"
+                  step="any"
+                  value="3000" /></label
+              ><label
+                >ELIGIBLE ROLLS<input
+                  id="rngKills"
+                  type="number"
+                  min="0"
+                  step="1"
+                  value="2000"
+              /></label>
+            </div>
+            <div class="rng-result">
+              <div>
+                <span>AT LEAST ONE</span><strong id="rngSuccess">—</strong>
+              </div>
+              <div><span>ZERO DROPS</span><strong id="rngDry">—</strong></div>
+            </div>
+            <div class="rng-verdict" id="rngVerdict"></div>
+            <p class="fineprint">
+              A probability, never a guarantee. This calculator does not model
+              variable rates, thresholds, duplicate protection or team
+              contribution.
+            </p>
+          </div>
+        </div>
+      </section>
+      <footer>
+        <div class="footer-brand">
+          SNIFFIN<span>.</span><small>EVERY BOSS. EVERY PET. EVENTUALLY.</small>
+        </div>
+        <div class="footer-links">
+          <a href="../">PEAK PVM ↗</a
+          ><a
+            href="https://wiseoldman.net/players/s%20niffin"
+            target="_blank"
+            rel="noopener"
+            >WISE OLD MAN ↗</a
+          ><a href="./README.md">ARCHIVE NOTES ↗</a>
+        </div>
+        <p>
+          Unofficial fan site. RuneScape &amp; game artwork © Jagex Ltd.<br />Portrait
+          supplied by s niffin.
+          <a href="./media/FONT-LICENSE.txt">Font licence</a>.
+        </p>
+      </footer>
+    </main>
+    <div
+      class="modal hidden"
+      id="editorModal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modalTitle"
+    >
+      <div class="modal-backdrop" id="modalBackdrop"></div>
+      <div class="modal-content">
+        <div class="modal-top">
+          <div>
+            <div class="eyebrow">RESTRICTED ACCESS</div>
+            <h2 id="modalTitle">OWNER SETTINGS<span>.</span></h2>
+          </div>
+          <button class="modal-close" id="closeModal" aria-label="Close">
+            ×
+          </button>
+        </div>
+        <div id="loginPanel">
+          <p class="modal-help">
+            OWNER PIN REQUIRED. YOUR IP MUST ALSO BE ALLOWLISTED.
+          </p>
+          <label class="form-label"
+            >ACCESS PIN<input
+              id="pinInput"
+              type="password"
+              inputmode="numeric"
+              autocomplete="off"
+              maxlength="32"
+              placeholder="••••" /></label
+          ><button class="primary-button" id="loginBtn">UNLOCK EDITOR →</button>
+          <p id="loginError" class="error"></p>
+        </div>
+        <div id="editPanel" class="hidden">
+          <div class="edit-grid">
+            <label class="form-label"
+              >TRACKED RSN<input
+                id="editUsername"
+                maxlength="40"
+                readonly
+                placeholder="Your in-game name" /></label
+            ><label class="form-label"
+              >NEXT BOSS TO CAMP<select id="editTarget"></select></label
+            ><label class="form-label"
+              >KC WHEN THIS GRIND STARTED
+              <input id="editStartKC" type="number" min="0" value="0" /><small
+                >Set the KC you started this grind at. Total boss KC still
+                tracks automatically.</small
+              ></label
+            ><label class="form-label"
+              >GRIND NOTE<input
+                id="editHuntNote"
+                maxlength="140"
+                placeholder="One more trip. Surely..."
+            /></label>
+          </div>
+          <div class="edit-subhead">PETS / MANUAL KC / DROP DETAILS</div>
+          <p class="modal-help">
+            Checked ownership is a manual confirmation, preserved even when
+            Temple is incomplete. Unchecking removes the manual confirmation; a
+            verified Temple record still counts. Manual KC is used where live KC
+            is unavailable. Rate overrides apply to the displayed KC.
+          </p>
+          <div class="edit-pets" id="editPets"></div>
+          <div class="edit-subhead">HUNT NOTES</div>
+          <div class="edit-notes" id="editNotes"></div>
+          <button id="addNoteBtn" class="secondary-button">+ ADD A NOTE</button>
+          <p id="saveError" class="error"></p>
+          <div class="modal-actions">
+            <button id="logoutBtn" class="secondary-button">LOCK EDITOR</button
+            ><button id="saveBtn" class="primary-button">SAVE CHANGES →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <dialog id="petDialog" class="pet-dialog">
+      <button
+        id="closePetDialog"
+        class="modal-close"
+        aria-label="Close pet details"
+      >
+        ×
+      </button>
+      <div id="petDialogContent"></div>
+    </dialog>
+    <div class="toast hidden" id="toast" role="status"></div>
+    <noscript
+      ><p class="empty">
+        JavaScript is required for account data, filters and calculations. No
+        account statistics are available without it.
+      </p></noscript
+    >
+    <script src="./menagerie.js?v=menagerie-1" defer></script>
+    <script src="./app.js?v=menagerie-1" defer></script>
+  </body>
+</html>

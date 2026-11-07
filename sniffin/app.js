@@ -1,83 +1,764 @@
-'use strict';
+"use strict";
 // Catalog and follower-model provenance are verified against Wiki NPC infoboxes.
-let PETS=[],CATALOG=[],PET_META={};
-async function loadCatalog(){const res=await fetch('./catalog.json?v=20261107-7');if(!res.ok)throw Error('Pet catalog unavailable');const rows=await res.json();PET_META=Object.fromEntries(rows.map(p=>[p.id,p]));PETS=rows.map(p=>[p.id,p.name,p.source,p.metric,p.rate]);CATALOG=PETS;}
-const BACKEND='https://peakpvm-sniffin-api.bells-pvm.workers.dev';
-const ON_BACKEND=location.origin===BACKEND;
-const API_BASE=(ON_BACKEND?'':BACKEND)+'/sniffin/api/';
-const meta=p=>PET_META[p[0]]||{};
-const fmtRate=n=>Number.isInteger(n)?fmt(n):Number(n).toLocaleString('en-US',{maximumFractionDigits:2});
-const stamp=value=>{if(!value)return null;const d=new Date(typeof value==='number'?value*1000:String(value).replace(' ','T')+(/Z$|[+-]\d\d:\d\d$/.test(value)?'':'Z'));return Number.isNaN(d.getTime())?null:d;};
-function readCache(key){try{return JSON.parse(localStorage.getItem('sniffin-v3:'+key)||'null');}catch{return null;}}
-function writeCache(key,value){try{localStorage.setItem('sniffin-v3:'+key,JSON.stringify(value));}catch{}}
-let templeState={owned:{},complete:false,lastSuccess:null,lastChecked:null},templeRecent=[],refreshing=false;
-let stateUnavailable=false;
-const isOwned=p=>!!serverState.owned?.[p[0]]||!!templeState.owned[p[0]];
-const ownershipKnown=()=>templeState.complete||savedStateReady;
-function ownershipSource(p){return serverState.owned?.[p[0]]?(templeState.owned[p[0]]?'MANUAL + TEMPLE':'MANUALLY CONFIRMED'):templeState.owned[p[0]]?'TEMPLE COLLECTION LOG':templeState.complete?'NOT IN SYNCED LOG':'AWAITING CONFIRMATION';}
-function chanceFor(p,kc=kcFor(p)){return meta(p).rollsPerKC||serverState.rates?.[p[0]]!==undefined?probability(kc,rateFor(p)):null;}
-function dateLabel(value){const d=stamp(value);return d?d.toLocaleString():null;}
-const $=id=>document.getElementById(id);const fmt=n=>Number.isFinite(+n)?Math.floor(+n).toLocaleString('en-US'):'—';const clean=s=>String(s??'');
-const escaped=s=>clean(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const wikifile=name=>meta(CATALOG.find(p=>p[1]===name)||CATALOG[0]).image;
-const wiki=name=>'https://oldschool.runescape.wiki/w/'+encodeURIComponent(name.replaceAll(' ','_'));
-const RSN='s niffin';
-let savedStateReady=false,womDirect=false;
-let serverState={username:RSN,target:'sraracha',startKC:0,huntNote:'',owned:{},manualKC:{},rates:{},notes:[]};
-let editable=null,metrics={},syncOk=false,adminAllowed=false,filter='all',sort='default',search='';
-const pet=id=>CATALOG.find(p=>p[0]===id)||CATALOG[0];
-function probability(k,n){if(!Number.isFinite(k)||!Number.isFinite(n)||n<1||k<0)return null;if(k===0)return 0;if(n===1)return 1;return -Math.expm1(k*Math.log1p(-1/n));}
-function rateFor(p){const v=serverState.rates?.[p[0]];return v===undefined?p[4]:v;}
-function kcFor(p){if(p[3]&&Number.isFinite(metrics[p[3]]))return metrics[p[3]];const n=Number(serverState.manualKC?.[p[0]]);return Number.isFinite(n)&&n>=0&&serverState.manualKC?.[p[0]]!==undefined?n:null;}
-function snapshotValue(v){if(typeof v==='number')return v;if(v&&typeof v==='object'){for(const key of ['kills','value','score'])if(typeof v[key]==='number')return v[key];}return null;}
-function setSyncLabel(msg,ok=false){$('syncLabel').textContent=msg;$('kcSyncStatus').textContent=msg;document.querySelector('.live-dot').style.background=ok?'#8bc68a':'#d4a35e';}
-function toast(s){$('toast').textContent=s;$('toast').classList.remove('hidden');setTimeout(()=>$('toast').classList.add('hidden'),4000);}
-async function api(path,options={}){const res=await fetch(API_BASE+path,{credentials:ON_BACKEND?'same-origin':'omit',cache:'no-store',signal:AbortSignal.timeout(15000),...options});const body=await res.json().catch(()=>({}));if(!res.ok)throw new Error(body.error||'Request failed ('+res.status+')');return body;}
-async function loadState(){try{const state=await api('state');if(!state||typeof state.owned!=='object')throw Error('Invalid saved state');if((serverState.updatedAt||0)>(state.updatedAt||0))return;serverState={...serverState,...state,username:RSN};savedStateReady=true;stateUnavailable=false;writeCache('manual',state);render();}catch(e){stateUnavailable=true;$('syncHelp').textContent='Owner edits are temporarily unavailable. Confirmed ownership and last known tracking data are retained.';}}
-function applyTemple(payload){
- const data=payload?.collection?.data;
- if(!data||String(data.player_name_with_capitalization||data.player||'').toLowerCase()!==RSN||!stamp(data.last_checked)||!Array.isArray(data.items))throw Error('Temple collection log is not synced for this RSN');
- const ids=new Set(),confirmed={};
- for(const item of data.items){const p=CATALOG.find(p=>meta(p).templeId===Number(item.id));if(!p)continue;ids.add(p[0]);if(Number(item.count)>0)confirmed[p[0]]={count:Number(item.count),recordedAt:item.date||null};}
- if(!ids.size)throw Error('Temple returned no recognized pet records');
- const previous=templeState;const newPets=Object.keys(confirmed).filter(id=>previous.lastSuccess&&!previous.owned[id]&&!serverState.owned?.[id]);
- const complete=CATALOG.every(p=>ids.has(p[0]));
- templeState={owned:{...previous.owned,...confirmed},complete,lastSuccess:payload.fetchedAt||Date.now(),lastChecked:data.last_checked};
- if(newPets.length&&!payload.stale){const detectedAt=Date.now();templeRecent=[...newPets.map(id=>({id,detectedAt})),...templeRecent].slice(0,12);writeCache('recent',templeRecent);toast('NEW CLOG SYNC: '+newPets.map(id=>pet(id)[1]).join(', '));}
- writeCache('temple',templeState);return {complete,count:Object.keys(confirmed).length};
+let PETS = [],
+  CATALOG = [],
+  PET_META = {};
+async function loadCatalog() {
+  const res = await fetch("./catalog.json?v=20261107-7");
+  if (!res.ok) throw Error("Pet catalog unavailable");
+  const rows = await res.json();
+  PET_META = Object.fromEntries(rows.map((p) => [p.id, p]));
+  PETS = rows.map((p) => [p.id, p.name, p.source, p.metric, p.rate]);
+  CATALOG = PETS;
 }
-async function syncPets(force=false){
- $('templeSyncStatus').textContent='Checking TempleOSRS…';
- try{const payload=await api('temple'+(force?'?refresh=1':''));const result=applyTemple(payload);$('templeSyncStatus').textContent=(payload.stale?'Cached Temple log':'Temple collection log')+' · '+result.count+' confirmed'+(result.complete?'':' · partial data');$('petLastSync').textContent='Log synced '+dateLabel(templeState.lastChecked);$('syncHelp').textContent='TempleOSRS collection-log records + confirmed manual ownership. Recorded dates are sync records, not proof of the original drop date.'+(stateUnavailable?' Owner storage is temporarily unavailable.':'');}
- catch(e){$('templeSyncStatus').textContent=templeState.lastSuccess?'Temple unavailable · showing last successful sync':'Temple collection log not available';$('petLastSync').textContent=templeState.lastChecked?'Last log sync '+dateLabel(templeState.lastChecked):'No successful pet sync yet';$('syncHelp').textContent=templeState.lastSuccess?'Temple is temporarily unavailable. The last successful records and every manual confirmation are retained.':'Temple needs a synced collection log. Enable TempleOSRS uploads in the RuneLite Collection Log plugin and open your log. Confirmed manual ownership is always retained.';}
- render();
+const BACKEND = "https://peakpvm-sniffin-api.bells-pvm.workers.dev";
+const ON_BACKEND = location.origin === BACKEND;
+const API_BASE = (LOCAL_PREVIEW || ON_BACKEND ? "" : BACKEND) + "/sniffin/api/";
+const meta = (p) => PET_META[p[0]] || {};
+const fmtRate = (n) =>
+  Number.isInteger(n)
+    ? fmt(n)
+    : Number(n).toLocaleString("en-US", { maximumFractionDigits: 2 });
+const stamp = (value) => {
+  if (!value) return null;
+  const d = new Date(
+    typeof value === "number"
+      ? value * 1000
+      : String(value).replace(" ", "T") +
+        (/Z$|[+-]\d\d:\d\d$/.test(value) ? "" : "Z"),
+  );
+  return Number.isNaN(d.getTime()) ? null : d;
+};
+function readCache(key) {
+  try {
+    return JSON.parse(localStorage.getItem("sniffin-v3:" + key) || "null");
+  } catch {
+    return null;
+  }
 }
-async function refreshAll(force=true){if(refreshing)return;refreshing=true;$('refreshBtn').disabled=true;$('refreshBtn').setAttribute('aria-busy','true');try{await Promise.allSettled([loadState(),syncKC(force),syncPets(force)]);await checkOwner();$('lastRefresh').textContent='Last checked '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});}finally{refreshing=false;$('refreshBtn').disabled=false;$('refreshBtn').setAttribute('aria-busy','false');}}
-async function syncKC(force=false){setSyncLabel('SYNCING '+RSN.toUpperCase()+'...');try{
- let data;
- if(!womDirect){try{data=await api('wom?username='+encodeURIComponent(RSN)+(force?'&refresh=1':''));}catch(_){womDirect=true;}}
- // Public read-only fallback; editor requests still use the protected same-origin API.
- if(womDirect){const response=await fetch('https://api.wiseoldman.net/v2/players/'+encodeURIComponent(RSN),{cache:'no-store',signal:AbortSignal.timeout(15000)});if(!response.ok)throw Error('Wise Old Man returned '+response.status);data=await response.json();}
- if(clean(data.displayName||data.username).toLowerCase()!==RSN)throw Error('Unexpected WOM account');
- const snapshot=data.latestSnapshot||data.snapshot||{},bossData=snapshot.data?.bosses||snapshot.bosses||data.bosses||{},found={};
- for(const [key,value] of Object.entries(bossData)){const n=snapshotValue(value);if(Number.isFinite(n)&&n>=0)found[key]=n;}
- if(!Object.keys(found).length)throw Error('No boss metrics in snapshot');metrics=found;syncOk=true;writeCache('wom',{metrics:found,fetchedAt:Date.now()});
- const updated=snapshot.createdAt||data.updatedAt;
- $('syncLabel').title=updated?'WOM snapshot: '+new Date(updated).toLocaleString():'';
- setSyncLabel(syncOk?RSN.toUpperCase()+' · WOM SYNCED '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}):'NO WOM BOSS DATA',syncOk);render();
- }catch(e){setSyncLabel(Object.keys(metrics).length?'WOM unavailable · last known KC':'WOM OFFLINE / NOT TRACKED');render();}}
-function render(){if(!CATALOG.length)return;const owned=CATALOG.filter(isOwned),known=ownershipKnown();$('ownedNum').textContent=known?fmt(owned.length):owned.length?'≥'+fmt(owned.length):'—';$('missingNum').textContent=known?fmt(CATALOG.length-owned.length):'—';$('ownedSub').textContent='OF '+CATALOG.length+' PETS';$('completionNum').textContent=known?Math.round(owned.length/CATALOG.length*100)+'%':'UNCONFIRMED';$('completionBar').style.width=owned.length/CATALOG.length*100+'%';$('vaultCount').textContent=(known?owned.length:owned.length?'≥'+owned.length:'—')+' / '+CATALOG.length+' OWNED';const total=Object.values(metrics).filter(n=>Number.isFinite(n)&&n>=0).reduce((a,b)=>a+b,0);$('kcTotal').textContent=Object.keys(metrics).length?fmt(total):'—';renderTarget();renderVault();renderFeed();}
-function renderTarget(){const p=pet(serverState.target),kc=kcFor(p),rate=rateFor(p),huntKC=kc===null?null:Math.max(0,kc-(Number(serverState.startKC)||0)),chance=chanceFor(p,kc);$('targetImage').src=wikifile(p[1]);$('targetImage').alt=p[1]+' in-game follower model';$('targetName').textContent=p[2];$('targetPet').textContent='CHASING: '+p[1]+(serverState.huntNote?' · '+serverState.huntNote:'');$('targetKC').textContent=kc===null?'—':fmt(kc);$('targetRate').textContent=rate?'1 / '+fmtRate(rate):'VARIES';$('targetRate').title=meta(p).rateText||'';$('targetChance').textContent=chance===null?'METHOD BASED':(chance*100).toFixed(1)+'%';$('targetPercent').textContent=chance===null?'ENTER EXACT ROLLS BELOW':(chance*100).toFixed(2)+'%';$('targetBar').style.width=chance===null?'0%':Math.min(chance*100,100)+'%';$('targetWiki').href=meta(p).wiki||wiki(p[2]);$('targetSummary').textContent=kc===null?'NO KC AVAILABLE · MANUAL TRACKING SUPPORTED':'THIS GRIND: '+fmt(huntKC)+' KC'+(rate?' · PET ROLL: 1 IN '+fmtRate(rate):' · METHOD-DEPENDENT RATE');$('targetRateNote').textContent=(meta(p).rateText||'Rate varies by method')+(!meta(p).rollsPerKC?' · Boss completions are not assumed to equal eligible reward rolls.':' · The boss does not owe you the next roll.');}
-function renderVault(){const items=CATALOG.filter(p=>filter==='all'||(filter==='owned')===isOwned(p)).filter(p=>(p[1]+' '+p[2]).toLowerCase().includes(search));items.sort((a,b)=>sort==='name'?a[1].localeCompare(b[1]):sort==='kc'?(kcFor(b)??-1)-(kcFor(a)??-1):sort==='chance'?(chanceFor(b)??-1)-(chanceFor(a)??-1):(Number(isOwned(b))-Number(isOwned(a))||CATALOG.indexOf(a)-CATALOG.indexOf(b)));$('visiblePets').textContent=items.length+' pets in this tab';$('petGrid').innerHTML=items.map(p=>{const got=isOwned(p),kc=kcFor(p),detail=serverState.owned?.[p[0]]||{},rate=rateFor(p);return `<article class="pet-tile ${got?'owned':'missing'}" data-pet-id="${p[0]}"><div class="pet-crown" aria-hidden="true">${got?'✦':'◇'}</div><div class="pet-state">${got?'OWNED':templeState.complete?'MISSING':'NOT CONFIRMED'}</div><div class="pet-art"><div class="trophy-halo"></div><img loading="lazy" decoding="async" width="${meta(p).imageWidth}" height="${meta(p).imageHeight}" src="${meta(p).image}" alt="${escaped(p[1])} in-game follower model"></div><div class="pet-copy"><div class="pet-name">${escaped(p[1])}</div><div class="pet-boss">${escaped(p[2])}</div><div class="pet-detail">${got&&detail.kc!==null&&detail.kc!==undefined?'DROP @ '+fmt(detail.kc)+' KC':kc!==null?fmt(kc)+' KC':escaped(meta(p).category)+' PET'}</div>${meta(p).note?`<div class="pet-detail">${escaped(meta(p).note)}</div>`:''}<div class="pet-provenance">${ownershipSource(p)}</div></div><a class="pet-wiki" href="${meta(p).wiki}" target="_blank" rel="noopener noreferrer" aria-label="${escaped(p[1])} Wiki and drop rates" title="${escaped(meta(p).rateText)}">${rate?'1 / '+fmtRate(rate):'METHOD BASED'} <span>↗</span></a></article>`;}).join('')||'<div class="empty">NO PETS MATCH THE FILTER.</div>';}
-function renderFeed(){const notes=[...templeRecent.map(n=>({title:'NEWLY SYNCED PET',body:pet(n.id)[1]+' appeared in a later Temple sync.',date:'Detected '+new Date(n.detectedAt).toLocaleString()})),...(serverState.notes||[]).slice().reverse()];$('feedItems').innerHTML=notes.length?notes.map(n=>`<div class="feed-item"><div class="feed-icon">✦</div><div class="feed-copy"><strong>${escaped(n.title||'GRIND UPDATE')}</strong><p>${escaped(n.body||'')}</p><small>${escaped(n.date||'')}</small></div></div>`).join(''):'<div class="empty">No notes yet. “Surely next kill” is not a filing system.</div>';}
-function renderRng(){const rate=Number($('rngRate').value),kills=Number($('rngKills').value),n=probability(kills,rate);if(n===null||!Number.isFinite(n)){$('rngSuccess').textContent=$('rngDry').textContent='—';$('rngVerdict').textContent='Enter a valid drop rate and number of rolls. The maths department is waiting.';return;}$('rngSuccess').textContent=(n*100).toFixed(2)+'%';$('rngDry').textContent=((1-n)*100).toFixed(2)+'%';$('rngVerdict').textContent=n<.5?'The complaint is still in the drafts folder.':n<.9?'Still dry? The boss’s legal team isn’t worried yet.':n<.99?'Still dry? A reasonable time to screenshot the log.':'Still dry? The calculator is taking this personally.';}
-async function checkOwner(){try{const status=await api('auth/status');adminAllowed=!!status.allowed;$('editBtn').classList.toggle('hidden',!adminAllowed);if(ON_BACKEND&&status.authenticated&&!editable)showEditor();else if(ON_BACKEND&&status.allowed&&new URLSearchParams(location.search).get('edit')==='1'&&$('editorModal').classList.contains('hidden'))openModal();}catch(_){adminAllowed=false;}}
-function openModal(){if(!adminAllowed)return;if(!ON_BACKEND){window.open(BACKEND+'/sniffin/?edit=1','_blank','noopener');return;}$('editorModal').classList.remove('hidden');$('loginPanel').classList.remove('hidden');$('editPanel').classList.add('hidden');$('pinInput').value='';$('loginError').textContent='';$('pinInput').focus();}
-function closeModal(){$('editorModal').classList.add('hidden');editable=null;}
-function showEditor(){if(!adminAllowed)return;editable=JSON.parse(JSON.stringify(serverState));$('loginPanel').classList.add('hidden');$('editPanel').classList.remove('hidden');$('editorModal').classList.remove('hidden');$('editUsername').value=editable.username||'';$('editTarget').innerHTML=CATALOG.map(p=>`<option value="${p[0]}">${escaped(p[2])} — ${escaped(p[1])}</option>`).join('');$('editTarget').value=editable.target||CATALOG[0][0];$('editStartKC').value=editable.startKC||0;$('editHuntNote').value=editable.huntNote||'';renderEditPets();renderEditNotes();}
-function renderEditPets(){$('editPets').innerHTML=CATALOG.map(p=>{const v=editable.owned?.[p[0]];const manual=editable.manualKC?.[p[0]];return `<label class="edit-pet" title="${escaped(p[2])}"><input data-owned="${p[0]}" type="checkbox" ${v?'checked':''}><span>${escaped(p[1])}<small>${templeState.owned[p[0]]?'Temple confirmed · manual checkbox is additional confirmation':''}</small></span><input aria-label="Manual KC for ${escaped(p[1])}" data-manual="${p[0]}" type="number" min="0" placeholder="KC if no WOM" value="${manual??''}"><input aria-label="Drop KC for ${escaped(p[1])}" data-drop="${p[0]}" type="number" min="0" placeholder="DROP KC" value="${v?.kc??''}"><input aria-label="Drop rate denominator for ${escaped(p[1])}" data-rate="${p[0]}" type="number" min="1" step="any" placeholder="1 IN N" value="${editable.rates?.[p[0]]??p[4]??''}"></label>`}).join('');}
-function renderEditNotes(){$('editNotes').innerHTML=(editable.notes||[]).map((n,i)=>`<div class="edit-note"><input data-note-date="${i}" aria-label="Note date" placeholder="DATE" value="${escaped(n.date||'')}"><input data-note-body="${i}" aria-label="Field note" placeholder="Field note" maxlength="200" value="${escaped(n.body||'')}"><button data-remove-note="${i}" type="button">×</button></div>`).join('');}
-function captureEditor(){editable.username=$('editUsername').value.trim();editable.target=$('editTarget').value;editable.startKC=Math.max(0,Number($('editStartKC').value)||0);editable.huntNote=$('editHuntNote').value.trim();editable.owned={};editable.manualKC={};editable.rates={};document.querySelectorAll('[data-owned]').forEach(inp=>{const id=inp.dataset.owned;if(inp.checked){const drop=document.querySelector(`[data-drop="${id}"]`).value;editable.owned[id]={kc:drop===''?null:Math.max(0,Number(drop)||0)};}const manual=document.querySelector(`[data-manual="${id}"]`).value;if(manual!=='')editable.manualKC[id]=Math.max(0,Number(manual)||0);const rate=document.querySelector(`[data-rate="${id}"]`).value;if(rate!=='')editable.rates[id]=Math.max(1,Number(rate)||1);});(editable.notes||[]).forEach((n,i)=>{n.date=document.querySelector(`[data-note-date="${i}"]`)?.value||'';n.body=document.querySelector(`[data-note-body="${i}"]`)?.value||'';});}
-async function save(){if(!ON_BACKEND||!adminAllowed)return;captureEditor();$('saveError').textContent='';$('saveBtn').disabled=true;try{const next=await api('state',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(editable)});serverState=next;savedStateReady=true;writeCache('manual',next);editable=null;closeModal();toast('CHANGES SAVED · PUBLIC PAGE UPDATED');render();await syncKC();}catch(e){$('saveError').textContent=e.message;}finally{$('saveBtn').disabled=false;}}
-async function init(){try{await loadCatalog();}catch(e){$('syncHelp').textContent='The pet tab could not load. Hit refresh and give it another go.';return;}const cachedManual=readCache('manual');if(cachedManual?.owned){serverState={...serverState,...cachedManual,username:RSN};savedStateReady=true;}const cachedTemple=readCache('temple');if(cachedTemple?.owned){templeState=cachedTemple;$('petLastSync').textContent='Last log sync '+dateLabel(templeState.lastChecked);}const cachedWom=readCache('wom');if(cachedWom?.metrics){metrics=cachedWom.metrics;syncOk=true;}templeRecent=readCache('recent')||[];const glow=$('cursorGlow');window.addEventListener('pointermove',e=>{glow.style.left=e.clientX+'px';glow.style.top=e.clientY+'px';},{passive:true});$('rngRate').addEventListener('input',renderRng);$('rngKills').addEventListener('input',renderRng);$('searchPets').addEventListener('input',e=>{search=e.target.value.toLowerCase();renderVault();});$('sortPets').addEventListener('change',e=>{sort=e.target.value;renderVault();});$('filterTabs').addEventListener('click',e=>{const b=e.target.closest('[data-filter]');if(!b)return;filter=b.dataset.filter;document.querySelectorAll('[data-filter]').forEach(x=>x.classList.toggle('active',x===b));renderVault();});$('refreshBtn').onclick=()=>refreshAll(true);$('editBtn').onclick=openModal;$('closeModal').onclick=closeModal;$('modalBackdrop').onclick=closeModal;$('pinInput').addEventListener('keydown',e=>{if(e.key==='Enter')$('loginBtn').click();});$('loginBtn').onclick=async()=>{try{await api('auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pin:$('pinInput').value})});showEditor();}catch(e){$('loginError').textContent=e.message;}};$('logoutBtn').onclick=async()=>{try{await api('auth/logout',{method:'POST'});}catch(_){ }closeModal();toast('EDITOR LOCKED');};$('saveBtn').onclick=save;$('addNoteBtn').onclick=()=>{captureEditor();editable.notes.push({date:new Date().toISOString().slice(0,10),body:''});renderEditNotes();};$('editNotes').addEventListener('click',e=>{const b=e.target.closest('[data-remove-note]');if(!b)return;captureEditor();editable.notes.splice(Number(b.dataset.removeNote),1);renderEditNotes();});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});renderRng();render();refreshAll(false);setInterval(()=>{if(document.visibilityState==='visible')refreshAll(false);},5*60*1000);setInterval(()=>{if(document.visibilityState==='visible')loadState();},2*60*1000);}
-document.addEventListener('DOMContentLoaded',init);
+function writeCache(key, value) {
+  if (MOCK_MODE) return;
+  try {
+    localStorage.setItem("sniffin-v3:" + key, JSON.stringify(value));
+  } catch {}
+}
+let templeState = {
+    owned: {},
+    complete: false,
+    lastSuccess: null,
+    lastChecked: null,
+  },
+  templeRecent = [],
+  refreshing = false;
+let stateUnavailable = false;
+const isOwned = (p) => !!serverState.owned?.[p[0]] || !!templeState.owned[p[0]];
+const ownershipKnown = () => templeState.complete;
+function ownershipSource(p) {
+  return serverState.owned?.[p[0]]
+    ? templeState.owned[p[0]]
+      ? "MANUAL + TEMPLE"
+      : "MANUALLY CONFIRMED"
+    : templeState.owned[p[0]]
+      ? "TEMPLE COLLECTION LOG"
+      : templeState.complete
+        ? "NOT IN SYNCED LOG"
+        : "AWAITING CONFIRMATION";
+}
+function chanceFor(p, kc = kcFor(p)) {
+  return modelEligible(p) ? probability(kc, rateFor(p)) : null;
+}
+function dateLabel(value) {
+  const d = stamp(value);
+  return d ? d.toLocaleString() : null;
+}
+const $ = (id) => document.getElementById(id);
+const fmt = (n) =>
+  Number.isFinite(+n) ? Math.floor(+n).toLocaleString("en-US") : "—";
+const clean = (s) => String(s ?? "");
+const escaped = (s) =>
+  clean(s).replace(
+    /[&<>"']/g,
+    (c) =>
+      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[
+        c
+      ],
+  );
+const wikifile = (name) =>
+  meta(CATALOG.find((p) => p[1] === name) || CATALOG[0]).image;
+const wiki = (name) =>
+  "https://oldschool.runescape.wiki/w/" +
+  encodeURIComponent(name.replaceAll(" ", "_"));
+const RSN = "s niffin";
+let savedStateReady = false,
+  womDirect = false;
+let serverState = {
+  username: RSN,
+  target: "sraracha",
+  startKC: 0,
+  huntNote: "",
+  owned: {},
+  manualKC: {},
+  rates: {},
+  notes: [],
+};
+let editable = null,
+  metrics = {},
+  syncOk = false,
+  adminAllowed = false,
+  filter = "all",
+  sort = "default",
+  search = "";
+const pet = (id) => CATALOG.find((p) => p[0] === id) || CATALOG[0];
+function probability(k, n) {
+  if (!Number.isFinite(k) || !Number.isFinite(n) || n < 1 || k < 0) return null;
+  if (k === 0) return 0;
+  if (n === 1) return 1;
+  return -Math.expm1(k * Math.log1p(-1 / n));
+}
+function rateFor(p) {
+  const v = serverState.rates?.[p[0]];
+  return v === undefined ? p[4] : v;
+}
+function kcFor(p) {
+  if (p[3] && Number.isFinite(metrics[p[3]])) return metrics[p[3]];
+  const n = Number(serverState.manualKC?.[p[0]]);
+  return Number.isFinite(n) &&
+    n >= 0 &&
+    serverState.manualKC?.[p[0]] !== undefined
+    ? n
+    : null;
+}
+function snapshotValue(v) {
+  if (typeof v === "number") return v;
+  if (v && typeof v === "object") {
+    for (const key of ["kills", "value", "score"])
+      if (typeof v[key] === "number") return v[key];
+  }
+  return null;
+}
+function setSyncLabel(msg, ok = false) {
+  $("syncLabel").textContent = msg;
+  $("kcSyncStatus").textContent = msg;
+  document.querySelector(".live-dot").style.background = ok
+    ? "#8bc68a"
+    : "#d4a35e";
+}
+function toast(s) {
+  $("toast").textContent = s;
+  $("toast").classList.remove("hidden");
+  setTimeout(() => $("toast").classList.add("hidden"), 4000);
+}
+async function api(path, options = {}) {
+  if (MOCK_MODE) {
+    if (path.startsWith("auth/"))
+      return { allowed: false, authenticated: false };
+    if (MOCK_OFFLINE) throw Error("Simulated API outage");
+    if (path === "state") return structuredClone(mockFixture.state);
+    if (path.startsWith("wom")) return structuredClone(mockFixture.wom);
+    if (path.startsWith("temple")) return structuredClone(mockFixture.temple);
+    throw Error("No writes in fixture mode");
+  }
+  const res = await fetch(API_BASE + path, {
+    credentials: ON_BACKEND ? "same-origin" : "omit",
+    cache: "no-store",
+    signal: AbortSignal.timeout(15000),
+    ...options,
+  });
+  const body = await res.json().catch(() => ({}));
+  if (!res.ok)
+    throw new Error(body.error || "Request failed (" + res.status + ")");
+  return body;
+}
+async function loadState() {
+  try {
+    const state = await api("state");
+    if (
+      !state ||
+      state.username !== RSN ||
+      !state.owned ||
+      typeof state.owned !== "object" ||
+      Array.isArray(state.owned)
+    )
+      throw Error("Invalid saved state");
+    if ((serverState.updatedAt || 0) > (state.updatedAt || 0)) return;
+    serverState = { ...serverState, ...state, username: RSN };
+    savedStateReady = true;
+    stateUnavailable = false;
+    writeCache("manual", state);
+    render();
+  } catch (e) {
+    stateUnavailable = true;
+    $("syncHelp").textContent =
+      "Owner edits are temporarily unavailable. Confirmed ownership and last known tracking data are retained.";
+  }
+}
+function applyTemple(payload) {
+  const data = payload?.collection?.data;
+  if (
+    !data ||
+    String(
+      data.player_name_with_capitalization || data.player || "",
+    ).toLowerCase() !== RSN ||
+    !stamp(data.last_checked) ||
+    !Array.isArray(data.items)
+  )
+    throw Error("Temple collection log is not synced for this RSN");
+  const ids = new Set(),
+    confirmed = {};
+  for (const item of data.items) {
+    const p = CATALOG.find((p) => meta(p).templeId === Number(item.id));
+    if (!p) continue;
+    ids.add(p[0]);
+    if (Number(item.count) > 0)
+      confirmed[p[0]] = {
+        count: Number(item.count),
+        recordedAt: item.date || null,
+      };
+  }
+  if (!ids.size) throw Error("Temple returned no recognized pet records");
+  const previous = templeState;
+  const newPets = Object.keys(confirmed).filter(
+    (id) =>
+      previous.lastSuccess && !previous.owned[id] && !serverState.owned?.[id],
+  );
+  const complete = CATALOG.every((p) => ids.has(p[0]));
+  templeState = {
+    owned: { ...previous.owned, ...confirmed },
+    complete,
+    lastSuccess: payload.fetchedAt || Date.now(),
+    lastChecked: data.last_checked,
+  };
+  if (newPets.length && !payload.stale) {
+    const detectedAt = Date.now();
+    templeRecent = [
+      ...newPets.map((id) => ({ id, detectedAt })),
+      ...templeRecent,
+    ].slice(0, 12);
+    writeCache("recent", templeRecent);
+    toast("NEW CLOG SYNC: " + newPets.map((id) => pet(id)[1]).join(", "));
+  }
+  writeCache("temple", templeState);
+  return { complete, count: Object.keys(confirmed).length };
+}
+async function syncPets(force = false) {
+  $("templeSyncStatus").textContent = "Checking TempleOSRS…";
+  try {
+    const payload = await api("temple" + (force ? "?refresh=1" : ""));
+    const result = applyTemple(payload);
+    $("templeSyncStatus").textContent =
+      (payload.stale ? "Cached Temple log" : "Temple collection log") +
+      " · " +
+      result.count +
+      " confirmed" +
+      (result.complete ? "" : " · partial data");
+    $("petLastSync").textContent =
+      "Log synced " + dateLabel(templeState.lastChecked);
+    $("syncHelp").textContent =
+      "TempleOSRS collection-log records + confirmed manual ownership. Recorded dates are sync records, not proof of the original drop date." +
+      (stateUnavailable ? " Owner storage is temporarily unavailable." : "");
+  } catch (e) {
+    $("templeSyncStatus").textContent = templeState.lastSuccess
+      ? "Temple unavailable · showing last successful sync"
+      : "Temple collection log not available";
+    $("petLastSync").textContent = templeState.lastChecked
+      ? "Last log sync " + dateLabel(templeState.lastChecked)
+      : "No successful pet sync yet";
+    $("syncHelp").textContent = templeState.lastSuccess
+      ? "Temple is temporarily unavailable. The last successful records and every manual confirmation are retained."
+      : "Temple needs a synced collection log. Enable TempleOSRS uploads in the RuneLite Collection Log plugin and open your log. Confirmed manual ownership is always retained.";
+  }
+  render();
+}
+async function refreshAll(force = true) {
+  if (refreshing) return;
+  refreshing = true;
+  $("refreshBtn").disabled = true;
+  $("refreshBtn").setAttribute("aria-busy", "true");
+  try {
+    await Promise.allSettled([loadState(), syncKC(force), syncPets(force)]);
+    await checkOwner();
+    $("lastRefresh").textContent =
+      ($("lastRefresh").textContent.startsWith("Snapshot:")
+        ? $("lastRefresh").textContent + " · "
+        : "") +
+      "Checked " +
+      new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  } finally {
+    refreshing = false;
+    $("refreshBtn").disabled = false;
+    $("refreshBtn").setAttribute("aria-busy", "false");
+  }
+}
+async function syncKC(force = false) {
+  setSyncLabel("SYNCING " + RSN.toUpperCase() + "...");
+  try {
+    let data;
+    if (!womDirect) {
+      try {
+        data = await api(
+          "wom?username=" +
+            encodeURIComponent(RSN) +
+            (force ? "&refresh=1" : ""),
+        );
+      } catch (_) {
+        womDirect = true;
+      }
+    }
+    // Public read-only fallback; editor requests still use the protected same-origin API.
+    if (womDirect) {
+      if (MOCK_MODE) throw Error("No external fallback in mock mode");
+      const response = await fetch(
+        "https://api.wiseoldman.net/v2/players/" + encodeURIComponent(RSN),
+        { cache: "no-store", signal: AbortSignal.timeout(15000) },
+      );
+      if (!response.ok) throw Error("Wise Old Man returned " + response.status);
+      data = await response.json();
+    }
+    if (clean(data.displayName || data.username).toLowerCase() !== RSN)
+      throw Error("Unexpected WOM account");
+    const snapshot = data.latestSnapshot || data.snapshot || {},
+      bossData = snapshot.data?.bosses || snapshot.bosses || data.bosses || {},
+      found = {};
+    for (const [key, value] of Object.entries(bossData)) {
+      const n = snapshotValue(value);
+      if (Number.isFinite(n) && n >= 0) found[key] = n;
+    }
+    if (!Object.keys(found).length) throw Error("No boss metrics in snapshot");
+    metrics = found;
+    syncOk = !data.stale;
+    writeCache("wom", {
+      metrics: found,
+      fetchedAt: data.fetchedAt || Date.now(),
+      snapshotAt: snapshot.createdAt || data.updatedAt,
+    });
+    const updated = snapshot.createdAt || data.updatedAt;
+    $("syncLabel").title = updated
+      ? "WOM snapshot: " + new Date(updated).toLocaleString()
+      : "";
+    $("lastRefresh").textContent = updated
+      ? "Snapshot: " + new Date(updated).toLocaleString()
+      : "Snapshot timestamp unavailable";
+    setSyncLabel(
+      syncOk
+        ? RSN.toUpperCase() +
+            " · WOM SYNCED " +
+            new Date().toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            })
+        : "WOM CACHED · LAST KNOWN KC",
+      syncOk,
+    );
+    render();
+  } catch (e) {
+    setSyncLabel(
+      Object.keys(metrics).length
+        ? "WOM unavailable · last known KC"
+        : "WOM OFFLINE / NOT TRACKED",
+    );
+    render();
+  }
+}
+function render() {
+  if (!CATALOG.length) return;
+  const owned = CATALOG.filter(isOwned),
+    known = ownershipKnown();
+  $("ownedNum").textContent = known
+    ? fmt(owned.length)
+    : owned.length
+      ? "≥" + fmt(owned.length)
+      : "—";
+  $("missingNum").textContent = known
+    ? fmt(CATALOG.length - owned.length)
+    : "—";
+  $("ownedSub").textContent = "OF " + CATALOG.length + " PETS";
+  $("completionNum").textContent = known
+    ? Math.round((owned.length / CATALOG.length) * 100) + "%"
+    : "UNCONFIRMED";
+  $("completionBar").style.width = (owned.length / CATALOG.length) * 100 + "%";
+  $("vaultCount").textContent =
+    (known ? owned.length : owned.length ? "≥" + owned.length : "—") +
+    " / " +
+    CATALOG.length +
+    " OWNED";
+  const total = Object.values(metrics)
+    .filter((n) => Number.isFinite(n) && n >= 0)
+    .reduce((a, b) => a + b, 0);
+  $("kcTotal").textContent = Object.keys(metrics).length ? fmt(total) : "—";
+  renderTarget();
+  renderVault();
+  renderFeed();
+  renderMenagerie();
+}
+function renderTarget() {
+  const p = pet(serverState.target),
+    kc = kcFor(p),
+    rate = rateFor(p),
+    huntKC =
+      kc === null ? null : Math.max(0, kc - (Number(serverState.startKC) || 0)),
+    chance = chanceFor(p, kc);
+  $("targetImage").src = wikifile(p[1]);
+  $("targetImage").alt = p[1] + " in-game follower model";
+  $("targetName").textContent = p[2];
+  $("targetPet").textContent =
+    "CHASING: " +
+    p[1] +
+    (serverState.huntNote ? " · " + serverState.huntNote : "");
+  $("targetKC").textContent = kc === null ? "—" : fmt(kc);
+  $("targetRate").textContent = rate ? "1 / " + fmtRate(rate) : "VARIES";
+  $("targetRate").title = meta(p).rateText || "";
+  $("targetChance").textContent =
+    chance === null ? "UNAVAILABLE" : (chance * 100).toFixed(1) + "%";
+  $("targetPercent").textContent =
+    chance === null ? "METHOD / KC REQUIRED" : (chance * 100).toFixed(2) + "%";
+  $("targetBar").style.width =
+    chance === null ? "0%" : Math.min(chance * 100, 100) + "%";
+  $("targetWiki").href = meta(p).wiki || wiki(p[2]);
+  $("targetSummary").textContent =
+    kc === null
+      ? "NO KC AVAILABLE · MANUAL TRACKING SUPPORTED"
+      : "THIS GRIND: " +
+        fmt(huntKC) +
+        " KC" +
+        (rate
+          ? " · PET ROLL: 1 IN " + fmtRate(rate)
+          : " · METHOD-DEPENDENT RATE");
+  $("targetRateNote").textContent =
+    (meta(p).rateText || "Rate varies by method") +
+    (!meta(p).rollsPerKC
+      ? " · Boss completions are not assumed to equal eligible reward rolls."
+      : " · The boss does not owe you the next roll.");
+}
+function renderVault() {
+  const items = CATALOG.filter(
+    (p) => filter === "all" || (filter === "owned") === isOwned(p),
+  )
+    .filter((p) => category === "all" || categoryFor(p) === category)
+    .filter((p) => (p[1] + " " + p[2]).toLowerCase().includes(search));
+  items.sort((a, b) =>
+    sort === "name"
+      ? a[1].localeCompare(b[1])
+      : sort === "kc"
+        ? (kcFor(b) ?? -1) - (kcFor(a) ?? -1)
+        : sort === "chance"
+          ? (chanceFor(b) ?? -1) - (chanceFor(a) ?? -1)
+          : Number(isOwned(b)) - Number(isOwned(a)) ||
+            CATALOG.indexOf(a) - CATALOG.indexOf(b),
+  );
+  $("visiblePets").textContent =
+    Math.min(vaultLimit, items.length) + " of " + items.length + " pets shown";
+  if ($("morePets"))
+    $("morePets").classList.toggle("hidden", vaultLimit >= items.length);
+  $("petGrid").innerHTML =
+    items
+      .slice(0, vaultLimit)
+      .map((p) => {
+        const got = isOwned(p),
+          kc = kcFor(p),
+          detail = serverState.owned?.[p[0]] || {},
+          rate = rateFor(p);
+        return `<article class="pet-tile ${got ? "owned" : "missing"}" data-pet-id="${p[0]}"><button class="pet-detail-button" data-details="${p[0]}" aria-label="Details for ${escaped(p[1])}">View details</button><div class="pet-crown" aria-hidden="true">${got ? "✦" : "◇"}</div><div class="pet-state">${got ? "OWNED" : templeState.complete ? "MISSING" : "NOT CONFIRMED"}</div><div class="pet-art"><div class="trophy-halo"></div><img loading="lazy" decoding="async" width="${meta(p).imageWidth}" height="${meta(p).imageHeight}" src="${meta(p).image}" alt="${escaped(p[1])} in-game follower model"></div><div class="pet-copy"><div class="pet-name">${escaped(p[1])}</div><div class="pet-boss">${escaped(p[2])}</div><div class="pet-detail">${got && detail.kc !== null && detail.kc !== undefined ? "DROP @ " + fmt(detail.kc) + " KC" : kc !== null ? fmt(kc) + " KC" : escaped(meta(p).category) + " PET"}</div>${meta(p).note ? `<div class="pet-detail">OWNER NOTE · ${escaped(meta(p).note)}</div>` : ""}<div class="pet-provenance">${ownershipSource(p)}</div></div><a class="pet-wiki" href="${meta(p).wiki}" target="_blank" rel="noopener noreferrer" aria-label="${escaped(p[1])} Wiki and drop rates" title="${escaped(meta(p).rateText)}">${rate ? "1 / " + fmtRate(rate) : "METHOD BASED"} <span>↗</span></a></article>`;
+      })
+      .join("") || '<div class="empty">NO PETS MATCH THE FILTER.</div>';
+}
+function renderFeed() {
+  const notes = [
+    ...templeRecent.map((n) => ({
+      title: "NEWLY SYNCED PET",
+      body: pet(n.id)[1] + " appeared in a later Temple sync.",
+      date: "Detected " + new Date(n.detectedAt).toLocaleString(),
+    })),
+    ...(serverState.notes || []).slice().reverse(),
+  ];
+  $("feedItems").innerHTML = notes.length
+    ? notes
+        .map(
+          (n) =>
+            `<div class="feed-item"><div class="feed-icon">✦</div><div class="feed-copy"><strong>${escaped(n.title || "GRIND UPDATE")}</strong><p>${escaped(n.body || "")}</p><small>${escaped(n.date || "")}</small></div></div>`,
+        )
+        .join("")
+    : '<div class="empty">No notes yet. “Surely next kill” is not a filing system.</div>';
+}
+function renderRng() {
+  const rate = Number($("rngRate").value),
+    kills = Number($("rngKills").value),
+    n = probability(kills, rate);
+  if (
+    $("rngRate").value === "" ||
+    $("rngKills").value === "" ||
+    !Number.isInteger(kills) ||
+    n === null ||
+    !Number.isFinite(n)
+  ) {
+    $("rngSuccess").textContent = $("rngDry").textContent = "—";
+    $("rngVerdict").textContent =
+      "Enter a valid drop rate and number of rolls. The maths department is waiting.";
+    return;
+  }
+  $("rngSuccess").textContent = (n * 100).toFixed(2) + "%";
+  $("rngDry").textContent = ((1 - n) * 100).toFixed(2) + "%";
+  $("rngVerdict").textContent =
+    n < 0.5
+      ? "The complaint is still in the drafts folder."
+      : n < 0.9
+        ? "Still dry? The boss’s legal team isn’t worried yet."
+        : n < 0.99
+          ? "Still dry? A reasonable time to screenshot the log."
+          : "Still dry? The calculator is taking this personally.";
+}
+async function checkOwner() {
+  try {
+    const status = await api("auth/status");
+    adminAllowed = !!status.allowed;
+    $("editBtn").classList.toggle("hidden", !adminAllowed);
+    if (ON_BACKEND && status.authenticated && !editable) showEditor();
+    else if (
+      ON_BACKEND &&
+      status.allowed &&
+      new URLSearchParams(location.search).get("edit") === "1" &&
+      $("editorModal").classList.contains("hidden")
+    )
+      openModal();
+  } catch (_) {
+    adminAllowed = false;
+  }
+}
+function openModal() {
+  if (!adminAllowed) return;
+  if (!ON_BACKEND) {
+    window.open(BACKEND + "/sniffin/?edit=1", "_blank", "noopener");
+    return;
+  }
+  $("editorModal").classList.remove("hidden");
+  $("loginPanel").classList.remove("hidden");
+  $("editPanel").classList.add("hidden");
+  $("pinInput").value = "";
+  $("loginError").textContent = "";
+  $("pinInput").focus();
+}
+function closeModal() {
+  $("editorModal").classList.add("hidden");
+  editable = null;
+  $("editBtn").focus();
+}
+function showEditor() {
+  if (!adminAllowed) return;
+  editable = JSON.parse(JSON.stringify(serverState));
+  $("loginPanel").classList.add("hidden");
+  $("editPanel").classList.remove("hidden");
+  $("editorModal").classList.remove("hidden");
+  $("editUsername").value = editable.username || "";
+  $("editTarget").innerHTML = CATALOG.map(
+    (p) =>
+      `<option value="${p[0]}">${escaped(p[2])} — ${escaped(p[1])}</option>`,
+  ).join("");
+  $("editTarget").value = editable.target || CATALOG[0][0];
+  $("editStartKC").value = editable.startKC || 0;
+  $("editHuntNote").value = editable.huntNote || "";
+  renderEditPets();
+  renderEditNotes();
+  $("closeModal").focus();
+}
+function renderEditPets() {
+  $("editPets").innerHTML = CATALOG.map((p) => {
+    const v = editable.owned?.[p[0]];
+    const manual = editable.manualKC?.[p[0]];
+    return `<label class="edit-pet" title="${escaped(p[2])}"><input data-owned="${p[0]}" type="checkbox" ${v ? "checked" : ""}><span>${escaped(p[1])}<small>${templeState.owned[p[0]] ? "Temple confirmed · manual checkbox is additional confirmation" : ""}</small></span><input aria-label="Manual KC for ${escaped(p[1])}" data-manual="${p[0]}" type="number" min="0" placeholder="KC if no WOM" value="${manual ?? ""}"><input aria-label="Drop KC for ${escaped(p[1])}" data-drop="${p[0]}" type="number" min="0" placeholder="DROP KC" value="${v?.kc ?? ""}"><input aria-label="Drop rate denominator for ${escaped(p[1])}" data-rate="${p[0]}" type="number" min="1" step="any" placeholder="1 IN N" value="${editable.rates?.[p[0]] ?? p[4] ?? ""}"></label>`;
+  }).join("");
+}
+function renderEditNotes() {
+  $("editNotes").innerHTML = (editable.notes || [])
+    .map(
+      (n, i) =>
+        `<div class="edit-note"><input data-note-date="${i}" aria-label="Note date" placeholder="DATE" value="${escaped(n.date || "")}"><input data-note-body="${i}" aria-label="Field note" placeholder="Field note" maxlength="200" value="${escaped(n.body || "")}"><button data-remove-note="${i}" type="button">×</button></div>`,
+    )
+    .join("");
+}
+function captureEditor() {
+  editable.username = $("editUsername").value.trim();
+  editable.target = $("editTarget").value;
+  editable.startKC = Math.max(0, Number($("editStartKC").value) || 0);
+  editable.huntNote = $("editHuntNote").value.trim();
+  editable.owned = {};
+  editable.manualKC = {};
+  editable.rates = {};
+  document.querySelectorAll("[data-owned]").forEach((inp) => {
+    const id = inp.dataset.owned;
+    if (inp.checked) {
+      const drop = document.querySelector(`[data-drop="${id}"]`).value;
+      editable.owned[id] = {
+        kc: drop === "" ? null : Math.max(0, Number(drop) || 0),
+      };
+    }
+    const manual = document.querySelector(`[data-manual="${id}"]`).value;
+    if (manual !== "") editable.manualKC[id] = Math.max(0, Number(manual) || 0);
+    const rate = document.querySelector(`[data-rate="${id}"]`).value;
+    if (
+      rate !== "" &&
+      (Number(rate) !== p[4] || serverState.rates?.[id] !== undefined)
+    )
+      editable.rates[id] = Math.max(1, Number(rate) || 1);
+  });
+  (editable.notes || []).forEach((n, i) => {
+    n.date = document.querySelector(`[data-note-date="${i}"]`)?.value || "";
+    n.body = document.querySelector(`[data-note-body="${i}"]`)?.value || "";
+  });
+}
+async function save() {
+  if (!ON_BACKEND || !adminAllowed) return;
+  captureEditor();
+  $("saveError").textContent = "";
+  $("saveBtn").disabled = true;
+  try {
+    const next = await api("state", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(editable),
+    });
+    serverState = next;
+    savedStateReady = true;
+    writeCache("manual", next);
+    editable = null;
+    closeModal();
+    toast("CHANGES SAVED · PUBLIC PAGE UPDATED");
+    render();
+    await syncKC();
+  } catch (e) {
+    $("saveError").textContent = e.message;
+  } finally {
+    $("saveBtn").disabled = false;
+  }
+}
+async function init() {
+  try {
+    await loadCatalog();
+    await initMenagerie();
+  } catch (e) {
+    $("syncHelp").textContent =
+      "The pet tab could not load. Hit refresh and give it another go.";
+    setSyncLabel("ARCHIVE UNAVAILABLE");
+    $("petGrid").innerHTML = '<div class="empty">The archive could not load. Reload the page to retry; account statistics have not been substituted.</div>';
+    $("targetName").textContent = "HUNT UNAVAILABLE";
+    $("refreshBtn").onclick = () => location.reload();
+    return;
+  }
+  const cachedManual = MOCK_MODE ? null : readCache("manual");
+  if (cachedManual?.owned) {
+    serverState = { ...serverState, ...cachedManual, username: RSN };
+    savedStateReady = true;
+  }
+  const cachedTemple = MOCK_MODE ? null : readCache("temple");
+  if (cachedTemple?.owned) {
+    templeState = cachedTemple;
+    $("petLastSync").textContent =
+      "Last log sync " + dateLabel(templeState.lastChecked);
+  }
+  const cachedWom = MOCK_MODE ? null : readCache("wom");
+  if (cachedWom?.metrics) {
+    metrics = cachedWom.metrics;
+    syncOk = false;
+    setSyncLabel("CACHED KC · CHECKING FRESHNESS");
+  }
+  templeRecent = MOCK_MODE ? [] : readCache("recent") || [];
+  $("rngRate").addEventListener("input", renderRng);
+  $("rngKills").addEventListener("input", renderRng);
+  $("searchPets").addEventListener("input", (e) => {
+    search = e.target.value.toLowerCase();
+    renderVault();
+  });
+  $("sortPets").addEventListener("change", (e) => {
+    sort = e.target.value;
+    renderVault();
+  });
+  $("filterTabs").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-filter]");
+    if (!b) return;
+    filter = b.dataset.filter;
+    document
+      .querySelectorAll("[data-filter]")
+      .forEach(
+        (x) => (
+          x.classList.toggle("active", x === b),
+          x.setAttribute("aria-pressed", String(x === b))
+        ),
+      );
+    renderVault();
+  });
+  $("refreshBtn").onclick = () => refreshAll(true);
+  $("editBtn").onclick = openModal;
+  $("closeModal").onclick = closeModal;
+  $("modalBackdrop").onclick = closeModal;
+  $("pinInput").addEventListener("keydown", (e) => {
+    if (e.key === "Enter") $("loginBtn").click();
+  });
+  $("loginBtn").onclick = async () => {
+    try {
+      await api("auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pin: $("pinInput").value }),
+      });
+      showEditor();
+    } catch (e) {
+      $("loginError").textContent = e.message;
+    }
+  };
+  $("logoutBtn").onclick = async () => {
+    try {
+      await api("auth/logout", { method: "POST" });
+    } catch (_) {}
+    closeModal();
+    toast("EDITOR LOCKED");
+  };
+  $("saveBtn").onclick = save;
+  $("addNoteBtn").onclick = () => {
+    captureEditor();
+    editable.notes.push({
+      date: new Date().toISOString().slice(0, 10),
+      body: "",
+    });
+    renderEditNotes();
+  };
+  $("editNotes").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-remove-note]");
+    if (!b) return;
+    captureEditor();
+    editable.notes.splice(Number(b.dataset.removeNote), 1);
+    renderEditNotes();
+  });
+  document.addEventListener("keydown", (e) => {
+    if (!$("editorModal").classList.contains("hidden")) {
+      if (e.key === "Escape") closeModal();
+      if (e.key === "Tab") {
+        const items = [
+          ...$("editorModal").querySelectorAll("button,input,select,a[href]"),
+        ].filter((n) => !n.disabled && n.getClientRects().length);
+        const first = items[0],
+          last = items.at(-1);
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last?.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first?.focus();
+        }
+      }
+    }
+  });
+  renderRng();
+  render();
+  refreshAll(false);
+  setInterval(
+    () => {
+      if (document.visibilityState === "visible") refreshAll(false);
+    },
+    5 * 60 * 1000,
+  );
+  setInterval(
+    () => {
+      if (document.visibilityState === "visible") loadState();
+    },
+    2 * 60 * 1000,
+  );
+}
+document.addEventListener("DOMContentLoaded", init);

@@ -1,0 +1,349 @@
+{
+  "notice": "DEVELOPMENT FIXTURE — invented sample values, never live account data",
+  "state": {
+    "username": "s niffin",
+    "target": "sraracha",
+    "startKC": 500,
+    "owned": {
+      "baby-mole": {
+        "kc": 17
+      }
+    },
+    "manualKC": {},
+    "rates": {},
+    "notes": [],
+    "milestones": [
+      {
+        "petId": "baby-mole",
+        "title": "SAMPLE: Mole came home",
+        "date": "2026-01-01",
+        "kc": 17,
+        "note": "Invented development example only."
+      }
+    ]
+  },
+  "wom": {
+    "displayName": "s niffin",
+    "latestSnapshot": {
+      "createdAt": "2026-01-01T12:00:00Z",
+      "data": {
+        "bosses": {
+          "sarachnis": {
+            "kills": 590
+          },
+          "giant_mole": {
+            "kills": 120
+          },
+          "vorkath": {
+            "kills": 2500
+          },
+          "kraken": {
+            "kills": 3000
+          },
+          "tzkal_zuk": {
+            "kills": 1
+          }
+        }
+      }
+    }
+  },
+  "temple": {
+    "fetchedAt": 1767268800000,
+    "collection": {
+      "data": {
+        "player": "s niffin",
+        "last_checked": "2026-01-01 12:00:00",
+        "items": [
+          {
+            "id": 11995,
+            "count": 1
+          },
+          {
+            "id": 12646,
+            "count": 1
+          },
+          {
+            "id": 13181,
+            "count": 1
+          },
+          {
+            "id": 21273,
+            "count": 0
+          },
+          {
+            "id": 20693,
+            "count": 0
+          },
+          {
+            "id": 12921,
+            "count": 0
+          },
+          {
+            "id": 13321,
+            "count": 0
+          },
+          {
+            "id": 13071,
+            "count": 0
+          },
+          {
+            "id": 29836,
+            "count": 0
+          },
+          {
+            "id": 33124,
+            "count": 0
+          },
+          {
+            "id": 23495,
+            "count": 0
+          },
+          {
+            "id": 21992,
+            "count": 0
+          },
+          {
+            "id": 13247,
+            "count": 0
+          },
+          {
+            "id": 22746,
+            "count": 0
+          },
+          {
+            "id": 12655,
+            "count": 0
+          },
+          {
+            "id": 12648,
+            "count": 0
+          },
+          {
+            "id": 12647,
+            "count": 0
+          },
+          {
+            "id": 12653,
+            "count": 0
+          },
+          {
+            "id": 13225,
+            "count": 0
+          },
+          {
+            "id": 21291,
+            "count": 0
+          },
+          {
+            "id": 12650,
+            "count": 0
+          },
+          {
+            "id": 12649,
+            "count": 0
+          },
+          {
+            "id": 12651,
+            "count": 0
+          },
+          {
+            "id": 12652,
+            "count": 0
+          },
+          {
+            "id": 13262,
+            "count": 0
+          },
+          {
+            "id": 12816,
+            "count": 0
+          },
+          {
+            "id": 27590,
+            "count": 0
+          },
+          {
+            "id": 26348,
+            "count": 0
+          },
+          {
+            "id": 24491,
+            "count": 0
+          },
+          {
+            "id": 28250,
+            "count": 0
+          },
+          {
+            "id": 28248,
+            "count": 0
+          },
+          {
+            "id": 28246,
+            "count": 0
+          },
+          {
+            "id": 28252,
+            "count": 0
+          },
+          {
+            "id": 28801,
+            "count": 0
+          },
+          {
+            "id": 13177,
+            "count": 0
+          },
+          {
+            "id": 13179,
+            "count": 0
+          },
+          {
+            "id": 13178,
+            "count": 0
+          },
+          {
+            "id": 25602,
+            "count": 0
+          },
+          {
+            "id": 26901,
+            "count": 0
+          },
+          {
+            "id": 13320,
+            "count": 0
+          },
+          {
+            "id": 13322,
+            "count": 0
+          },
+          {
+            "id": 20663,
+            "count": 0
+          },
+          {
+            "id": 20659,
+            "count": 0
+          },
+          {
+            "id": 20665,
+            "count": 0
+          },
+          {
+            "id": 20661,
+            "count": 0
+          },
+          {
+            "id": 13324,
+            "count": 0
+          },
+          {
+            "id": 21509,
+            "count": 0
+          },
+          {
+            "id": 19730,
+            "count": 0
+          },
+          {
+            "id": 23757,
+            "count": 0
+          },
+          {
+            "id": 23760,
+            "count": 0
+          },
+          {
+            "id": 22473,
+            "count": 0
+          },
+          {
+            "id": 20851,
+            "count": 0
+          },
+          {
+            "id": 27352,
+            "count": 0
+          },
+          {
+            "id": 30152,
+            "count": 0
+          },
+          {
+            "id": 30154,
+            "count": 0
+          },
+          {
+            "id": 31285,
+            "count": 0
+          },
+          {
+            "id": 34042,
+            "count": 0
+          },
+          {
+            "id": 30622,
+            "count": 0
+          },
+          {
+            "id": 31130,
+            "count": 0
+          },
+          {
+            "id": 33642,
+            "count": 0
+          },
+          {
+            "id": 21748,
+            "count": 0
+          },
+          {
+            "id": 34646,
+            "count": 0
+          },
+          {
+            "id": 12644,
+            "count": 0
+          },
+          {
+            "id": 12645,
+            "count": 0
+          },
+          {
+            "id": 12643,
+            "count": 0
+          },
+          {
+            "id": 28960,
+            "count": 0
+          },
+          {
+            "id": 30888,
+            "count": 0
+          },
+          {
+            "id": 31283,
+            "count": 0
+          },
+          {
+            "id": 25348,
+            "count": 0
+          },
+          {
+            "id": 34040,
+            "count": 0
+          },
+          {
+            "id": 12703,
+            "count": 0
+          },
+          {
+            "id": 28962,
+            "count": 0
+          }
+        ]
+      }
+    }
+  }
+}
