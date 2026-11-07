@@ -54,6 +54,39 @@
         </div>
       </div>
 
+      <div class="supply-controls">
+        <div class="control-row">
+          <label class="search-label">Search supplies<input id="supplySearch" type="search" placeholder="Name or alias: ppot, scb, cballs…" autocomplete="off"></label>
+          <label>Sort by<select id="sortOrder"><option value="opportunity">Best buying opportunity</option><option value="discount">Biggest discount</option><option value="name">Name A–Z</option><option value="price">Price: low to high</option></select></label>
+          <button id="clearFilters" type="button">Clear filters</button>
+        </div>
+        <div class="control-row">
+          <div id="categoryFilters" class="filter-group" role="group" aria-label="Supply category">
+            <button type="button" data-category="All" aria-pressed="true">All</button>
+            <button type="button" data-category="Food" aria-pressed="false">Food</button>
+            <button type="button" data-category="Potions" aria-pressed="false">Potions</button>
+            <button type="button" data-category="Runes" aria-pressed="false">Runes</button>
+            <button type="button" data-category="Ammo" aria-pressed="false">Ammo</button>
+            <button type="button" data-category="Charges" aria-pressed="false">Charges</button>
+          </div>
+          <button id="favoritesFilter" type="button" aria-pressed="false">★ Favorites</button>
+          <span id="itemCount" role="status"></span>
+        </div>
+        <p id="priceFreshness" class="control-note"></p>
+        <details class="quick-buy" open>
+          <summary>Quick Buy List · <span id="buyTotal" role="status"></span></summary>
+          <div class="control-row" id="restockPresets">
+            <span>Set quantity for visible items:</span>
+            <button type="button" data-quantity-preset="100">100</button>
+            <button type="button" data-quantity-preset="500">500</button>
+            <button type="button" data-quantity-preset="1000">1,000</button>
+            <button id="clearList" type="button">Clear buy list</button>
+          </div>
+          <p class="control-note">Enter quantities in the table. Total includes all saved items, even when filtered out. Uses instant-buy quotes where available; actual GE cost may vary. Favorites, quantities and targets stay on this device.</p>
+        </details>
+        <p class="control-note">Opportunity sorting prioritizes reached targets, then historical discounts. Targets use buy quotes on refresh; stale quotes do not trigger alerts. Blank target = off.</p>
+      </div>
+
       <div class="table-wrap">
         <table>
           <thead>
@@ -62,6 +95,8 @@
               <th>Price</th>
               <th>Status</th>
               <th>Usually cheapest</th>
+              <th>Buy quantity</th>
+              <th>Buy alert (gp)</th>
             </tr>
           </thead>
           <tbody id="supplyRows"></tbody>
@@ -71,7 +106,7 @@
 
     <section class="note panel">
       <strong>How this works</strong>
-      <p>It compares live prices with recent hourly trade history and looks for the weekday and time block where this PvM supply basket has tended to be cheapest. It is a historical buying signal, not a prediction of future prices.</p>
+      <p>It compares live prices with recent hourly trade history and looks for the weekday and time block where the original PvM supply basket has tended to be cheapest. Added supplies do not change the overall market indicators. Individual signals require at least 24 traded hourly samples and a quote from the last hour. It is a historical buying signal, not a prediction of future prices.</p>
       <p class="source">Live market data: RuneScape Wiki real-time prices API.</p>
     </section>
 
