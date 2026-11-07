@@ -727,19 +727,40 @@ label select {
   background: #191512;
 }
 .pet-tile.owned {
-  border-color: #a280468c;
+  border-color: #b8944f;
+  border-radius: 8px;
   background:
-    radial-gradient(ellipse at 50% 34%, #b18a3340, transparent 60%),
-    linear-gradient(155deg, #2e2817, #0e0f08 82%);
-  box-shadow: inset 0 1px #eed99b24;
+    radial-gradient(ellipse at 50% 31%, #c59b464f, transparent 63%),
+    linear-gradient(145deg, #3a2b13, #1b160d 56%, #100e09);
+  box-shadow: inset 0 1px #ffe7ac52, inset 0 -20px 35px #0004;
+}
+.pet-tile.owned::before {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border: 1px solid #e6c77d26;
+  border-radius: 3px;
+  pointer-events: none;
+}
+.pet-tile.owned::after {
+  content: "";
+  position: absolute;
+  inset: 0 12% auto;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #f2d592, transparent);
+  pointer-events: none;
 }
 .pet-tile.owned:hover,
 .pet-tile.owned:focus-within {
-  border-color: #dcbd76;
-  box-shadow: inset 0 1px #eed99b38, 0 12px 28px #0006;
+  border-color: #f1d28b;
+  box-shadow: inset 0 1px #ffe7ac66, 0 12px 28px #0006, 0 0 22px #c59b461a;
 }
 .owned .pet-name {
-  color: #f4dfb1;
+  color: #ffe7aa;
+  text-shadow: 0 2px 8px #0008;
+}
+.owned .pet-boss {
+  color: #c9b68c;
 }
 .owned .pet-detail {
   color: #d6bd87;
@@ -748,9 +769,9 @@ label select {
   color: #b5a075;
 }
 .owned .pet-wiki {
-  color: #d5b879;
-  border-color: #9b7d384a;
-  background: #191305b3;
+  color: #e6c77d;
+  border-color: #bd954958;
+  background: #201706cc;
 }
 .owned .pet-crown {
   color: #e3c588;
@@ -794,10 +815,10 @@ label select {
   pointer-events: none;
 }
 .owned .trophy-halo {
-  background: radial-gradient(ellipse, #e3bd5130, transparent 65%);
+  background: radial-gradient(ellipse, #f0c45b40, transparent 68%);
 }
 .owned .pet-art img {
-  filter: drop-shadow(0 0 14px #edc05845) drop-shadow(0 14px 9px #0008);
+  filter: drop-shadow(0 0 18px #f1c96666) drop-shadow(0 14px 9px #0009);
 }
 .missing .pet-art img {
   filter: brightness(0.42) saturate(0.2) drop-shadow(0 12px 7px #000);

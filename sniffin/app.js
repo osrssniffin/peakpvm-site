@@ -107,7 +107,7 @@ let editable = null,
   metrics = {},
   syncOk = false,
   adminAllowed = false,
-  filter = "all",
+  filter = "owned",
   sort = "default",
   search = "";
 const pet = (id) => CATALOG.find((p) => p[0] === id) || CATALOG[0];
