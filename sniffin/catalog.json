@@ -1,7 +1,7 @@
 [
   {
     "name": "Pet chaos elemental",
-    "source": "Chaos Elemental and Chaos Fanatic",
+    "source": "Chaos Elemental",
     "rateText": "1/300 (Elemental) 1/1,000 (Fanatic)",
     "category": "Boss",
     "id": "chaos-elemental",
@@ -15,7 +15,8 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Chaos_Elemental_Jr..png?5c995",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Chaos_Elemental_Jr..png",
     "imageWidth": 600,
-    "imageHeight": 563
+    "imageHeight": 563,
+    "sourceMethods": "Chaos Elemental and Chaos Fanatic"
   },
   {
     "name": "Baby Mole",
@@ -33,7 +34,8 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Baby_Mole_%28follower%29.png?c4d59",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Baby_Mole_(follower).png",
     "imageWidth": 600,
-    "imageHeight": 358
+    "imageHeight": 358,
+    "sourceMethods": "Giant Mole"
   },
   {
     "name": "Scorpia's offspring",
@@ -51,7 +53,8 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Scorpia%27s_offspring_%28follower%29.png?dfe31",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Scorpia%27s_offspring_(follower).png",
     "imageWidth": 600,
-    "imageHeight": 406
+    "imageHeight": 406,
+    "sourceMethods": "Scorpia"
   },
   {
     "name": "Skotos",
@@ -69,12 +72,13 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Skotos_%28follower%29.png?dc8b8",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Skotos_(follower).png",
     "imageWidth": 600,
-    "imageHeight": 663
+    "imageHeight": 663,
+    "sourceMethods": "Skotizo"
   },
   {
     "name": "Phoenix",
-    "source": "Wintertodt [ i ]",
-    "rateText": "1/5,000 [ j ]",
+    "source": "Wintertodt",
+    "rateText": "1/5,000",
     "category": "Boss",
     "id": "phoenix",
     "templeId": 20693,
@@ -87,7 +91,8 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Phoenix_%28follower%29.png?f6800",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Phoenix_(follower).png",
     "imageWidth": 600,
-    "imageHeight": 525
+    "imageHeight": 525,
+    "sourceMethods": "Wintertodt [ i ]"
   },
   {
     "name": "Pet Snakeling",
@@ -105,7 +110,8 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Snakeling.png?f371a",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Snakeling.png",
     "imageWidth": 600,
-    "imageHeight": 580
+    "imageHeight": 580,
+    "sourceMethods": "Zulrah"
   },
   {
     "name": "Rock golem",
@@ -123,7 +129,8 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Rock_golem_%28follower%29.png?269fc",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Rock_golem_(follower).png",
     "imageWidth": 600,
-    "imageHeight": 926
+    "imageHeight": 926,
+    "sourceMethods": "Mining"
   },
   {
     "name": "Chompy chick",
@@ -141,12 +148,13 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Chompy_chick_%28follower%29.png?608c5",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Chompy_chick_(follower).png",
     "imageWidth": 600,
-    "imageHeight": 630
+    "imageHeight": 630,
+    "sourceMethods": "Hunting chompy birds (after completing the Elite Western Provinces Diary )"
   },
   {
     "name": "Nid",
     "source": "Araxxor",
-    "rateText": "1/3,000 (Harvest) 1/1,500 (Destroy) [ g ]",
+    "rateText": "1/3,000 (Harvest) 1/1,500 (Destroy)",
     "category": "Boss",
     "id": "nid",
     "templeId": 29836,
@@ -159,7 +167,8 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Nid_%28follower%29.png?35d2e",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Nid_(follower).png",
     "imageWidth": 600,
-    "imageHeight": 367
+    "imageHeight": 367,
+    "sourceMethods": "Araxxor"
   },
   {
     "name": "Beef",
@@ -177,7 +186,8 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Beef_%28follower%29.png?b4a02",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Beef_(follower).png",
     "imageWidth": 600,
-    "imageHeight": 478
+    "imageHeight": 478,
+    "sourceMethods": "Brutus"
   },
   {
     "name": "Sraracha",
@@ -195,7 +205,8 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Sraracha_%28follower%29.png?e9085",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Sraracha_(follower).png",
     "imageWidth": 600,
-    "imageHeight": 494
+    "imageHeight": 494,
+    "sourceMethods": "Sarachnis"
   },
   {
     "name": "Vorki",
@@ -213,7 +224,8 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Vorki_%28follower%29.png?b2e83",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Vorki_(follower).png",
     "imageWidth": 600,
-    "imageHeight": 292
+    "imageHeight": 292,
+    "sourceMethods": "Vorkath"
   },
   {
     "name": "Hellpuppy",
@@ -231,7 +243,8 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Hellpuppy_%28follower%29.png?b9d9d",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Hellpuppy_(follower).png",
     "imageWidth": 600,
-    "imageHeight": 569
+    "imageHeight": 569,
+    "sourceMethods": "Cerberus"
   },
   {
     "name": "Ikkle Hydra",
@@ -249,7 +262,8 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Ikkle_Hydra_%28follower%2C_serpentine%29.png?94430",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Ikkle_Hydra_(follower,_serpentine).png",
     "imageWidth": 600,
-    "imageHeight": 874
+    "imageHeight": 874,
+    "sourceMethods": "Alchemical Hydra"
   },
   {
     "name": "Pet Kraken",
@@ -267,7 +281,8 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Pet_Kraken_%28follower%29.png?a4955",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Pet_Kraken_(follower).png",
     "imageWidth": 600,
-    "imageHeight": 450
+    "imageHeight": 450,
+    "sourceMethods": "Kraken"
   },
   {
     "name": "Pet Smoke Devil",
@@ -285,7 +300,8 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Smoke_Devil_%28follower%29.png?3e74f",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Smoke_Devil_(follower).png",
     "imageWidth": 600,
-    "imageHeight": 764
+    "imageHeight": 764,
+    "sourceMethods": "Thermonuclear smoke devil"
   },
   {
     "name": "Kalphite Princess",
@@ -303,7 +319,8 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Kalphite_Princess_%28follower%2C_walking%29.png?6d25b",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Kalphite_Princess_(follower,_walking).png",
     "imageWidth": 600,
-    "imageHeight": 521
+    "imageHeight": 521,
+    "sourceMethods": "Kalphite Queen"
   },
   {
     "name": "Prince Black Dragon",
@@ -321,11 +338,12 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Prince_Black_Dragon_%28follower%29.png?318e7",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Prince_Black_Dragon_(follower).png",
     "imageWidth": 600,
-    "imageHeight": 436
+    "imageHeight": 436,
+    "sourceMethods": "King Black Dragon"
   },
   {
     "name": "TzRek-Jad",
-    "source": "TzHaar Fight Cave",
+    "source": "TzTok-Jad",
     "rateText": "1/200 (per kill or gamble) 1/100 (per kill on Slayer task)",
     "category": "Boss",
     "id": "jad",
@@ -339,11 +357,12 @@
     "imageSource": "https://oldschool.runescape.wiki/images/TzRek-Jad_%28follower%29.png?87507",
     "imagePage": "https://oldschool.runescape.wiki/w/File:TzRek-Jad_(follower).png",
     "imageWidth": 600,
-    "imageHeight": 669
+    "imageHeight": 669,
+    "sourceMethods": "TzHaar Fight Cave"
   },
   {
     "name": "Jal-Nib-Rek",
-    "source": "Inferno",
+    "source": "TzKal-Zuk",
     "rateText": "1/100 (per kill or gamble) 1/75 (per kill on Slayer task)",
     "category": "Boss",
     "id": "zuk",
@@ -357,7 +376,8 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Jal-Nib-Rek_%28follower%29.png?6d25b",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Jal-Nib-Rek_(follower).png",
     "imageWidth": 600,
-    "imageHeight": 272
+    "imageHeight": 272,
+    "sourceMethods": "Inferno"
   },
   {
     "name": "Pet General Graardor",
@@ -375,7 +395,8 @@
     "imageSource": "https://oldschool.runescape.wiki/images/General_Graardor_Jr..png?6d25b",
     "imagePage": "https://oldschool.runescape.wiki/w/File:General_Graardor_Jr..png",
     "imageWidth": 600,
-    "imageHeight": 702
+    "imageHeight": 702,
+    "sourceMethods": "General Graardor"
   },
   {
     "name": "Pet Kree'arra",
@@ -393,7 +414,8 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Kree%27arra_Jr..png?ce6c4",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Kree%27arra_Jr..png",
     "imageWidth": 600,
-    "imageHeight": 484
+    "imageHeight": 484,
+    "sourceMethods": "Kree'arra"
   },
   {
     "name": "Pet Zilyana",
@@ -411,7 +433,8 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Zilyana_Jr..png?fd984",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Zilyana_Jr..png",
     "imageWidth": 600,
-    "imageHeight": 1025
+    "imageHeight": 1025,
+    "sourceMethods": "Commander Zilyana"
   },
   {
     "name": "Pet K'ril Tsutsaroth",
@@ -429,12 +452,13 @@
     "imageSource": "https://oldschool.runescape.wiki/images/K%27ril_Tsutsaroth_Jr..png?a4955",
     "imagePage": "https://oldschool.runescape.wiki/w/File:K%27ril_Tsutsaroth_Jr..png",
     "imageWidth": 600,
-    "imageHeight": 556
+    "imageHeight": 556,
+    "sourceMethods": "K'ril Tsutsaroth"
   },
   {
     "name": "Abyssal orphan",
-    "source": "Abyssal Sire [ a ]",
-    "rateText": "1/2,560 [ b ]",
+    "source": "Abyssal Sire",
+    "rateText": "1/2,560",
     "category": "Boss",
     "id": "sire",
     "templeId": 13262,
@@ -447,7 +471,8 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Abyssal_orphan_%28follower%29.png?f674f",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Abyssal_orphan_(follower).png",
     "imageWidth": 600,
-    "imageHeight": 620
+    "imageHeight": 620,
+    "sourceMethods": "Abyssal Sire [ a ]"
   },
   {
     "name": "Pet dark core",
@@ -465,7 +490,8 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Dark_core.png?4a144",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Dark_core.png",
     "imageWidth": 600,
-    "imageHeight": 937
+    "imageHeight": 937,
+    "sourceMethods": "Corporeal Beast"
   },
   {
     "name": "Muphin",
@@ -483,7 +509,8 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Muphin_%28follower%2C_ranged%29.png?01b57",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Muphin_(follower,_ranged).png",
     "imageWidth": 600,
-    "imageHeight": 606
+    "imageHeight": 606,
+    "sourceMethods": "Phantom Muspah"
   },
   {
     "name": "Nexling",
@@ -501,11 +528,12 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Nexling_%28follower%29.png?8ef0b",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Nexling_(follower).png",
     "imageWidth": 600,
-    "imageHeight": 780
+    "imageHeight": 780,
+    "sourceMethods": "Nex"
   },
   {
     "name": "Little Nightmare",
-    "source": "The Nightmare and Phosani's Nightmare",
+    "source": "Nightmare",
     "rateText": "1/800 to 1/4,000 (From 1 to 5+ team size) 1/1,400 (Phosani's Nightmare)",
     "category": "Boss",
     "id": "nightmare",
@@ -519,7 +547,8 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Little_Nightmare_%28follower%29.png?13c62",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Little_Nightmare_(follower).png",
     "imageWidth": 600,
-    "imageHeight": 678
+    "imageHeight": 678,
+    "sourceMethods": "The Nightmare and Phosani's Nightmare"
   },
   {
     "name": "Baron",
@@ -537,7 +566,8 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Baron_%28follower%29.png?79d46",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Baron_(follower).png",
     "imageWidth": 600,
-    "imageHeight": 410
+    "imageHeight": 410,
+    "sourceMethods": "Duke Sucellus"
   },
   {
     "name": "Butch",
@@ -555,7 +585,8 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Butch_%28follower%29.png?0c8e9",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Butch_(follower).png",
     "imageWidth": 600,
-    "imageHeight": 1120
+    "imageHeight": 1120,
+    "sourceMethods": "Vardorvis"
   },
   {
     "name": "Wisp",
@@ -573,7 +604,8 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Wisp_%28follower%29.png?d6646",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Wisp_(follower).png",
     "imageWidth": 600,
-    "imageHeight": 1574
+    "imageHeight": 1574,
+    "sourceMethods": "The Whisperer"
   },
   {
     "name": "Lil'viathan",
@@ -591,12 +623,13 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Lil%27viathan_%28follower%29.png?cc19a",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Lil%27viathan_(follower).png",
     "imageWidth": 600,
-    "imageHeight": 629
+    "imageHeight": 629,
+    "sourceMethods": "The Leviathan"
   },
   {
     "name": "Scurry",
     "source": "Scurrius",
-    "rateText": "1/3,000 [ k ]",
+    "rateText": "1/3,000",
     "category": "Boss",
     "id": "scurry",
     "templeId": 28801,
@@ -609,11 +642,12 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Scurry_%28follower%29.png?4de8a",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Scurry_(follower).png",
     "imageWidth": 600,
-    "imageHeight": 624
+    "imageHeight": 624,
+    "sourceMethods": "Scurrius"
   },
   {
     "name": "Venenatis spiderling",
-    "source": "Venenatis and Spindel",
+    "source": "Venenatis",
     "rateText": "1/1,500 (Venenatis) 1/2,800 (Spindel)",
     "category": "Boss",
     "id": "venenatis",
@@ -627,11 +661,12 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Venenatis_spiderling_%28follower%29.png?6f9f0",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Venenatis_spiderling_(follower).png",
     "imageWidth": 600,
-    "imageHeight": 329
+    "imageHeight": 329,
+    "sourceMethods": "Venenatis and Spindel"
   },
   {
     "name": "Vet'ion Jr.",
-    "source": "Vet'ion and Calvar'ion",
+    "source": "Vet'ion",
     "rateText": "1/1,500 (Vet'ion) 1/2,800 (Calvar'ion)",
     "category": "Boss",
     "id": "vetion",
@@ -645,11 +680,12 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Vet%27ion_Jr._%28follower%29.png?48a60",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Vet%27ion_Jr._(follower).png",
     "imageWidth": 600,
-    "imageHeight": 1105
+    "imageHeight": 1105,
+    "sourceMethods": "Vet'ion and Calvar'ion"
   },
   {
     "name": "Callisto cub",
-    "source": "Callisto and Artio",
+    "source": "Callisto",
     "rateText": "1/1,500 (Callisto) 1/2,800 (Artio)",
     "category": "Boss",
     "id": "callisto",
@@ -663,11 +699,12 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Callisto_cub_%28follower%29.png?6f9f0",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Callisto_cub_(follower).png",
     "imageWidth": 600,
-    "imageHeight": 478
+    "imageHeight": 478,
+    "sourceMethods": "Callisto and Artio"
   },
   {
     "name": "Tiny tempor",
-    "source": "Tempoross [ l ]",
+    "source": "Tempoross",
     "rateText": "1/8,000",
     "category": "Boss",
     "id": "tempoross",
@@ -681,7 +718,8 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Tiny_Tempor.png?c4248",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Tiny_Tempor.png",
     "imageWidth": 600,
-    "imageHeight": 401
+    "imageHeight": 401,
+    "sourceMethods": "Tempoross [ l ]"
   },
   {
     "name": "Abyssal protector",
@@ -699,7 +737,8 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Abyssal_protector_%28follower%29.png?bfcb7",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Abyssal_protector_(follower).png",
     "imageWidth": 600,
-    "imageHeight": 1252
+    "imageHeight": 1252,
+    "sourceMethods": "Guardians of the Rift"
   },
   {
     "name": "Heron",
@@ -717,7 +756,8 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Heron_%28follower%29.png?1a8a8",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Heron_(follower).png",
     "imageWidth": 600,
-    "imageHeight": 280
+    "imageHeight": 280,
+    "sourceMethods": "Fishing"
   },
   {
     "name": "Beaver",
@@ -735,7 +775,8 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Beaver_%28follower%29.png?15794",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Beaver_(follower).png",
     "imageWidth": 600,
-    "imageHeight": 413
+    "imageHeight": 413,
+    "sourceMethods": "Woodcutting"
   },
   {
     "name": "Rocky",
@@ -753,7 +794,8 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Rocky_%28follower%29.png?5bf2f",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Rocky_(follower).png",
     "imageWidth": 600,
-    "imageHeight": 470
+    "imageHeight": 470,
+    "sourceMethods": "Thieving"
   },
   {
     "name": "Giant Squirrel",
@@ -771,7 +813,8 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Giant_Squirrel_%28follower%29.png?6927a",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Giant_Squirrel_(follower).png",
     "imageWidth": 600,
-    "imageHeight": 861
+    "imageHeight": 861,
+    "sourceMethods": "Agility"
   },
   {
     "name": "Rift guardian",
@@ -789,7 +832,8 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Rift_guardian_%28follower%2C_fire%29.png?725c4",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Rift_guardian_(follower,_fire).png",
     "imageWidth": 600,
-    "imageHeight": 861
+    "imageHeight": 861,
+    "sourceMethods": "Runecraft"
   },
   {
     "name": "Tangleroot",
@@ -807,7 +851,8 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Tangleroot_%28follower%29.png?d25f8",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Tangleroot_(follower).png",
     "imageWidth": 600,
-    "imageHeight": 887
+    "imageHeight": 887,
+    "sourceMethods": "Farming"
   },
   {
     "name": "Baby chinchompa",
@@ -825,7 +870,8 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Baby_Chinchompa_%28grey%29.png?a3a4c",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Baby_Chinchompa_(grey).png",
     "imageWidth": 600,
-    "imageHeight": 424
+    "imageHeight": 424,
+    "sourceMethods": "Hunter ( chinchompas only)"
   },
   {
     "name": "Herbi",
@@ -843,7 +889,8 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Herbi_%28follower%29.png?af968",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Herbi_(follower).png",
     "imageWidth": 600,
-    "imageHeight": 579
+    "imageHeight": 579,
+    "sourceMethods": "Hunting herbiboars"
   },
   {
     "name": "Bloodhound",
@@ -861,7 +908,8 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Bloodhound_%28follower%29.png?1f705",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Bloodhound_(follower).png",
     "imageWidth": 600,
-    "imageHeight": 567
+    "imageHeight": 567,
+    "sourceMethods": "Master clue scrolls"
   },
   {
     "name": "Youngllef",
@@ -879,7 +927,8 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Youngllef_%28follower%29.png?fc90e",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Youngllef_(follower).png",
     "imageWidth": 600,
-    "imageHeight": 403
+    "imageHeight": 403,
+    "sourceMethods": "The Gauntlet"
   },
   {
     "name": "Smolcano",
@@ -897,12 +946,13 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Smolcano_%28follower%29.png?93a76",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Smolcano_(follower).png",
     "imageWidth": 600,
-    "imageHeight": 1011
+    "imageHeight": 1011,
+    "sourceMethods": "Zalcano"
   },
   {
     "name": "Lil' Zik",
     "source": "Theatre of Blood",
-    "rateText": "1/650 (Normal mode) 1/500 (Hard mode) [ e ] · Team size, contribution, or eligible rewards can change the effective chance; use exact rolls for probability.",
+    "rateText": "1/650 (Normal mode) 1/500 (Hard mode) · Team size, contribution, or eligible rewards can change the effective chance; use exact rolls for probability.",
     "category": "Boss",
     "id": "tob",
     "templeId": 22473,
@@ -915,12 +965,13 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Lil%27_Zik_%28follower%29.png?5a023",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Lil%27_Zik_(follower).png",
     "imageWidth": 600,
-    "imageHeight": 545
+    "imageHeight": 545,
+    "sourceMethods": "Theatre of Blood"
   },
   {
     "name": "Olmlet",
     "source": "Chambers of Xeric",
-    "rateText": "1/53 [ h ]",
+    "rateText": "1/53",
     "category": "Boss",
     "id": "cox",
     "templeId": 20851,
@@ -933,12 +984,13 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Olmlet_%28follower%29.png?24b14",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Olmlet_(follower).png",
     "imageWidth": 356,
-    "imageHeight": 890
+    "imageHeight": 890,
+    "sourceMethods": "Chambers of Xeric"
   },
   {
     "name": "Tumeken's guardian",
     "source": "Tombs of Amascut",
-    "rateText": "Varies [ m ]",
+    "rateText": "Varies",
     "category": "Boss",
     "id": "toa",
     "templeId": 27352,
@@ -951,11 +1003,12 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Tumeken%27s_Guardian_%28follower%29.png?7583d",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Tumeken%27s_Guardian_(follower).png",
     "imageWidth": 600,
-    "imageHeight": 794
+    "imageHeight": 794,
+    "sourceMethods": "Tombs of Amascut"
   },
   {
     "name": "Huberte",
-    "source": "The Hueycoatl",
+    "source": "Hueycoatl",
     "rateText": "1/400 · Team size, contribution, or eligible rewards can change the effective chance; use exact rolls for probability.",
     "category": "Boss",
     "id": "huey",
@@ -969,7 +1022,8 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Huberte_%28follower%29.png?19e22",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Huberte_(follower).png",
     "imageWidth": 600,
-    "imageHeight": 431
+    "imageHeight": 431,
+    "sourceMethods": "The Hueycoatl"
   },
   {
     "name": "Moxi",
@@ -987,7 +1041,8 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Moxi_%28follower%29.png?19e22",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Moxi_(follower).png",
     "imageWidth": 600,
-    "imageHeight": 1264
+    "imageHeight": 1264,
+    "sourceMethods": "Amoxliatl"
   },
   {
     "name": "Gull",
@@ -1005,7 +1060,8 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Gull.png?eb2db",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Gull.png",
     "imageWidth": 550,
-    "imageHeight": 236
+    "imageHeight": 236,
+    "sourceMethods": "Shellbane Gryphon"
   },
   {
     "name": "Aggy",
@@ -1023,12 +1079,13 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Aggy_%28follower%29.png?4e394",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Aggy_(follower).png",
     "imageWidth": 600,
-    "imageHeight": 1194
+    "imageHeight": 1194,
+    "sourceMethods": "Mad Angel"
   },
   {
     "name": "Bran",
     "source": "Royal Titans",
-    "rateText": "1/3,000 (Loot) 1/1,500 (Sacrifice) [ c ]",
+    "rateText": "1/3,000 (Loot) 1/1,500 (Sacrifice)",
     "category": "Boss",
     "id": "bran",
     "templeId": 30622,
@@ -1041,12 +1098,13 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Bran_%28follower%29.png?68158",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Bran_(follower).png",
     "imageWidth": 600,
-    "imageHeight": 958
+    "imageHeight": 958,
+    "sourceMethods": "Royal Titans"
   },
   {
     "name": "Dom",
     "source": "Doom of Mokhaiotl",
-    "rateText": "1/250-1/1000 [ d ]",
+    "rateText": "1/250-1/1000",
     "category": "Boss",
     "id": "dom",
     "templeId": 31130,
@@ -1059,12 +1117,13 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Dom_%28follower%29.png?e7157",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Dom_(follower).png",
     "imageWidth": 600,
-    "imageHeight": 316
+    "imageHeight": 316,
+    "sourceMethods": "Doom of Mokhaiotl"
   },
   {
     "name": "Maggot marquess",
     "source": "Maggot King",
-    "rateText": "1/3,500 ~1/1,502.4 (Take-eggs) [ f ]",
+    "rateText": "1/3,500 ~1/1,502.4 (Take-eggs)",
     "category": "Boss",
     "id": "maggot-marquess",
     "templeId": 33642,
@@ -1077,7 +1136,8 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Maggot_marquess_%28follower%29.png?c90d8",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Maggot_marquess_(follower).png",
     "imageWidth": 600,
-    "imageHeight": 464
+    "imageHeight": 464,
+    "sourceMethods": "Maggot King"
   },
   {
     "name": "Noon",
@@ -1095,7 +1155,8 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Noon_%28follower%29.png?ec4e4",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Noon_(follower).png",
     "imageWidth": 600,
-    "imageHeight": 477
+    "imageHeight": 477,
+    "sourceMethods": "Grotesque Guardians"
   },
   {
     "name": "Orion",
@@ -1113,7 +1174,8 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Orion_%28follower%29.png?b51de",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Orion_(follower).png",
     "imageWidth": 600,
-    "imageHeight": 909
+    "imageHeight": 909,
+    "sourceMethods": "The Fractured Archive"
   },
   {
     "name": "Pet Dagannoth Prime",
@@ -1131,7 +1193,8 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Dagannoth_Prime_Jr..png?4612a",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Dagannoth_Prime_Jr..png",
     "imageWidth": 600,
-    "imageHeight": 845
+    "imageHeight": 845,
+    "sourceMethods": "Dagannoth Prime"
   },
   {
     "name": "Pet Dagannoth Rex",
@@ -1149,7 +1212,8 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Dagannoth_Rex_Jr..png?4612a",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Dagannoth_Rex_Jr..png",
     "imageWidth": 600,
-    "imageHeight": 798
+    "imageHeight": 798,
+    "sourceMethods": "Dagannoth Rex"
   },
   {
     "name": "Pet Dagannoth Supreme",
@@ -1167,7 +1231,8 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Dagannoth_Supreme_Jr..png?4a144",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Dagannoth_Supreme_Jr..png",
     "imageWidth": 600,
-    "imageHeight": 845
+    "imageHeight": 845,
+    "sourceMethods": "Dagannoth Supreme"
   },
   {
     "name": "Smol Heredit",
@@ -1185,7 +1250,8 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Smol_Heredit_%28follower%29.png?571cb",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Smol_Heredit_(follower).png",
     "imageWidth": 600,
-    "imageHeight": 887
+    "imageHeight": 887,
+    "sourceMethods": "Sol Heredit"
   },
   {
     "name": "Yami",
@@ -1203,7 +1269,8 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Yami_%28follower%29.png?58add",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Yami_(follower).png",
     "imageWidth": 600,
-    "imageHeight": 542
+    "imageHeight": 542,
+    "sourceMethods": "Yama"
   },
   {
     "name": "Soup",
@@ -1221,7 +1288,8 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Soup_%28follower%29.png?3a662",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Soup_(follower).png",
     "imageWidth": 600,
-    "imageHeight": 251
+    "imageHeight": 251,
+    "sourceMethods": "Sailing"
   },
   {
     "name": "Lil' Creator",
@@ -1239,12 +1307,13 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Lil%27_Creator_%28follower%29.png?b4613",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Lil%27_Creator_(follower).png",
     "imageWidth": 600,
-    "imageHeight": 925
+    "imageHeight": 925,
+    "sourceMethods": "Soul Wars"
   },
   {
     "name": "Mr McGroot",
     "source": "Hunting Wyrmscraig Goats",
-    "rateText": "See here [ a ]",
+    "rateText": "See here",
     "category": "Activity",
     "id": "mr-mcgroot",
     "templeId": 34040,
@@ -1257,7 +1326,8 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Mr_McGroot_%28follower%29.png?6cb7d",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Mr_McGroot_(follower).png",
     "imageWidth": 600,
-    "imageHeight": 619
+    "imageHeight": 619,
+    "sourceMethods": "Hunting Wyrmscraig Goats"
   },
   {
     "name": "Pet Penance Queen",
@@ -1275,12 +1345,13 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Penance_Pet.png?56343",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Penance_Pet.png",
     "imageWidth": 600,
-    "imageHeight": 449
+    "imageHeight": 449,
+    "sourceMethods": "Barbarian Assault"
   },
   {
     "name": "Quetzin",
     "source": "Hunter's guild rumours (expert and master only)",
-    "rateText": "1/1,000 [ a ]",
+    "rateText": "1/1,000",
     "category": "Activity",
     "id": "quetzin",
     "templeId": 28962,
@@ -1293,6 +1364,7 @@
     "imageSource": "https://oldschool.runescape.wiki/images/Quetzin_%28follower%29.png?ca338",
     "imagePage": "https://oldschool.runescape.wiki/w/File:Quetzin_(follower).png",
     "imageWidth": 600,
-    "imageHeight": 315
+    "imageHeight": 315,
+    "sourceMethods": "Hunter's guild rumours (expert and master only)"
   }
 ]

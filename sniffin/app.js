@@ -1,7 +1,7 @@
 'use strict';
 // Catalog and follower-model provenance are verified against Wiki NPC infoboxes.
 let PETS=[],CATALOG=[],PET_META={};
-async function loadCatalog(){const res=await fetch('./catalog.json?v=20261107-3');if(!res.ok)throw Error('Pet catalog unavailable');const rows=await res.json();PET_META=Object.fromEntries(rows.map(p=>[p.id,p]));PETS=rows.map(p=>[p.id,p.name,p.source,p.metric,p.rate]);CATALOG=PETS;}
+async function loadCatalog(){const res=await fetch('./catalog.json?v=20261107-4');if(!res.ok)throw Error('Pet catalog unavailable');const rows=await res.json();PET_META=Object.fromEntries(rows.map(p=>[p.id,p]));PETS=rows.map(p=>[p.id,p.name,p.source,p.metric,p.rate]);CATALOG=PETS;}
 const BACKEND='https://peakpvm-sniffin-api.bells-pvm.workers.dev';
 const ON_BACKEND=location.origin===BACKEND;
 const API_BASE=(ON_BACKEND?'':BACKEND)+'/sniffin/api/';
@@ -49,7 +49,7 @@ function applyTemple(payload){
 async function syncPets(force=false){
  $('templeSyncStatus').textContent='Checking TempleOSRS…';
  try{const payload=await api('temple'+(force?'?refresh=1':''));const result=applyTemple(payload);$('templeSyncStatus').textContent=(payload.stale?'Cached Temple log':'Temple collection log')+' · '+result.count+' confirmed'+(result.complete?'':' · partial data');$('petLastSync').textContent='Log synced '+dateLabel(templeState.lastChecked);$('syncHelp').textContent='TempleOSRS collection-log records + confirmed manual ownership. Recorded dates are sync records, not proof of the original drop date.'+(stateUnavailable?' Owner storage is temporarily unavailable.':'');}
- catch(e){$('templeSyncStatus').textContent=templeState.lastSuccess?'Temple unavailable · showing last successful sync':'Temple collection log not available';$('petLastSync').textContent=templeState.lastChecked?'Last log sync '+dateLabel(templeState.lastChecked):'No successful pet sync yet';$('syncHelp').textContent='Temple needs a synced collection log. Enable TempleOSRS uploads in the RuneLite Collection Log plugin and open your log. Confirmed manual ownership is always retained.';}
+ catch(e){$('templeSyncStatus').textContent=templeState.lastSuccess?'Temple unavailable · showing last successful sync':'Temple collection log not available';$('petLastSync').textContent=templeState.lastChecked?'Last log sync '+dateLabel(templeState.lastChecked):'No successful pet sync yet';$('syncHelp').textContent=templeState.lastSuccess?'Temple is temporarily unavailable. The last successful records and every manual confirmation are retained.':'Temple needs a synced collection log. Enable TempleOSRS uploads in the RuneLite Collection Log plugin and open your log. Confirmed manual ownership is always retained.';}
  render();
 }
 async function refreshAll(force=true){if(refreshing)return;refreshing=true;$('refreshBtn').disabled=true;$('refreshBtn').setAttribute('aria-busy','true');try{await Promise.allSettled([loadState(),syncKC(force),syncPets(force)]);await checkOwner();$('lastRefresh').textContent='Last checked '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});}finally{refreshing=false;$('refreshBtn').disabled=false;$('refreshBtn').setAttribute('aria-busy','false');}}
