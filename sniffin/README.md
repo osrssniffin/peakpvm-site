@@ -31,7 +31,7 @@ Production-oriented static frontend and Cloudflare Worker API for `https://peakp
 
 4. Confirm the route `peakpvm.com/sniffin/api/*` points to this Worker. If your deployment is on Cloudflare Pages instead, adapt the backend as a Pages Function or route the Worker explicitly; a GitHub Pages website by itself cannot securely store shared edits or enforce IP/PIN login.
 5. Test public page in private browsing, then test Edit using the allowlisted public IP. **The IP may change, and some ISPs route traffic through different egress addresses.** Update `ALLOWED_IP` in the Worker when necessary and redeploy.
-6. If you want a specific OSRS account tracked, set its exact character name in the editor. The default `Sniffin` is only a placeholder until verified. If WOM has not tracked your account recently, use Wise Old Man's Update Player feature to collect a fresh snapshot.
+6. If you want a specific OSRS account tracked, set its exact character name in the editor. The tracker is configured for the exact RSN `s niffin`. If WOM has not tracked your account recently, use Wise Old Man's Update Player feature to collect a fresh snapshot.
 
 ## Security notes
 
