@@ -14,7 +14,7 @@ const configs = [...code.matchAll(/^    \[(\d+), "([^"]+)", "([^"]+)", "([^"]*)"
 const mapping = configs;
 const now = Math.floor(Date.now()/1000);
 let calls=0;
-const context={document, console, Date, localStorage:{getItem(){return '{"385":{"favorite":true,"quantity":100,"target":105}}';},setItem(k,v){this.value=v;}}, fetch:async url=>{
+const context={document, console, Date, AbortSignal, localStorage:{getItem(){return '{"385":{"favorite":true,"quantity":100,"target":105}}';},setItem(k,v){this.value=v;}}, fetch:async url=>{
  calls++;
  if(url.endsWith('/mapping')) return {ok:true,json:async()=>mapping};
  if(url.endsWith('/latest')) return {ok:true,json:async()=>({data:Object.fromEntries(configs.map(x=>[x.id,{high:100,low:90,highTime:x.id===11212?now-7200:now,lowTime:now}]))})};
@@ -30,7 +30,7 @@ vm.runInNewContext(code,context);
  assert.equal(elements.get('itemCount').textContent,'78 visible / 78 tracked');
  assert.equal(elements.get('overallPrice').textContent,'13.6% below normal','new outliers must not change the original basket');
  assert.equal(context.test.preferences.get(385).favorite,true);
- assert.equal(elements.get('buyTotal').textContent,'10,000 gp estimated · 1 supplies');
+ assert.equal(elements.get('buyTotal').textContent,'10,000 gp estimated · 1 supply');
  assert.match(elements.get('supplyRows').innerHTML,/Target reached/);
  assert.equal(context.test.market.find(x=>x.item.id===3144).signal.label,'Not enough data');
  assert.equal(context.test.market.find(x=>x.item.id===24777).signal.label,'Not enough data');
@@ -47,7 +47,7 @@ vm.runInNewContext(code,context);
  assert.equal(calls,before,'filtering must not fetch');
  await context.test.load();
  // Failed history is retried, successful histories use the hour cache.
- assert.equal(calls-before,3);
+ assert.equal(calls-before,2);
  assert.equal(context.test.signal(NaN).label,'Not enough data');
  assert.ok(Number.isNaN(context.test.pointPrice({avgHighPrice:100,avgLowPrice:100,highPriceVolume:0,lowPriceVolume:0})));
  console.log('PASS: 78 mapped supplies; aliases; combined filters; favorites; saved totals; targets; stale buy quotes; thin/missing history; zero-volume prices; refresh cache; no search requests.');

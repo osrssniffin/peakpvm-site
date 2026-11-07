@@ -119,29 +119,67 @@ td:nth-child(2) { font-variant-numeric: tabular-nums; }
   th, td { padding-left: 15px; padding-right: 15px; }
 }
 
-/* Compact controls share the existing palette and table. */
+/* Supply controls follow the guide's dark olive and gold palette. */
 input, select, button { font: inherit; }
-.supply-controls { padding: 0 22px 16px; }
+.supply-controls { padding: 0 22px 20px; }
 .control-row, .filter-group { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
-.control-row { margin: 10px 0; }
-.control-row label { display: grid; gap: 5px; color: var(--muted); font-size: .8rem; }
-.search-label { flex: 1 1 220px; }
-.supply-controls button, input, select { border: 1px solid var(--line); border-radius: 7px; background: var(--panel-2); color: var(--text); padding: 8px 10px; }
-.supply-controls button, .star { cursor: pointer; }
-button[aria-pressed="true"] { color: var(--gold); border-color: var(--gold); }
-:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
-.control-note, #itemCount { color: var(--muted); font-size: .78rem; line-height: 1.5; }
-.control-note { margin: 8px 0 0; }
-.quick-buy { border-top: 1px solid var(--line); padding-top: 12px; margin-top: 12px; }
-.quick-buy summary { cursor: pointer; font-size: .9rem; }
-#buyTotal { color: var(--gold); }
-.star { background: none; border: 0; color: var(--muted); font-size: 1.2rem; padding: 3px 7px 3px 0; }
-.target-hit { background: rgba(111,209,122,.08); }
+.control-row { margin: 12px 0; }
+.search-row { align-items: end; gap: 12px; }
+.control-row label { display: grid; gap: 7px; color: var(--muted); font-size: .75rem; font-weight: 650; }
+.search-label { flex: 1 1 240px; }
+.supply-controls button, input, select { border: 1px solid var(--line); border-radius: 8px; background: var(--panel-2); color: var(--text); padding: 10px 12px; }
+input, select { min-height: 40px; min-width: 0; }
+input::placeholder { color: #777f6f; }
+.supply-controls button { cursor: pointer; font-size: .8rem; font-weight: 600; transition: background .15s, border-color .15s; }
+.supply-controls button:hover { background: #22271c; border-color: #586046; }
+.filter-row { gap: 10px; margin-top: 18px; }
+.filter-group { padding: 4px; gap: 3px; border: 1px solid var(--line); border-radius: 10px; background: #0d0f0b; }
+.filter-group button { border: 1px solid transparent; background: transparent; padding: 7px 12px; border-radius: 6px; }
+.filter-group button[aria-pressed="true"] { background: #302c1c; color: #f1d48b; border-color: #5c4f2b; }
+#favoritesFilter { background: transparent; color: var(--muted); }
+#favoritesFilter[aria-pressed="true"] { background: #302c1c; color: var(--gold); border-color: #5c4f2b; }
+#clearFilters, #clearList { background: transparent; color: var(--muted); }
+#itemCount { margin-left: auto; white-space: nowrap; }
+:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+.control-note, #itemCount { color: var(--muted); font-size: .75rem; line-height: 1.6; }
+.control-note { margin: 10px 0 0; }
+.quick-buy { border: 1px solid var(--line); background: rgba(217,184,95,.025); border-radius: 10px; padding: 12px 14px; margin-top: 16px; }
+.quick-buy summary { cursor: pointer; font-size: .85rem; font-weight: 650; line-height: 1.7; }
+.summary-separator { color: #505743; padding: 0 5px; }
+#buyTotal { color: var(--gold); font-weight: 500; }
+#restockPresets { font-size: .75rem; color: var(--muted); }
+#restockPresets button { padding: 6px 11px; }
+.supply-cell { display: flex; align-items: center; gap: 9px; min-height: 88px; }
+.star { display: grid; place-items: center; flex: 0 0 32px; width: 32px; height: 32px; background: transparent; border: 1px solid transparent; border-radius: 7px; color: #7d8572; font-size: 1.35rem; padding: 0; cursor: pointer; }
+.star:hover { color: var(--gold); background: #24271e; }
+.star[aria-pressed="true"] { color: var(--gold); }
+.target-hit { background: rgba(111,209,122,.07); }
 .target-hit .target-label { color: var(--green); }
-td input { width: 100px; font-size: .85rem; }
-table { min-width: 960px; }
+td input { width: 92px; font-size: .85rem; padding: 8px; font-variant-numeric: tabular-nums; }
+th, td { padding: 12px; }
+th:first-child, td:first-child { padding-left: 22px; }
+th:last-child, td:last-child { padding-right: 22px; }
+table { min-width: 900px; }
 .pill.neutral { color: var(--muted); }
 @media (max-width: 650px) {
-  .supply-controls { padding-left: 15px; padding-right: 15px; }
-  .control-row label, .control-row select { max-width: 100%; }
+  .status { white-space: normal; }
+  .supply-controls { padding: 0 15px 16px; }
+  .search-row { display: grid; grid-template-columns: minmax(0,1fr) auto; }
+  .search-label { grid-column: 1 / -1; }
+  .search-row select { width: 100%; }
+  .filter-group { flex: 1 1 100%; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .filter-group button { padding: 8px 2px; font-size: .7rem; }
+  .quick-buy summary { font-size: .8rem; }
+  #buyTotal { display: block; padding-left: 15px; }
+  .summary-separator { display: none; }
+  .table-wrap { overflow: visible; }
+  table, tbody { display: block; min-width: 0; }
+  thead { display: none; }
+  tbody tr { display: grid; grid-template-columns: 1fr 1fr; padding: 14px 15px; gap: 14px 12px; border-top: 1px solid var(--line); }
+  td { display: block; border: 0; padding: 0 !important; font-size: .85rem; }
+  td::before { content: attr(data-label); display: block; color: var(--muted); font-size: .68rem; margin-bottom: 6px; text-transform: uppercase; letter-spacing: .04em; }
+  td.supply-cell { display: flex; grid-column: 1 / -1; min-height: 0; }
+  td.supply-cell::before { display: none; }
+  td[data-label="Usually cheapest"] { grid-column: 1 / -1; }
+  td input { width: 100%; }
 }

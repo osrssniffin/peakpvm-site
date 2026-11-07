@@ -197,7 +197,7 @@
   function bucketStart(hour) { return Math.floor(hour / 4) * 4; }
 
   async function getJson(url) {
-    const res = await fetch(url, { cache: 'no-store' });
+    const res = await fetch(url, { cache: 'no-store', signal: AbortSignal.timeout(15000) });
     if (!res.ok) throw new Error(`Price API returned ${res.status}`);
     return res.json();
   }
@@ -209,12 +209,17 @@
 
     try {
       const [mapping, latest] = await Promise.all([
-        getJson(`${API}/mapping`),
+        mappingCache ? Promise.resolve(mappingCache) : getJson(`${API}/mapping`),
         getJson(`${API}/latest`)
       ]);
 
+      mappingCache = mapping;
       const byId = new Map(mapping.map(x => [x.id, x]));
       const items = TRACKED.map(config => ({ ...byId.get(config.id), ...config, available: byId.has(config.id) }));
+      // Show quotes immediately; search and the buy list do not wait for all histories.
+      market = items.map(item => ({ item, current: latestPrice(latest.data?.[item.id]), ...quoteDetails(latest.data?.[item.id]), pct: NaN, signal: { label: 'Loading history', cls: 'neutral' } }));
+      updatedAt = Date.now();
+      render();
       const histories = await Promise.all(items.map(async item => {
         // Reuse each hourly series on manual refresh; only current quotes need refreshing.
         let result = historyCache.get(item.id);
@@ -232,12 +237,8 @@
         const points = data.filter(p => Number(p.highPriceVolume) > 0 || Number(p.lowPriceVolume) > 0).map(p => ({ ...p, price: pointPrice(p) })).filter(p => Number.isFinite(p.price) && p.price > 0);
         const normal = points.length >= 24 ? median(points.map(p => p.price)) : NaN;
         const current = latestPrice(latest.data?.[item.id]);
-        const quote = latest.data?.[item.id];
-        const quoteTimes = [quote?.high > 0 ? quote.highTime || 0 : null, quote?.low > 0 ? quote.lowTime || 0 : null].filter(t => t !== null);
-        const quoteTime = quoteTimes.length ? Math.min(...quoteTimes) : 0;
-        const stale = !quoteTime || Date.now() / 1000 - quoteTime > 3600;
-        const buyTime = Number(quote?.high) > 0 ? quote.highTime : quote?.lowTime;
-        const buyStale = !buyTime || Date.now() / 1000 - buyTime > 3600;
+        const details = quoteDetails(latest.data?.[item.id]);
+        const { stale } = details;
         const pct = !stale && Number.isFinite(current) && Number.isFinite(normal) ? ((current / normal) - 1) * 100 : NaN;
 
         const slots = new Map();
@@ -259,15 +260,20 @@
           }
         }
 
-        const buy = Number(quote?.high) > 0 ? Number(quote.high) : current;
-        return { item, points, normal, current, buy, pct, stale, buyStale, quoteTime, signal: signal(pct), bestSlot: Number.isFinite(normal) ? bestSlot : null };
+        return { item, points, normal, current, ...details, pct, signal: signal(pct), bestSlot: Number.isFinite(normal) ? bestSlot : null };
       });
       market = analyses;
       updatedAt = Date.now();
       render();
       const basket = analyses.filter(a => BASKET.includes(a.item.name) && Number.isFinite(a.pct));
 
-      if (!basket.length) throw new Error('No usable market history was returned for the original basket.');
+      if (!basket.length) {
+        els.bestDay.textContent = els.bestTime.textContent = els.overallPrice.textContent = els.bestBuy.textContent = els.worstBuy.textContent = 'Not enough data';
+        els.currentStatus.textContent = 'Not enough history';
+        els.currentStatus.className = 'status neutral';
+        els.summary.textContent = 'Current quotes loaded. Historical signals are unavailable for the original basket.';
+        return;
+      }
 
       // Basket-level historical pattern. Each item is normalized to its own median first,
       // so expensive items do not dominate cheap items.
@@ -313,6 +319,8 @@
 
     } catch (err) {
       console.error(err);
+      market = market.map(a => a.signal.label.startsWith('Loading') ? { ...a, signal: signal(NaN) } : a);
+      render();
       els.error.textContent = `Couldn’t load GE data right now. ${err.message || ''}`.trim();
       els.error.classList.remove('hidden');
       els.summary.textContent = 'Live GE data could not be loaded.';
@@ -328,8 +336,19 @@
     return String(value).replace(/[&<>'"]/g, ch => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '"':'&quot;' }[ch]));
   }
 
+  function quoteDetails(quote) {
+    const high = Number(quote?.high), low = Number(quote?.low);
+    const times = [high > 0 ? quote.highTime || 0 : null, low > 0 ? quote.lowTime || 0 : null].filter(t => t !== null);
+    const quoteTime = times.length ? Math.min(...times) : 0;
+    const buyTime = high > 0 ? quote.highTime : quote?.lowTime;
+    return { buy: high > 0 ? high : low > 0 ? low : NaN, quoteTime,
+      stale: !quoteTime || Date.now() / 1000 - quoteTime > 3600,
+      buyStale: !buyTime || Date.now() / 1000 - buyTime > 3600 };
+  }
+
   const historyCache = new Map();
-  let market = [], updatedAt = 0, category = 'All', favoritesOnly = false;
+  let mappingCache;
+  let market = TRACKED.map(item => ({ item, current: NaN, buy: NaN, buyStale: true, pct: NaN, signal: { label: 'Loading prices', cls: 'neutral' } })), updatedAt = 0, category = 'All', favoritesOnly = false;
   const storageKey = 'peakpvm-ge-supplies-v1';
   let saved = {};
   try { saved = JSON.parse(localStorage.getItem(storageKey)) || {}; } catch { /* Storage may be blocked. */ }
@@ -357,7 +376,7 @@
       if (Number.isFinite(price)) total += pref.quantity * price;
       else missing++;
     }
-    els.total.textContent = `${fmtGp(total)} estimated · ${selected} supplies${missing ? ` · ${missing} unpriced (excluded)` : ''}`;
+    els.total.textContent = `${fmtGp(total)} estimated · ${selected} ${selected === 1 ? 'supply' : 'supplies'}${missing ? ` · ${missing} unpriced (excluded)` : ''}`;
   }
   function render() {
     const query = els.search.value.toLowerCase().trim();
@@ -375,20 +394,26 @@
     });
     els.count.textContent = `${visible.length} visible / ${TRACKED.length} tracked`;
     els.freshness.textContent = updatedAt ? `Prices fetched ${new Date(updatedAt).toLocaleString()}. Quotes over 1 hour old are marked stale.` : 'Prices not loaded yet.';
+    const active = document.activeElement;
+    const editing = active?.matches('[data-quantity], [data-target]') ? { id: active.closest('tr').dataset.id, field: active.hasAttribute('data-quantity') ? 'data-quantity' : 'data-target', value: active.value } : null;
     els.rows.innerHTML = visible.map(a => {
       const pref = preferences.get(a.item.id);
       const name = escapeHtml(a.item.name);
       const cheapest = a.bestSlot ? `${dayName(a.bestSlot.day).slice(0,3)} ${timeLabel(a.bestSlot.start)}` : 'Not enough history';
       const hit = reached(a);
       return `<tr data-id="${a.item.id}" class="${hit ? 'target-hit' : ''}">
-        <td><button type="button" class="star" data-favorite aria-label="Favorite ${name}" aria-pressed="${pref.favorite}">${pref.favorite ? '★' : '☆'}</button><span class="item-name">${escapeHtml(shortName(a.item.name))}</span><span class="item-sub">${name}</span></td>
-        <td>${fmtGp(a.current)}${a.stale && Number.isFinite(a.current) ? '<span class="item-sub">Stale quote</span>' : ''}</td>
-        <td><span class="pill ${a.signal.cls}">${a.signal.label}</span>${Number.isFinite(a.pct) ? `<span class="item-sub">${fmtPct(a.pct)}</span>` : ''}</td>
-        <td>${escapeHtml(cheapest)}</td>
-        <td><input type="number" min="0" max="2147483647" step="1" data-quantity aria-label="Quantity for ${name}" value="${pref.quantity || ''}" placeholder="0"></td>
-        <td><input type="number" min="0" max="2147483647" step="1" data-target aria-label="Target buy price for ${name}" value="${pref.target || ''}" placeholder="gp"><span class="item-sub target-label">${hit ? 'Target reached' : ''}</span></td>
+        <td class="supply-cell"><button type="button" class="star" data-favorite aria-label="Favorite ${name}" aria-pressed="${pref.favorite}">${pref.favorite ? '★' : '☆'}</button><div><span class="item-name">${escapeHtml(shortName(a.item.name))}</span><span class="item-sub">${shortName(a.item.name).trim() === a.item.name ? a.item.category : name}</span></div></td>
+        <td data-label="Price">${fmtGp(a.current)}${a.stale && Number.isFinite(a.current) ? '<span class="item-sub">Stale quote</span>' : ''}</td>
+        <td data-label="Status"><span class="pill ${a.signal.cls}">${a.signal.label}</span>${Number.isFinite(a.pct) ? `<span class="item-sub">${fmtPct(a.pct)}</span>` : ''}</td>
+        <td data-label="Usually cheapest">${escapeHtml(cheapest)}</td>
+        <td data-label="Buy quantity"><input type="number" min="0" max="2147483647" step="1" data-quantity aria-label="Quantity for ${name}" value="${pref.quantity || ''}" placeholder="0"></td>
+        <td data-label="Buy alert (gp)"><input type="number" min="0" max="2147483647" step="1" data-target aria-label="Target buy price for ${name}" value="${pref.target || ''}" placeholder="gp"><span class="item-sub target-label">${hit ? 'Target reached' : ''}</span></td>
       </tr>`;
     }).join('') || '<tr><td colspan="6">No supplies match your filters.</td></tr>';
+    if (editing) {
+      const input = els.rows.querySelector(`tr[data-id="${editing.id}"] [${editing.field}]`);
+      if (input) { input.value = editing.value; input.focus({ preventScroll: true }); }
+    }
     updateTotal();
   }
   els.search.addEventListener('input', render);
@@ -428,10 +453,7 @@
     row.classList.toggle('target-hit', hit);
     row.querySelector('.target-label').textContent = hit ? 'Target reached' : '';
   });
-  // Re-sort after editing, without interrupting typing/focus.
-  els.rows.addEventListener('change', event => {
-    if (event.target.matches('[data-quantity], [data-target]')) render();
-  });
+  // Keep the existing inputs on blur so the next click is never discarded.
   $('restockPresets').addEventListener('click', event => {
     const button = event.target.closest('[data-quantity-preset]');
     if (!button) return;

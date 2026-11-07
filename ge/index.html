@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#0c0d0b" />
   <title>GE Supply Guide | Peak PvM</title>
   <meta name="description" content="A simple OSRS PvM supply buying guide using live RuneScape Wiki Grand Exchange price data." />
-  <link rel="stylesheet" href="./styles.css" />
+  <link rel="stylesheet" href="./styles.css?v=20261107-2" />
 </head>
 <body>
   <main class="shell">
@@ -55,12 +55,12 @@
       </div>
 
       <div class="supply-controls">
-        <div class="control-row">
+        <div class="control-row search-row">
           <label class="search-label">Search supplies<input id="supplySearch" type="search" placeholder="Name or alias: ppot, scb, cballs…" autocomplete="off"></label>
           <label>Sort by<select id="sortOrder"><option value="opportunity">Best buying opportunity</option><option value="discount">Biggest discount</option><option value="name">Name A–Z</option><option value="price">Price: low to high</option></select></label>
           <button id="clearFilters" type="button">Clear filters</button>
         </div>
-        <div class="control-row">
+        <div class="control-row filter-row">
           <div id="categoryFilters" class="filter-group" role="group" aria-label="Supply category">
             <button type="button" data-category="All" aria-pressed="true">All</button>
             <button type="button" data-category="Food" aria-pressed="false">Food</button>
@@ -74,17 +74,17 @@
         </div>
         <p id="priceFreshness" class="control-note"></p>
         <details class="quick-buy" open>
-          <summary>Quick Buy List · <span id="buyTotal" role="status"></span></summary>
+          <summary>Quick Buy List <span class="summary-separator">/</span> <span id="buyTotal" role="status"></span></summary>
           <div class="control-row" id="restockPresets">
-            <span>Set quantity for visible items:</span>
+            <span>Restock visible items:</span>
             <button type="button" data-quantity-preset="100">100</button>
             <button type="button" data-quantity-preset="500">500</button>
             <button type="button" data-quantity-preset="1000">1,000</button>
             <button id="clearList" type="button">Clear buy list</button>
           </div>
-          <p class="control-note">Enter quantities in the table. Total includes all saved items, even when filtered out. Uses instant-buy quotes where available; actual GE cost may vary. Favorites, quantities and targets stay on this device.</p>
+          <p class="control-note">Quantities and targets save automatically on this device. Total includes hidden items and uses available buy quotes; actual GE cost may vary.</p>
         </details>
-        <p class="control-note">Opportunity sorting prioritizes reached targets, then historical discounts. Targets use buy quotes on refresh; stale quotes do not trigger alerts. Blank target = off.</p>
+        <p class="control-note">Buy alerts highlight reached targets when you refresh. Leave a target blank to turn it off.</p>
       </div>
 
       <div class="table-wrap">
@@ -113,6 +113,6 @@
     <div id="errorBox" class="error hidden" role="alert"></div>
   </main>
 
-  <script src="./app.js" defer></script>
+  <script src="./app.js?v=20261107-2" defer></script>
 </body>
 </html>
