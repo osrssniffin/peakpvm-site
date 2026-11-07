@@ -56,6 +56,7 @@ const wom = {
         tztok_jad: { kills: 31 },
         tzkal_zuk: { kills: 1 },
         wintertodt: { kills: 600 },
+        nex: { kills: 0, rank: -1 },
       },
     },
   },
@@ -125,6 +126,7 @@ const run = (s) => vm.runInContext(s, context);
   await context.loadState();
   await context.syncPets();
   await context.syncKC();
+  assert.equal(run('metrics.nex'),undefined,'unranked zero is unavailable, not confirmed zero KC');
   assert.ok(requests.some((r) => r.url.includes("username=s%20niffin")));
   assert.equal(element("targetKC").textContent, "590");
   assert.equal(element("targetChance").textContent, "17.9%");
@@ -483,7 +485,7 @@ const run = (s) => vm.runInContext(s, context);
     403,
   );
   console.log(
-    "PASS: 72 unique follower PNGs; exact RSN; live KC and hunt baseline; Temple complete/partial/empty/failure handling; manual preservation; filters; RNG; IP/PIN/cookie/CSRF restrictions; persistent public state.",
+    "PASS: 72 follower PNGs and relative assets; exact RSN; live/unranked KC; Temple complete/partial/failure states; manual preservation; categories/search/pagination; probability targets and special methods; import validation; production mock guard; stale/time-out/wrong-player API responses; owner authentication and persistent milestones.",
   );
 })().catch((e) => {
   console.error(e);

@@ -321,6 +321,8 @@ async function syncKC(force = false) {
       found = {};
     for (const [key, value] of Object.entries(bossData)) {
       const n = snapshotValue(value);
+      // Unranked zero is absence of a hiscores result, not proof of zero kills.
+      if (n === 0 && value?.rank === -1) continue;
       if (Number.isFinite(n) && n >= 0) found[key] = n;
     }
     if (!Object.keys(found).length) throw Error("No boss metrics in snapshot");

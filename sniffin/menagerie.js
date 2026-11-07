@@ -426,7 +426,7 @@ function renderHistory() {
     ? rows
         .map(
           (r) =>
-            `<article class="history-item"><small>${escaped(r.date || "DATE NOT RECORDED")} · OWNER-CURATED</small><strong>${escaped(r.title || pet(r.petId)[1])}</strong><p>${r.kc !== null && r.kc !== undefined ? fmt(r.kc) + " KC · " : ""}${escaped(r.note || "")}</p></article>`,
+            `<article class="history-item"><small>${escaped(r.date || "DATE NOT RECORDED")} · OWNER-CURATED</small><strong>${escaped(r.title || CATALOG.find(p=>p[0]===r.petId)?.[1] || 'ARCHIVE RECORD')}</strong><p>${r.kc !== null && r.kc !== undefined ? fmt(r.kc) + " KC · " : ""}${escaped(r.note || "")}</p></article>`,
         )
         .join("")
     : '<div class="empty">The archive has residents, but no verified drop chronology yet. Confirmed drop dates, KC, and notes can be added by the owner without borrowing dates from a sync.</div>';
