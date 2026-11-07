@@ -68,7 +68,7 @@ Backend and private owner-console origin: https://peakpvm-sniffin-api.bells-pvm.
 - Temple collection-log dates may be initial synchronization dates, so the site does not claim they are original drop dates. Newly synced trophies are detected by comparing successful snapshots; first sync does not invent unlock events.
 - Wise Old Man supplies boss KC, not pet ownership. Its snapshot time is shown in the sync tooltip. Refresh does not force an in-game hiscores update.
 - Temple requires collection-log uploads from the RuneLite Collection Log plugin. The public site reports missing sync data and links to Temple's setup guidance when needed.
-- Active pages poll every five minutes; public manual state checks every two minutes. Worker KV caches Temple for five minutes and WOM for four, with one-minute bounded refresh windows. Last known successful data is retained during outages; failed WOM refreshes explicitly mark retained data stale and retain its original retrieval timestamp.
+- Active pages poll every five minutes and refresh on returning to an overdue tab; public manual state checks every two minutes. Worker KV caches Temple for five minutes and WOM for four, with one-minute bounded refresh windows. Last known successful data is retained during outages; failed WOM refreshes explicitly mark retained data stale and retain its original retrieval timestamp. New Temple-confirmed pets automatically receive the golden owned-card treatment after the next sync. Temple must first receive the player's RuneLite collection-log upload.
 
 ## Pet models and rates
 

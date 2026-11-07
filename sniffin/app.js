@@ -14,6 +14,8 @@ async function loadCatalog() {
 const BACKEND = "https://peakpvm-sniffin-api.bells-pvm.workers.dev";
 const ON_BACKEND = location.origin === BACKEND;
 const API_BASE = (LOCAL_PREVIEW || ON_BACKEND ? "" : BACKEND) + "/sniffin/api/";
+const SYNC_INTERVAL = 5 * 60 * 1000;
+let lastRefreshAttempt = 0;
 const meta = (p) => PET_META[p[0]] || {};
 const fmtRate = (n) =>
   Number.isInteger(n)
@@ -272,6 +274,7 @@ async function syncPets(force = false) {
 async function refreshAll(force = true) {
   if (refreshing) return;
   refreshing = true;
+  lastRefreshAttempt = Date.now();
   $("refreshBtn").disabled = true;
   $("refreshBtn").setAttribute("aria-busy", "true");
   try {
@@ -287,6 +290,14 @@ async function refreshAll(force = true) {
     refreshing = false;
     $("refreshBtn").disabled = false;
     $("refreshBtn").setAttribute("aria-busy", "false");
+  }
+}
+function refreshWhenVisible() {
+  if (
+    document.visibilityState === "visible" &&
+    Date.now() - lastRefreshAttempt >= SYNC_INTERVAL
+  ) {
+    return refreshAll(false);
   }
 }
 async function syncKC(force = false) {
@@ -750,12 +761,8 @@ async function init() {
   renderRng();
   render();
   refreshAll(false);
-  setInterval(
-    () => {
-      if (document.visibilityState === "visible") refreshAll(false);
-    },
-    5 * 60 * 1000,
-  );
+  setInterval(refreshWhenVisible, SYNC_INTERVAL);
+  document.addEventListener("visibilitychange", refreshWhenVisible);
   setInterval(
     () => {
       if (document.visibilityState === "visible") loadState();

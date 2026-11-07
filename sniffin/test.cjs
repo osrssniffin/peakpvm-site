@@ -236,6 +236,39 @@ const run = (s) => vm.runInContext(s, context);
   await context.loadState();
   assert.equal(run("serverState.username"), "s niffin");
   context.fetch = goodFetch;
+  context.fetch = async () => ({
+    ok: true,
+    json: async () => ({
+      collection: {
+        data: {
+          ...collection.data,
+          items: collection.data.items.map(item => item.id === 23495 ? {...item, count: 1} : item),
+        },
+      },
+      fetchedAt: Date.now(),
+      stale: false,
+    }),
+  });
+  run("filter='owned';category='all';search=''");
+  await context.syncPets();
+  assert.equal(run("isOwned(pet('sraracha'))"), true, 'a new Temple record confirms ownership without manual edits');
+  assert.match(element('petGrid').innerHTML, /class="pet-tile owned" data-pet-id="sraracha"/, 'the next sync automatically gives the newly owned pet its gold card class');
+  assert.equal(element('ownedNum').textContent, '4');
+  context.fetch = goodFetch;
+  const refreshOriginal = context.refreshAll;
+  let autoRefreshes = 0;
+  context.refreshAll = () => { autoRefreshes++; };
+  context.document.visibilityState = 'hidden';
+  run('lastRefreshAttempt=0');
+  context.refreshWhenVisible();
+  assert.equal(autoRefreshes, 0, 'hidden pages do not poll');
+  context.document.visibilityState = 'visible';
+  context.refreshWhenVisible();
+  assert.equal(autoRefreshes, 1, 'returning to an overdue visible page automatically syncs');
+  run('lastRefreshAttempt=Date.now()');
+  context.refreshWhenVisible();
+  assert.equal(autoRefreshes, 1, 'fresh data is not repeatedly requested');
+  context.refreshAll = refreshOriginal;
   const html = fs.readFileSync(path.join(root, "index.html"), "utf8");
   assert.ok(!/all420s|all%20420s/i.test(html));
   for (const match of html.matchAll(
