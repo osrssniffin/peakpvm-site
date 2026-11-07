@@ -30,3 +30,11 @@ Expanded supply controls:
 Run dependency-free regression checks from the repository root:
   node ge/app.test.cjs
 No Node runtime is needed by the deployed page.
+
+PIN screen:
+- Autofocus, four-digit text validation, and native Enter-to-submit form.
+- Unlock is remembered in sessionStorage for the current tab session.
+- The guide and market script remain hidden/unloaded until PIN validation.
+- This is a browser-side convenience gate, not server authentication. GitHub
+  Pages and the public source cannot enforce access control or protect secrets.
+- Regression checks: node ge/pin.test.cjs

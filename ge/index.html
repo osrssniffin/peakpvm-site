@@ -6,10 +6,25 @@
   <meta name="theme-color" content="#0c0d0b" />
   <title>GE Supply Guide | Peak PvM</title>
   <meta name="description" content="A simple OSRS PvM supply buying guide using live RuneScape Wiki Grand Exchange price data." />
-  <link rel="stylesheet" href="./styles.css?v=20261107-2" />
+  <link rel="stylesheet" href="./styles.css?v=20261107-3" />
 </head>
 <body>
-  <main class="shell">
+  <section id="pinGate" class="pin-gate" aria-labelledby="pinTitle">
+    <div class="pin-card panel">
+      <a class="brand" href="/">Peak PvM</a>
+      <h1 id="pinTitle">GE Supply Guide</h1>
+      <p>Enter the four-digit PIN to open the guide.</p>
+      <form id="pinForm">
+        <label for="pinInput">Access PIN</label>
+        <input id="pinInput" type="password" inputmode="numeric" pattern="[0-9]{4}" minlength="4" maxlength="4" autocomplete="off" autofocus required aria-describedby="pinMessage" placeholder="••••">
+        <button id="pinSubmit" class="refresh" type="submit">Unlock guide <span aria-hidden="true">↵</span></button>
+        <p id="pinMessage" class="pin-message" role="alert"></p>
+      </form>
+      <p class="pin-hint">Type your PIN and press Enter.</p>
+      <noscript><p>Enable JavaScript to enter the PIN and use the guide.</p></noscript>
+    </div>
+  </section>
+  <main id="guide" class="shell" hidden inert>
     <header class="topbar">
       <a class="brand" href="/">Peak PvM</a>
       <div class="title-wrap">
@@ -113,6 +128,6 @@
     <div id="errorBox" class="error hidden" role="alert"></div>
   </main>
 
-  <script src="./app.js?v=20261107-2" defer></script>
+  <script src="./pin.js?v=20261107-3" defer></script>
 </body>
 </html>

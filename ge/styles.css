@@ -183,3 +183,18 @@ table { min-width: 900px; }
   td[data-label="Usually cheapest"] { grid-column: 1 / -1; }
   td input { width: 100%; }
 }
+
+/* Browser-side PIN screen; the guide stays hidden until validation. */
+.pin-gate[hidden], #guide[hidden] { display: none !important; }
+.pin-gate { min-height: 100dvh; display: grid; place-items: center; padding: 24px 18px; }
+.pin-card { width: min(100%, 390px); padding: 32px; }
+.pin-card h1 { margin: 26px 0 10px; font-size: 1.7rem; }
+.pin-card p { color: var(--muted); font-size: .9rem; line-height: 1.6; }
+#pinForm { display: grid; gap: 10px; margin-top: 24px; }
+#pinForm label { color: var(--muted); font-size: .8rem; font-weight: 650; }
+#pinInput { width: 100%; text-align: center; font-size: 1.7rem; letter-spacing: .4em; padding: 13px; }
+#pinSubmit { justify-self: stretch; background: #302c1c; border-color: #5c4f2b; color: #f1d48b; }
+#pinSubmit:hover { background: #3d3520; }
+#pinMessage { margin: 0; color: var(--red); font-size: .8rem; }
+#pinMessage:empty { display: none; }
+.pin-card .pin-hint { font-size: .75rem; margin: 16px 0 0; text-align: center; }
