@@ -33,3 +33,6 @@ body{background:radial-gradient(ellipse at 50% -10%,#55431e26,transparent 45%),r
 
 .pet-tile.missing{background:radial-gradient(ellipse at 50% 38%,#708b5911,transparent 65%),linear-gradient(155deg,#171b12,#080a07 80%);border-color:#353d2e}.pet-tile .pet-state{left:auto;right:20px;top:22px}.pet-tile.missing .pet-state{color:#839074}.pet-tile .pet-detail{white-space:normal;overflow:visible}.pet-tile.missing .pet-name{color:#a0ac94}
 @media(max-width:760px){.pet-tile .pet-state{top:18px;right:12px}}
+
+html{overflow-x:clip}
+@media(max-width:760px){.cursor-glow{display:none}.hero{overflow:clip}}
