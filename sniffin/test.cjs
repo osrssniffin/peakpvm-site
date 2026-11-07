@@ -12,7 +12,7 @@ const run=s=>vm.runInContext(s,context);
  assert.equal(catalog.length,72);assert.equal(new Set(catalog.map(p=>p.templeId)).size,72);
  for(const p of catalog){const data=fs.readFileSync(path.join(root,p.image.replace('./','')));assert.equal(data.subarray(1,4).toString(),'PNG');assert.ok(data.readUInt32BE(16)>50&&data.readUInt32BE(20)>50);assert.ok(p.modelFile&&!p.modelFile.includes('detail'));}
  await context.loadCatalog();await context.loadState();await context.syncPets();await context.syncKC();
- assert.ok(requests.some(r=>r.url.includes('username=s%20niffin')));assert.equal(element('targetKC').textContent,'590');assert.equal(element('targetChance').textContent,'17.9%');assert.match(element('targetSummary').textContent,/THIS HUNT: 90 KC/);
+ assert.ok(requests.some(r=>r.url.includes('username=s%20niffin')));assert.equal(element('targetKC').textContent,'590');assert.equal(element('targetChance').textContent,'17.9%');assert.match(element('targetSummary').textContent,/THIS GRIND: 90 KC/);
  assert.equal(run("isOwned(pet('kraken'))"),true);assert.equal(run('templeState.complete'),true);
  const positives=run('Object.keys(templeState.owned).length');assert.equal(positives,2);
  assert.throws(()=>context.applyTemple({collection:{error:{message:'not synced'}}}));assert.equal(run('Object.keys(templeState.owned).length'),2);
