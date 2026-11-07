@@ -1,0 +1,12 @@
+name = "peakpvm-sniffin-api"
+main = "index.js"
+compatibility_date = "2026-11-07"
+workers_dev = false
+
+# IMPORTANT: configure your Cloudflare account and KV namespace before deploying.
+# This route assumes peakpvm.com is on Cloudflare and currently serves the static site.
+routes = [{ pattern = "peakpvm.com/sniffin/api/*", zone_name = "peakpvm.com" }]
+
+[[kv_namespaces]]
+binding = "SNIFFIN_KV"
+id = "REPLACE_WITH_YOUR_KV_NAMESPACE_ID"
