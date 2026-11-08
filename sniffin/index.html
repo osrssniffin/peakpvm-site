@@ -17,7 +17,7 @@
       type="font/ttf"
       crossorigin
     />
-    <link rel="stylesheet" href="./styles.css?v=menagerie-gold-3" />
+    <link rel="stylesheet" href="./styles.css?v=chase-1" />
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to archive</a>
@@ -37,6 +37,14 @@
         ><button id="refreshBtn" class="icon-button" title="Check account data">
           ↻ <span>SYNC</span></button
         ><button id="editBtn" class="edit-button hidden">EDIT</button>
+      </div>
+      <div class="character-stats" aria-label="TempleOSRS character stats">
+        <span><small>EHP</small><b id="headerEhp">—</b></span
+        ><span><small>EHB</small><b id="headerEhb">—</b></span
+        ><span><small>PETS</small><b id="headerPets">—</b></span
+        ><span id="headerRankItem" class="hidden"
+          ><small>PET RANK</small><b id="headerPetRank">—</b></span
+        ><small id="characterUpdated">CHECKING TEMPLEOSRS</small>
       </div>
     </header>
     <main class="shell" id="main">
@@ -145,7 +153,7 @@
             ><small id="petLastSync">No verified log loaded</small>
           </div>
           <div>
-            <span class="eyebrow">BOSS KC / WISE OLD MAN</span
+            <span class="eyebrow">BOSS KC / TEMPLE · WOM FALLBACK</span
             ><strong id="kcSyncStatus" role="status">Checking s niffin…</strong
             ><small id="lastRefresh">Checks every five minutes</small>
           </div>
@@ -192,14 +200,23 @@
             </div>
             <h3 id="targetName">SARACHNIS</h3>
             <p id="targetPet">Loading current hunt…</p>
+            <div class="chase-status">
+              <span id="huntStatus">ACTIVE CHASE</span
+              ><small id="huntSource"></small>
+            </div>
             <div class="hunt-metrics">
               <div><span>CURRENT KC</span><strong id="targetKC">—</strong></div>
               <div>
-                <span id="targetRateLabel">BASE PET RATE</span><strong id="targetRate">—</strong>
+                <span id="targetRateLabel">BASE PET RATE</span
+                ><strong id="targetRate">—</strong>
               </div>
               <div>
                 <span>≥ 1 BY THIS KC</span><strong id="targetChance">—</strong>
               </div>
+            </div>
+            <div class="hunt-baseline-strip">
+              <span>STARTING KC <b id="huntStartKC">—</b></span
+              ><span>GAINED THIS HUNT <b id="huntGainedKC">—</b></span>
             </div>
             <div class="chance-label">
               <span>DRYNESS PERCENTILE</span><b id="targetPercent">—</b>
@@ -249,9 +266,9 @@
         <div id="categoryProgress" class="category-progress"></div>
         <div class="vault-toolbar">
           <div class="tabs" id="filterTabs">
-            <button aria-pressed="false" data-filter="all">
-              ALL PETS</button
-            ><button class="active" aria-pressed="true" data-filter="owned">RESIDENTS</button
+            <button aria-pressed="false" data-filter="all">ALL PETS</button
+            ><button class="active" aria-pressed="true" data-filter="owned">
+              RESIDENTS</button
             ><button aria-pressed="false" data-filter="missing">
               UNCLAIMED
             </button>
@@ -465,7 +482,7 @@
                 readonly
                 placeholder="Your in-game name" /></label
             ><label class="form-label"
-              >NEXT BOSS TO CAMP<select id="editTarget"></select></label
+              >CHASE TARGET<select id="editTarget"></select></label
             ><label class="form-label"
               >KC WHEN THIS GRIND STARTED
               <input id="editStartKC" type="number" min="0" value="0" /><small
@@ -479,14 +496,18 @@
                 placeholder="One more trip. Surely..."
             /></label>
           </div>
-          <div class="edit-subhead">PETS / MANUAL KC / DROP DETAILS</div>
-          <p class="modal-help">
-            Checked ownership is a manual confirmation, preserved even when
-            Temple is incomplete. Unchecking removes the manual confirmation; a
-            verified Temple record still counts. Manual KC is used where live KC
-            is unavailable. Rate overrides apply to the displayed KC.
-          </p>
-          <div class="edit-pets" id="editPets"></div>
+          <details class="owner-pet-details">
+            <summary class="edit-subhead">
+              PET RECORDS / MANUAL OVERRIDES
+            </summary>
+            <p class="modal-help">
+              Checked ownership is a manual confirmation, preserved even when
+              Temple is incomplete. Unchecking removes the manual confirmation;
+              a verified Temple record still counts. Manual KC is used where
+              live KC is unavailable. Rate overrides apply to the displayed KC.
+            </p>
+            <div class="edit-pets" id="editPets"></div>
+          </details>
           <div class="edit-subhead">HUNT NOTES</div>
           <div class="edit-notes" id="editNotes"></div>
           <button id="addNoteBtn" class="secondary-button">+ ADD A NOTE</button>
@@ -515,7 +536,8 @@
         account statistics are available without it.
       </p></noscript
     >
-    <script src="./menagerie.js?v=menagerie-1" defer></script>
-    <script src="./app.js?v=menagerie-gold-3" defer></script>
+    <script src="./menagerie.js?v=chase-1" defer></script>
+    <script src="./chase.js?v=chase-1" defer></script>
+    <script src="./app.js?v=chase-1" defer></script>
   </body>
 </html>

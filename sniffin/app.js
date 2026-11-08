@@ -151,11 +151,29 @@ function toast(s) {
   setTimeout(() => $("toast").classList.add("hidden"), 4000);
 }
 async function api(path, options = {}) {
+  if (MOCK_ADMIN) {
+    const response = await fetch("/sniffin/dev-api/" + path, {
+      credentials: "same-origin",
+      ...options,
+    });
+    const data = await response.json();
+    if (!response.ok) throw Error(data.error || "Preview request failed");
+    return data;
+  }
   if (MOCK_MODE) {
     if (path.startsWith("auth/"))
       return { allowed: false, authenticated: false };
     if (MOCK_OFFLINE) throw Error("Simulated API outage");
     if (path === "state") return structuredClone(mockFixture.state);
+    if (path.startsWith("character"))
+      return structuredClone(
+        mockFixture.character || {
+          username: RSN,
+          metrics: {},
+          unavailable: true,
+        },
+      );
+    if (path === "progress") return { events: [] };
     if (path.startsWith("wom")) return structuredClone(mockFixture.wom);
     if (path.startsWith("temple")) return structuredClone(mockFixture.temple);
     throw Error("No writes in fixture mode");
@@ -217,6 +235,10 @@ function applyTemple(payload) {
         recordedAt: item.date || null,
       };
   }
+  for (const id of payload.confirmedPetIds || []) {
+    const p = CATALOG.find((p) => meta(p).templeId === Number(id));
+    if (p && !confirmed[p[0]]) confirmed[p[0]] = { count: 1, recordedAt: null };
+  }
   if (!ids.size) throw Error("Temple returned no recognized pet records");
   const previous = templeState;
   const newPets = Object.keys(confirmed).filter(
@@ -247,6 +269,16 @@ async function syncPets(force = false) {
   try {
     const payload = await api("temple" + (force ? "?refresh=1" : ""));
     const result = applyTemple(payload);
+    const rankData = payload.count?.data;
+    const rankRow = Array.isArray(rankData)
+      ? rankData.find((r) => String(r.player || "").toLowerCase() === RSN)
+      : rankData;
+    verifiedPetRank =
+      String(rankRow?.player || "").toLowerCase() === RSN &&
+      Number.isInteger(rankRow?.rank) &&
+      rankRow.rank > 0
+        ? rankRow.rank
+        : null;
     $("templeSyncStatus").textContent =
       (payload.stale ? "Cached Temple log" : "Temple collection log") +
       " · " +
@@ -279,6 +311,7 @@ async function refreshAll(force = true) {
   $("refreshBtn").setAttribute("aria-busy", "true");
   try {
     await Promise.allSettled([loadState(), syncKC(force), syncPets(force)]);
+    await syncProgress();
     await checkOwner();
     $("lastRefresh").textContent =
       ($("lastRefresh").textContent.startsWith("Snapshot:")
@@ -300,7 +333,7 @@ function refreshWhenVisible() {
     return refreshAll(false);
   }
 }
-async function syncKC(force = false) {
+async function syncWOM(force = false) {
   setSyncLabel("SYNCING " + RSN.toUpperCase() + "...");
   try {
     let data;
@@ -337,7 +370,8 @@ async function syncKC(force = false) {
       if (Number.isFinite(n) && n >= 0) found[key] = n;
     }
     if (!Object.keys(found).length) throw Error("No boss metrics in snapshot");
-    metrics = found;
+    womMetrics = found;
+    mergeBossMetrics();
     syncOk = !data.stale;
     writeCache("wom", {
       metrics: found,
@@ -364,6 +398,7 @@ async function syncKC(force = false) {
     );
     render();
   } catch (e) {
+    syncOk = false;
     setSyncLabel(
       Object.keys(metrics).length
         ? "WOM unavailable · last known KC"
@@ -470,27 +505,12 @@ function renderVault() {
           kc = kcFor(p),
           detail = serverState.owned?.[p[0]] || {},
           rate = rateFor(p);
-        return `<article class="pet-tile ${got ? "owned" : "missing"}" data-pet-id="${p[0]}"><button class="pet-detail-button" data-details="${p[0]}" aria-label="Details for ${escaped(p[1])}">View details</button><div class="pet-crown" aria-hidden="true">${got ? "✦" : "◇"}</div><div class="pet-state">${got ? "OWNED" : templeState.complete ? "MISSING" : "NOT CONFIRMED"}</div><div class="pet-art"><div class="trophy-halo"></div><img loading="lazy" decoding="async" width="${meta(p).imageWidth}" height="${meta(p).imageHeight}" src="${meta(p).image}" alt="${escaped(p[1])} in-game follower model"></div><div class="pet-copy"><div class="pet-name">${escaped(p[1])}</div><div class="pet-boss">${escaped(p[2])}</div><div class="pet-detail">${got && detail.kc !== null && detail.kc !== undefined ? "DROP @ " + fmt(detail.kc) + " KC" : kc !== null ? fmt(kc) + " KC" : escaped(meta(p).category) + " PET"}</div>${meta(p).note ? `<div class="pet-detail">OWNER NOTE · ${escaped(meta(p).note)}</div>` : ""}<div class="pet-provenance">${ownershipSource(p)}</div></div><a class="pet-wiki" href="${meta(p).wiki}" target="_blank" rel="noopener noreferrer" aria-label="${escaped(p[1])} Wiki and drop rates" title="${escaped(meta(p).rateText)}">${rate ? "1 / " + fmtRate(rate) : "METHOD BASED"} <span>↗</span></a></article>`;
+        return `<article class="pet-tile ${got ? "owned" : "missing"}" data-pet-id="${p[0]}"><button class="pet-detail-button" data-details="${p[0]}" aria-label="Details for ${escaped(p[1])}">View details</button><div class="pet-crown" aria-hidden="true">${got ? "✦" : "◇"}</div><div class="pet-state">${got ? "OWNED" : templeState.complete ? "MISSING" : "NOT CONFIRMED"}</div><div class="pet-art"><div class="trophy-halo"></div><img loading="lazy" decoding="async" width="${meta(p).imageWidth}" height="${meta(p).imageHeight}" src="${meta(p).image}" alt="${escaped(p[1])} in-game follower model"></div><div class="pet-copy"><div class="pet-name">${escaped(p[1])}</div>${petLuckBadge(p)}<div class="pet-boss">${escaped(p[2])}</div><div class="pet-detail">${got && detail.kc !== null && detail.kc !== undefined ? "DROP @ " + fmt(detail.kc) + " KC" : kc !== null ? fmt(kc) + " KC" : escaped(meta(p).category) + " PET"}</div>${meta(p).note ? `<div class="pet-detail">OWNER NOTE · ${escaped(meta(p).note)}</div>` : ""}<div class="pet-provenance">${ownershipSource(p)}</div></div><a class="pet-wiki" href="${meta(p).wiki}" target="_blank" rel="noopener noreferrer" aria-label="${escaped(p[1])} Wiki and drop rates" title="${escaped(meta(p).rateText)}">${rate ? "1 / " + fmtRate(rate) : "METHOD BASED"} <span>↗</span></a></article>`;
       })
       .join("") || '<div class="empty">NO PETS MATCH THE FILTER.</div>';
 }
 function renderFeed() {
-  const notes = [
-    ...templeRecent.map((n) => ({
-      title: "NEWLY SYNCED PET",
-      body: pet(n.id)[1] + " appeared in a later Temple sync.",
-      date: "Detected " + new Date(n.detectedAt).toLocaleString(),
-    })),
-    ...(serverState.notes || []).slice().reverse(),
-  ];
-  $("feedItems").innerHTML = notes.length
-    ? notes
-        .map(
-          (n) =>
-            `<div class="feed-item"><div class="feed-icon">✦</div><div class="feed-copy"><strong>${escaped(n.title || "GRIND UPDATE")}</strong><p>${escaped(n.body || "")}</p><small>${escaped(n.date || "")}</small></div></div>`,
-        )
-        .join("")
-    : '<div class="empty">No notes yet. “Surely next kill” is not a filing system.</div>';
+  renderRecentProgress();
 }
 function renderRng() {
   const rate = Number($("rngRate").value),
@@ -524,7 +544,7 @@ async function checkOwner() {
     const status = await api("auth/status");
     adminAllowed = !!status.allowed;
     $("editBtn").classList.toggle("hidden", !adminAllowed);
-    if (ON_BACKEND && status.authenticated && !editable) showEditor();
+    if (CAN_EDIT_ORIGIN && status.authenticated && !editable) showEditor();
     else if (
       ON_BACKEND &&
       status.allowed &&
@@ -538,7 +558,7 @@ async function checkOwner() {
 }
 function openModal() {
   if (!adminAllowed) return;
-  if (!ON_BACKEND) {
+  if (!CAN_EDIT_ORIGIN) {
     window.open(BACKEND + "/sniffin/?edit=1", "_blank", "noopener");
     return;
   }
@@ -566,17 +586,18 @@ function showEditor() {
       `<option value="${p[0]}">${escaped(p[2])} — ${escaped(p[1])}</option>`,
   ).join("");
   $("editTarget").value = editable.target || CATALOG[0][0];
-  $("editStartKC").value = editable.startKC || 0;
+  $("editStartKC").value = activeHunt().startKC ?? "";
   $("editHuntNote").value = editable.huntNote || "";
   renderEditPets();
   renderEditNotes();
+  setupChaseEditor();
   $("closeModal").focus();
 }
 function renderEditPets() {
   $("editPets").innerHTML = CATALOG.map((p) => {
     const v = editable.owned?.[p[0]];
     const manual = editable.manualKC?.[p[0]];
-    return `<label class="edit-pet" title="${escaped(p[2])}"><input data-owned="${p[0]}" type="checkbox" ${v ? "checked" : ""}><span>${escaped(p[1])}<small>${templeState.owned[p[0]] ? "Temple confirmed · manual checkbox is additional confirmation" : ""}</small></span><input aria-label="Manual KC for ${escaped(p[1])}" data-manual="${p[0]}" type="number" min="0" placeholder="KC if no WOM" value="${manual ?? ""}"><input aria-label="Drop KC for ${escaped(p[1])}" data-drop="${p[0]}" type="number" min="0" placeholder="DROP KC" value="${v?.kc ?? ""}"><input aria-label="Drop rate denominator for ${escaped(p[1])}" data-rate="${p[0]}" type="number" min="1" step="any" placeholder="1 IN N" value="${editable.rates?.[p[0]] ?? p[4] ?? ""}"></label>`;
+    return `<label class="edit-pet" title="${escaped(p[2])}"><input data-owned="${p[0]}" type="checkbox" ${v ? "checked" : ""}><span>${escaped(p[1])}<small>${templeState.owned[p[0]] ? "Temple confirmed · manual checkbox is additional confirmation" : ""}</small></span><input aria-label="Manual KC for ${escaped(p[1])}" data-manual="${p[0]}" type="number" min="0" placeholder="KC if no WOM" value="${manual ?? ""}"><input aria-label="Drop KC for ${escaped(p[1])}" data-drop="${p[0]}" type="number" min="0" placeholder="DROP KC" value="${v?.kc ?? ""}"><input aria-label="Drop rate denominator for ${escaped(p[1])}" data-rate="${p[0]}" type="number" min="1" step="any" placeholder="1 IN N" value="${editable.rates?.[p[0]] ?? p[4] ?? ""}"><input class="pet-note-field" aria-label="Personal note for ${escaped(p[1])}" data-pet-note="${p[0]}" maxlength="300" placeholder="Optional personal note" value="${escaped(editable.petNotes?.[p[0]] || v?.note || "")}"></label>`;
   }).join("");
 }
 function renderEditNotes() {
@@ -589,18 +610,25 @@ function renderEditNotes() {
 }
 function captureEditor() {
   editable.username = $("editUsername").value.trim();
-  editable.target = $("editTarget").value;
-  editable.startKC = Math.max(0, Number($("editStartKC").value) || 0);
+  editable.target = serverState.target;
+  editable.startKC = serverState.startKC;
   editable.huntNote = $("editHuntNote").value.trim();
+  editable.petNotes = { ...serverState.petNotes };
   editable.owned = {};
   editable.manualKC = {};
   editable.rates = {};
   document.querySelectorAll("[data-owned]").forEach((inp) => {
-    const id = inp.dataset.owned;
+    const id = inp.dataset.owned,
+      p = pet(id);
+    const note =
+      document.querySelector(`[data-pet-note="${id}"]`)?.value?.trim() || "";
+    if (note) editable.petNotes[id] = note;
+    else delete editable.petNotes[id];
     if (inp.checked) {
       const drop = document.querySelector(`[data-drop="${id}"]`).value;
       editable.owned[id] = {
         kc: drop === "" ? null : Math.max(0, Number(drop) || 0),
+        note: serverState.owned?.[id]?.note || "",
       };
     }
     const manual = document.querySelector(`[data-manual="${id}"]`).value;
@@ -618,7 +646,7 @@ function captureEditor() {
   });
 }
 async function save() {
-  if (!ON_BACKEND || !adminAllowed) return;
+  if (!CAN_EDIT_ORIGIN || !adminAllowed) return;
   captureEditor();
   $("saveError").textContent = "";
   $("saveBtn").disabled = true;
@@ -650,11 +678,13 @@ async function init() {
     $("syncHelp").textContent =
       "The pet tab could not load. Hit refresh and give it another go.";
     setSyncLabel("ARCHIVE UNAVAILABLE");
-    $("petGrid").innerHTML = '<div class="empty">The archive could not load. Reload the page to retry; account statistics have not been substituted.</div>';
+    $("petGrid").innerHTML =
+      '<div class="empty">The archive could not load. Reload the page to retry; account statistics have not been substituted.</div>';
     $("targetName").textContent = "HUNT UNAVAILABLE";
     $("refreshBtn").onclick = () => location.reload();
     return;
   }
+  restoreChaseCache();
   const cachedManual = MOCK_MODE ? null : readCache("manual");
   if (cachedManual?.owned) {
     serverState = { ...serverState, ...cachedManual, username: RSN };
@@ -668,7 +698,8 @@ async function init() {
   }
   const cachedWom = MOCK_MODE ? null : readCache("wom");
   if (cachedWom?.metrics) {
-    metrics = cachedWom.metrics;
+    womMetrics = cachedWom.metrics;
+    mergeBossMetrics();
     syncOk = false;
     setSyncLabel("CACHED KC · CHECKING FRESHNESS");
   }

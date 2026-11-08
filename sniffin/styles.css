@@ -732,7 +732,9 @@ label select {
   background:
     radial-gradient(ellipse at 50% 31%, #c59b464f, transparent 63%),
     linear-gradient(145deg, #3a2b13, #1b160d 56%, #100e09);
-  box-shadow: inset 0 1px #ffe7ac52, inset 0 -20px 35px #0004;
+  box-shadow:
+    inset 0 1px #ffe7ac52,
+    inset 0 -20px 35px #0004;
 }
 .pet-tile.owned::before {
   content: "";
@@ -753,7 +755,10 @@ label select {
 .pet-tile.owned:hover,
 .pet-tile.owned:focus-within {
   border-color: #f1d28b;
-  box-shadow: inset 0 1px #ffe7ac66, 0 12px 28px #0006, 0 0 22px #c59b461a;
+  box-shadow:
+    inset 0 1px #ffe7ac66,
+    0 12px 28px #0006,
+    0 0 22px #c59b461a;
 }
 .owned .pet-name {
   color: #ffe7aa;
@@ -1794,4 +1799,192 @@ footer p {
 }
 .hero-contract + .account-line {
   margin-top: 12px;
+}
+.topbar {
+  height: auto;
+  min-height: 96px;
+  flex-wrap: wrap;
+  padding-block: 22px;
+  row-gap: 14px;
+}
+.character-stats {
+  order: 1;
+  flex-basis: 100%;
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: 26px;
+  border-top: 1px solid var(--line);
+  padding-top: 12px;
+}
+.character-stats > span {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  white-space: nowrap;
+}
+.character-stats small {
+  font: 8px/1.6 var(--mono);
+  letter-spacing: 1px;
+  color: var(--muted);
+}
+.character-stats b {
+  font: 900 21px/1 var(--display);
+  color: var(--gold);
+}
+#characterUpdated {
+  font-size: 8px;
+  letter-spacing: 0;
+  text-align: right;
+}
+.chase-status {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 22px;
+  font: 8px/1.8 var(--mono);
+  letter-spacing: 0.6px;
+  color: var(--gold);
+}
+.chase-status small {
+  font-size: 8px;
+  color: var(--muted);
+  letter-spacing: 0;
+}
+.hunt-baseline-strip {
+  display: flex;
+  gap: 28px;
+  margin: -8px 0 22px;
+  color: var(--muted);
+  font: 8px/1.8 var(--mono);
+  letter-spacing: 0.7px;
+}
+.hunt-baseline-strip b {
+  display: block;
+  color: var(--gold);
+  font: 900 25px var(--display);
+}
+.chase-controls {
+  border: 1px solid #795c35;
+  background: #20190f55;
+  padding: 20px;
+  margin: 5px 0 30px;
+}
+.chase-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 15px 0 25px;
+}
+.chase-controls .edit-grid {
+  margin-bottom: 18px;
+}
+.pet-note-field {
+  grid-column: 2/-1;
+}
+.luck-label {
+  color: #ffe7aa !important;
+  font: 9px/1.8 var(--mono);
+  letter-spacing: 0.5px;
+}
+.pet-acquisition {
+  border-block: 1px solid var(--line);
+  padding: 16px 0;
+  font: 11px/1.9 var(--mono);
+}
+.pet-acquisition strong {
+  color: var(--gold);
+}
+.pet-personal-note {
+  font-style: italic;
+}
+.completed-hunts {
+  margin-bottom: 22px;
+}
+.hunt-history-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  flex-wrap: wrap;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--line);
+}
+.hunt-history-row strong {
+  display: block;
+  font: 900 25px var(--display);
+  color: var(--ink);
+}
+.hunt-history-row small,
+.hunt-history-row > span {
+  font: 9px/1.8 var(--mono);
+  color: var(--gold);
+}
+.hunt-history-row p {
+  flex-basis: 100%;
+  margin: 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+.progress-label {
+  margin-top: 30px;
+}
+@media (max-width: 850px) {
+  .character-stats {
+    justify-content: flex-start;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .character-stats #characterUpdated {
+    margin-left: auto;
+  }
+  .chase-status {
+    align-items: start;
+  }
+  .pet-note-field {
+    grid-column: 1/-1;
+  }
+}
+@media (max-width: 600px) {
+  .topbar {
+    min-height: 0;
+    padding-block: 15px;
+    row-gap: 10px;
+  }
+  .character-stats {
+    order: 4;
+    gap: 16px;
+    padding-top: 10px;
+  }
+  .character-stats b {
+    font-size: 19px;
+  }
+  .character-stats #characterUpdated {
+    flex-basis: 100%;
+    margin-left: 0;
+    text-align: left;
+    font-size: 7px;
+  }
+  .chase-controls {
+    padding: 15px;
+  }
+  .chase-actions {
+    gap: 8px;
+  }
+  .hunt-baseline-strip {
+    gap: 20px;
+  }
+}
+
+.collection-import,
+.owner-pet-details {
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 15px;
+  margin: 15px 0;
+}
+.collection-import summary,
+.owner-pet-details summary {
+  cursor: pointer;
+  margin: 0;
+  color: var(--gold);
 }

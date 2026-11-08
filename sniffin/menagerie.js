@@ -238,9 +238,10 @@ async function initMenagerie() {
     { once: true },
   );
   // Preserve the existing protected editor. Imports stage a change; Save is still required.
-  const importer = document.createElement("div");
+  const importer = document.createElement("details");
+  importer.className = "collection-import";
   importer.innerHTML =
-    '<div class="edit-subhead">IMPORT CONFIRMED COLLECTION / MILESTONES</div><p class="modal-help">Choose a JSON export for s niffin (format in README). This stages manual confirmations; review them before saving. No RuneLite files are read automatically.</p><input id="collectionImport" type="file" accept="application/json,.json" aria-label="Import confirmed collection"><p id="importStatus" role="status"></p>';
+    '<summary class="edit-subhead">IMPORT CONFIRMED COLLECTION / MILESTONES</summary><p class="modal-help">Choose a JSON export for s niffin (format in README). This stages manual confirmations; review them before saving. No RuneLite files are read automatically.</p><input id="collectionImport" type="file" accept="application/json,.json" aria-label="Import confirmed collection"><p id="importStatus" role="status"></p>';
   $("editPanel").insertBefore(importer, $("editPanel").firstChild);
   $("collectionImport").onchange = async (e) => {
     try {
@@ -285,6 +286,7 @@ function renderMenagerie() {
   renderTrophies();
   renderHistory();
   renderPlanner();
+  renderChase();
 }
 function renderCategories() {
   $("categoryProgress").innerHTML = [...new Set(CATALOG.map(categoryFor))]
@@ -302,7 +304,10 @@ function renderHuntExtras() {
     chance = chanceFor(p, kc),
     pace = paceFor(p[0]);
   const boss = $("bossImage");
-  $("targetRateLabel").textContent = serverState.rates?.[p[0]] !== undefined ? 'OWNER RATE OVERRIDE' : 'BASE PET RATE';
+  $("targetRateLabel").textContent =
+    serverState.rates?.[p[0]] !== undefined
+      ? "OWNER RATE OVERRIDE"
+      : "BASE PET RATE";
   const src = p[0] === "sraracha" ? "./media/sarachnis.png" : meta(p).image;
   if (!boss.getAttribute("src")?.endsWith(src.replace("./", "")))
     boss.src = src;
@@ -382,6 +387,28 @@ function records() {
     ...(curated.milestones || []),
     ...(serverState.milestones || []),
   ];
+  for (const hunt of serverState.hunts || []) {
+    if (hunt.status !== "completed" || !Number.isInteger(hunt.acquisitionKC))
+      continue;
+    const rolls =
+      Number.isInteger(hunt.startKC) && hunt.acquisitionKC >= hunt.startKC
+        ? hunt.acquisitionKC - hunt.startKC
+        : null;
+    const index = rows.findIndex(
+      (r) => r.petId === hunt.petId && r.kc === hunt.acquisitionKC,
+    );
+    if (index >= 0) rows[index] = { ...rows[index], rolls, huntId: hunt.id };
+    else
+      rows.push({
+        petId: hunt.petId,
+        kc: hunt.acquisitionKC,
+        rolls,
+        huntId: hunt.id,
+        title: pet(hunt.petId)[1] + " hunt completed",
+        date: hunt.acquisitionDate || null,
+        note: hunt.note || "",
+      });
+  }
   for (const [id, detail] of Object.entries(serverState.owned || {})) {
     if (
       CATALOG.some((p) => p[0] === id) &&
@@ -411,32 +438,58 @@ function renderTrophies() {
   const spoon = kcRecords
     .filter((r) => modelEligible(pet(r.petId)))
     .sort(
-      (a, b) => a.kc / rateFor(pet(a.petId)) - b.kc / rateFor(pet(b.petId)),
+      (a, b) =>
+        (a.rolls ?? a.kc) / rateFor(pet(a.petId)) -
+        (b.rolls ?? b.kc) / rateFor(pet(b.petId)),
     )[0];
   const achieved = records().find((r) => r.type === "achievement"),
     longOdds = owned
       .filter(modelEligible)
       .sort((a, b) => rateFor(b) - rateFor(a))[0];
   $("trophyWall").innerHTML =
-    `<article class="trophy"><div class="eyebrow">I / THE RESIDENTS</div>${owned.length ? `<img src="${meta(owned[0]).image}" alt="" width="80" height="80" loading="lazy">` : ""}<strong>${ownershipKnown() ? "" : "AT LEAST "}${owned.length} FOLLOWERS</strong><p>${ownershipKnown() ? "Temple log + manual confirmations." : "Confirmed residents only; the rest of the collection is unverified."} Acquisition order is unknown.</p></article><article class="trophy"><div class="eyebrow">II / THE SPOON CABINET</div><strong>${spoon ? escaped(pet(spoon.petId)[1]) : "AWAITING RECEIPTS"}</strong><p>${spoon ? fmt(spoon.kc) + " drop KC · " + (probability(spoon.kc, rateFor(pet(spoon.petId))) * 100).toFixed(2) + "% base-model chance by then. Owner-curated record." : "Low-KC drops need a confirmed acquisition KC. Current boss KC cannot prove a spoon."}</p></article><article class="trophy"><div class="eyebrow">III / THE PERSONAL RECORD</div><strong>${achieved ? escaped(achieved.title) : longOdds ? escaped(longOdds[1]) : "ROOM FOR LEGENDS"}</strong><p>${achieved ? escaped(achieved.note) : longOdds ? "1 / " + fmtRate(rateFor(longOdds)) + " per kill. Smallest base drop chance among confirmed fixed-rate boss pets; no acquisition luck is inferred." : "First pet, longest dry streak, and major achievements await curated records."}</p></article>`;
+    `<article class="trophy"><div class="eyebrow">I / THE RESIDENTS</div>${owned.length ? `<img src="${meta(owned[0]).image}" alt="" width="80" height="80" loading="lazy">` : ""}<strong>${ownershipKnown() ? "" : "AT LEAST "}${owned.length} FOLLOWERS</strong><p>${ownershipKnown() ? "Temple log + manual confirmations." : "Confirmed residents only; the rest of the collection is unverified."} Acquisition order is unknown.</p></article><article class="trophy"><div class="eyebrow">II / THE SPOON CABINET</div><strong>${spoon ? escaped(pet(spoon.petId)[1]) : "AWAITING RECEIPTS"}</strong><p>${spoon ? (spoon.rolls !== null && spoon.rolls !== undefined ? fmt(spoon.rolls) + " hunt kills (acquisition " + fmt(spoon.kc) + " KC)" : fmt(spoon.kc) + " drop KC") + " · " + (probability(spoon.rolls ?? spoon.kc, rateFor(pet(spoon.petId))) * 100).toFixed(2) + "% base-model chance by then. Owner-curated record." : "Low-KC drops need a confirmed acquisition KC. Current boss KC cannot prove a spoon."}</p></article><article class="trophy"><div class="eyebrow">III / THE PERSONAL RECORD</div><strong>${achieved ? escaped(achieved.title) : longOdds ? escaped(longOdds[1]) : "ROOM FOR LEGENDS"}</strong><p>${achieved ? escaped(achieved.note) : longOdds ? "1 / " + fmtRate(rateFor(longOdds)) + " per kill. Smallest base drop chance among confirmed fixed-rate boss pets; no acquisition luck is inferred." : "First pet, longest dry streak, and major achievements await curated records."}</p></article>`;
 }
 function renderHistory() {
-  const rows = records();
+  const rows = records().filter((r) => !r.huntId);
   $("historyItems").innerHTML = rows.length
     ? rows
         .map(
           (r) =>
-            `<article class="history-item"><small>${escaped(r.date || "DATE NOT RECORDED")} · OWNER-CURATED</small><strong>${escaped(r.title || CATALOG.find(p=>p[0]===r.petId)?.[1] || 'ARCHIVE RECORD')}</strong><p>${r.kc !== null && r.kc !== undefined ? fmt(r.kc) + " KC · " : ""}${escaped(r.note || "")}</p></article>`,
+            `<article class="history-item"><small>${escaped(r.date || "DATE NOT RECORDED")} · OWNER-CURATED</small><strong>${escaped(r.title || CATALOG.find((p) => p[0] === r.petId)?.[1] || "ARCHIVE RECORD")}</strong><p>${r.kc !== null && r.kc !== undefined ? fmt(r.kc) + " KC · " : ""}${escaped(r.note || "")}</p></article>`,
         )
         .join("")
     : '<div class="empty">The archive has residents, but no verified drop chronology yet. Confirmed drop dates, KC, and notes can be added by the owner without borrowing dates from a sync.</div>';
 }
 function showPetDetails(id) {
   const p = pet(id),
-    kc = kcFor(p),
-    chance = chanceFor(p, kc);
+    kc = kcFor(p);
   $("petDialogContent").innerHTML =
-    `<img src="${meta(p).image}" alt="${escaped(p[1])} follower render"><div class="eyebrow">${escaped(categoryFor(p))} / ${escaped(ownershipSource(p))}</div><h3 id="petDetailTitle">${escaped(p[1])}</h3><p>Source: ${escaped(p[2])}<br>Current KC: ${kc === null ? "Unavailable" : fmt(kc)}<br>Published rate: ${escaped(meta(p).rateText)}${serverState.rates?.[p[0]] !== undefined ? "<br>Owner rate override: 1 / " + fmtRate(rateFor(p)) : ""}</p><p>${chance === null ? "Method-dependent probability or KC unavailable. No estimate is inferred." : (chance * 100).toFixed(2) + "% chance of at least one drop by this KC under the independent base-rate model. Prior kills do not improve the next roll."}</p><p>${escaped(meta(p).note ? "Owner note: " + meta(p).note : "Ownership is never inferred from kills.")}</p><p>Follower render © Jagex via the OSRS Wiki.</p><a href="${meta(p).wiki}" target="_blank" rel="noopener">PET, METHODS &amp; DROP RATES ↗</a>`;
+    '<img src="' +
+    meta(p).image +
+    '" alt="' +
+    escaped(p[1]) +
+    ' follower render"><div class="eyebrow">' +
+    escaped(categoryFor(p)) +
+    " / " +
+    escaped(ownershipSource(p)) +
+    '</div><h3 id="petDetailTitle">' +
+    escaped(p[1]) +
+    "</h3><p>Source: " +
+    escaped(p[2]) +
+    (kc !== null
+      ? "<br>Current KC: " +
+        fmt(kc) +
+        " · " +
+        escaped(kcSourceFor(p) || "Owner record")
+      : "") +
+    "<br>Published rate: " +
+    escaped(meta(p).rateText) +
+    "</p>" +
+    petRecordDetails(p) +
+    (meta(p).note ? "<p>Owner note: " + escaped(meta(p).note) + "</p>" : "") +
+    '<p>Follower render © Jagex via the OSRS Wiki.</p><a href="' +
+    meta(p).wiki +
+    '" target="_blank" rel="noopener">PET, METHODS &amp; DROP RATES ↗</a>';
   $("petDialog").setAttribute("aria-labelledby", "petDetailTitle");
   $("petDialog").showModal();
 }

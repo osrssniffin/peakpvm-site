@@ -345,5 +345,18 @@
         ]
       }
     }
+  },
+  "character": {
+    "username": "s niffin",
+    "metrics": {
+      "sarachnis": 590,
+      "giant_mole": 120,
+      "vorkath": 2500,
+      "kraken": 3000
+    },
+    "ehp": 1200.5,
+    "ehb": 300.5,
+    "snapshotAt": "2026-01-01 12:00:00",
+    "stale": false
   }
 }

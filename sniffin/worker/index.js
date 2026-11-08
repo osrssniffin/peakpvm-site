@@ -59,6 +59,157 @@ async function authorized(req, env) {
   const expect = await sign(env.SESSION_SECRET, expiry + "|" + getIP(req));
   return safeEqual(mac, expect);
 }
+
+// Explicit mapping verified against Temple player_stats.php?bosses=1.
+const TEMPLE_BOSSES = {
+  abyssal_sire: "Abyssal Sire",
+  alchemical_hydra: "Alchemical Hydra",
+  amoxliatl: "Amoxliatl",
+  araxxor: "Araxxor",
+  artio: "Artio",
+  barrows_chests: "Barrows Chests",
+  brutus: "Brutus",
+  bryophyta: "Bryophyta",
+  callisto: "Callisto",
+  calvarion: "Calvarion",
+  cerberus: "Cerberus",
+  chambers_of_xeric: "Chambers of Xeric",
+  chambers_of_xeric_challenge_mode: "Chambers of Xeric Challenge Mode",
+  chaos_elemental: "Chaos Elemental",
+  chaos_fanatic: "Chaos Fanatic",
+  commander_zilyana: "Commander Zilyana",
+  corporeal_beast: "Corporeal Beast",
+  crazy_archaeologist: "Crazy Archaeologist",
+  dagannoth_prime: "Dagannoth Prime",
+  dagannoth_rex: "Dagannoth Rex",
+  dagannoth_supreme: "Dagannoth Supreme",
+  deranged_archaeologist: "Deranged Archaeologist",
+  doom_of_mokhaiotl: "Doom of Mokhaiotl",
+  duke_sucellus: "Duke Sucellus",
+  general_graardor: "General Graardor",
+  giant_mole: "Giant Mole",
+  grotesque_guardians: "Grotesque Guardians",
+  hespori: "Hespori",
+  kalphite_queen: "Kalphite Queen",
+  king_black_dragon: "King Black Dragon",
+  kraken: "Kraken",
+  kreearra: "KreeArra",
+  kril_tsutsaroth: "Kril Tsutsaroth",
+  lunar_chests: "Lunar Chests",
+  mad_angel: "Mad Angel",
+  maggot_king: "Maggot King",
+  mimic: "Mimic",
+  nex: "Nex",
+  nightmare: "The Nightmare",
+  phosanis_nightmare: "Phosanis Nightmare",
+  obor: "Obor",
+  phantom_muspah: "Phantom Muspah",
+  sarachnis: "Sarachnis",
+  scorpia: "Scorpia",
+  scurrius: "Scurrius",
+  shellbane_gryphon: "Shellbane Gryphon",
+  skotizo: "Skotizo",
+  sol_heredit: "Sol Heredit",
+  spindel: "Spindel",
+  tempoross: "Tempoross",
+  the_gauntlet: "The Gauntlet",
+  the_corrupted_gauntlet: "The Corrupted Gauntlet",
+  the_fractured_archive: "The Fractured Archive",
+  the_hueycoatl: "Hueycoatl",
+  the_leviathan: "The Leviathan",
+  the_royal_titans: "The Royal Titans",
+  the_whisperer: "The Whisperer",
+  theatre_of_blood: "Theatre of Blood",
+  theatre_of_blood_hard_mode: "Theatre of Blood Challenge Mode",
+  thermonuclear_smoke_devil: "Thermonuclear Smoke Devil",
+  tombs_of_amascut: "Tombs of Amascut",
+  tombs_of_amascut_expert: "Tombs of Amascut Expert",
+  tzkal_zuk: "TzKal-Zuk",
+  tztok_jad: "TzTok-Jad",
+  vardorvis: "Vardorvis",
+  venenatis: "Venenatis",
+  vetion: "Vetion",
+  vorkath: "Vorkath",
+  wintertodt: "Wintertodt",
+  yama: "Yama",
+  zalcano: "Zalcano",
+  zulrah: "Zulrah",
+};
+const PET_METRICS = {
+  "chaos-elemental": "chaos_elemental",
+  "baby-mole": "giant_mole",
+  scorpia: "scorpia",
+  skotos: "skotizo",
+  phoenix: "wintertodt",
+  snakeling: "zulrah",
+  "rock-golem": null,
+  chompy: null,
+  nid: "araxxor",
+  beef: "brutus",
+  sraracha: "sarachnis",
+  vorki: "vorkath",
+  hellpuppy: "cerberus",
+  hydra: "alchemical_hydra",
+  kraken: "kraken",
+  thermy: "thermonuclear_smoke_devil",
+  kq: "kalphite_queen",
+  kbd: "king_black_dragon",
+  jad: "tztok_jad",
+  zuk: "tzkal_zuk",
+  graardor: "general_graardor",
+  kree: "kreearra",
+  zilyana: "commander_zilyana",
+  kril: "kril_tsutsaroth",
+  sire: "abyssal_sire",
+  corp: "corporeal_beast",
+  muspah: "phantom_muspah",
+  nex: "nex",
+  nightmare: "nightmare",
+  baron: "duke_sucellus",
+  butch: "vardorvis",
+  wisp: "the_whisperer",
+  leviathan: "the_leviathan",
+  scurry: "scurrius",
+  venenatis: "venenatis",
+  vetion: "vetion",
+  callisto: "callisto",
+  tempoross: "tempoross",
+  guardians: null,
+  heron: null,
+  beaver: null,
+  rocky: null,
+  squirrel: null,
+  rift: null,
+  tangleroot: null,
+  chinchompa: null,
+  herbi: null,
+  bloodhound: null,
+  goa: "the_gauntlet",
+  zalcano: "zalcano",
+  tob: "theatre_of_blood",
+  cox: "chambers_of_xeric",
+  toa: "tombs_of_amascut",
+  huey: "the_hueycoatl",
+  moons: "amoxliatl",
+  "giant-pet": "shellbane_gryphon",
+  aggy: "mad_angel",
+  bran: "the_royal_titans",
+  dom: "doom_of_mokhaiotl",
+  "maggot-marquess": "maggot_king",
+  noon: "grotesque_guardians",
+  orion: "the_fractured_archive",
+  "pet-dagannoth-prime": "dagannoth_prime",
+  "pet-dagannoth-rex": "dagannoth_rex",
+  "pet-dagannoth-supreme": "dagannoth_supreme",
+  "smol-heredit": "sol_heredit",
+  yami: "yama",
+  soup: null,
+  "lil-creator": null,
+  "mr-mcgroot": null,
+  "pet-penance-queen": null,
+  quetzin: null,
+};
+
 const INITIAL = {
   username: "s niffin",
   target: "sraracha",
@@ -99,7 +250,7 @@ function validate(data) {
     if (!ID_RE.test(k)) continue;
     const n = v?.kc === null || v?.kc === undefined ? null : Number(v.kc);
     if (n !== null && (!Number.isFinite(n) || n < 0)) continue;
-    owned[k] = { kc: n };
+    owned[k] = { kc: n, note: String(v?.note || "").slice(0, 300) };
     if (Object.keys(owned).length > 150) break;
   }
   const manualKC = {};
@@ -117,13 +268,11 @@ function validate(data) {
     if (Object.keys(rates).length > 150) break;
   }
   const notes = Array.isArray(data.notes)
-    ? data.notes
-        .slice(-30)
-        .map((n) => ({
-          date: String(n.date || "").slice(0, 40),
-          body: String(n.body || "").slice(0, 200),
-          title: "FIELD REPORT",
-        }))
+    ? data.notes.slice(-30).map((n) => ({
+        date: String(n.date || "").slice(0, 40),
+        body: String(n.body || "").slice(0, 200),
+        title: "FIELD REPORT",
+      }))
     : [];
   return {
     username,
@@ -134,6 +283,15 @@ function validate(data) {
     manualKC,
     rates,
     notes,
+    petNotes: Object.fromEntries(
+      Object.entries(data.petNotes || {})
+        .filter(
+          ([id, note]) =>
+            Object.hasOwn(PET_METRICS, id) && typeof note === "string",
+        )
+        .slice(0, 150)
+        .map(([id, note]) => [id, note.slice(0, 300)]),
+    ),
   };
 }
 function sameOrigin(req) {
@@ -175,13 +333,34 @@ async function handle(req, env, ctx) {
     return json({ error: "Admin secrets not configured" }, 503);
   try {
     if (path === "state" && req.method === "GET") return json(await state(env));
+    if (path === "character" && req.method === "GET")
+      return json(await character(req, env, ctx));
+    if (path === "progress" && req.method === "GET")
+      return json({ events: await activity(env) });
+    if (path === "hunt" && req.method === "POST") {
+      if (!(await authorized(req, env)))
+        return json({ error: "Not authorized" }, 403);
+      const body = await req.text();
+      if (body.length > 3000) return json({ error: "Payload too large" }, 413);
+      let input;
+      try {
+        input = JSON.parse(body);
+      } catch {
+        return json({ error: "Malformed JSON" }, 400);
+      }
+      try {
+        return json(await changeHunt(input, req, env, ctx));
+      } catch (e) {
+        return json({ error: e.message }, e.status || 400);
+      }
+    }
     if (path === "state" && req.method === "PUT") {
       if (!(await authorized(req, env)))
         return json({ error: "Not authorized" }, 403);
-      if (Number(req.headers.get("Content-Length") || 0) > 30000)
+      if (Number(req.headers.get("Content-Length") || 0) > 200000)
         return json({ error: "Payload too large" }, 413);
       const raw = await req.text();
-      if (raw.length > 30000) return json({ error: "Payload too large" }, 413);
+      if (raw.length > 200000) return json({ error: "Payload too large" }, 413);
       let parsed;
       try {
         parsed = JSON.parse(raw);
@@ -223,7 +402,29 @@ async function handle(req, env, ctx) {
       } catch (e) {
         return json({ error: e.message }, 400);
       }
-      next.updatedAt = Date.now();
+      const previous = await state(env);
+      if (
+        parsed.target !== previous.target ||
+        Number(parsed.startKC) !== Number(previous.startKC)
+      )
+        return json(
+          { error: "Use chase controls to change target or starting KC" },
+          409,
+        );
+      if (
+        parsed.updatedAt !== undefined &&
+        Number(parsed.updatedAt) !== Number(previous.updatedAt || 0)
+      )
+        return json(
+          { error: "State changed. Reopen the editor before saving." },
+          409,
+        );
+      next.hunt = previous.hunt || null;
+      next.hunts = previous.hunts || [];
+      next.updatedAt = Math.max(
+        Date.now(),
+        Number(previous.updatedAt || 0) + 1,
+      );
       await env.SNIFFIN_KV.put("site-state", JSON.stringify(next));
       return json(next);
     }
@@ -331,12 +532,29 @@ async function handle(req, env, ctx) {
 async function temple(req, env, ctx) {
   const key = "temple:s niffin",
     cached = await env.SNIFFIN_KV.get(key, "json");
+  // Seed durable confirmations when upgrading an existing successful cache.
+  if (
+    cached?.collection?.data?.items &&
+    !Array.isArray(cached.confirmedPetIds)
+  ) {
+    cached.confirmedPetIds = await observePets(cached.collection, cached, env);
+    await env.SNIFFIN_KV.put(key, JSON.stringify(cached), {
+      expirationTtl: 86400,
+    });
+  }
   const age = cached ? Date.now() - cached.fetchedAt : Infinity;
   if (
     cached &&
     age < (new URL(req.url).searchParams.has("refresh") ? 60000 : 300000)
   )
     return json(cached);
+  const retryAt = Number(
+    (await env.SNIFFIN_KV.get("temple-retry:" + RSN)) || 0,
+  );
+  if (retryAt > Date.now())
+    return cached
+      ? json({ ...cached, stale: true })
+      : json({ error: "Temple temporarily unavailable; retry shortly" }, 503);
   try {
     const get = async (path) => {
       const res = await fetch("https://templeosrs.com/api/" + path, {
@@ -370,11 +588,18 @@ async function temple(req, env, ctx) {
       fetchedAt: Date.now(),
       stale: false,
     };
+    result.confirmedPetIds = await observePets(log, cached, env);
+    await env.SNIFFIN_KV.delete("temple-retry:" + RSN);
     ctx.waitUntil(
       env.SNIFFIN_KV.put(key, JSON.stringify(result), { expirationTtl: 86400 }),
     );
     return json(result);
   } catch (error) {
+    await env.SNIFFIN_KV.put(
+      "temple-retry:" + RSN,
+      String(Date.now() + 60000),
+      { expirationTtl: 60 },
+    );
     if (cached) return json({ ...cached, stale: true });
     return json(
       {
@@ -385,6 +610,380 @@ async function temple(req, env, ctx) {
     );
   }
 }
+const ITEM_PETS = {
+  11995: "chaos-elemental",
+  12643: "pet-dagannoth-supreme",
+  12644: "pet-dagannoth-prime",
+  12645: "pet-dagannoth-rex",
+  12646: "baby-mole",
+  12647: "kq",
+  12648: "thermy",
+  12649: "kree",
+  12650: "graardor",
+  12651: "zilyana",
+  12652: "kril",
+  12653: "kbd",
+  12655: "kraken",
+  12703: "pet-penance-queen",
+  12816: "corp",
+  12921: "snakeling",
+  13071: "chompy",
+  13177: "venenatis",
+  13178: "callisto",
+  13179: "vetion",
+  13181: "scorpia",
+  13225: "jad",
+  13247: "hellpuppy",
+  13262: "sire",
+  13320: "heron",
+  13321: "rock-golem",
+  13322: "beaver",
+  13324: "chinchompa",
+  19730: "bloodhound",
+  20659: "squirrel",
+  20661: "tangleroot",
+  20663: "rocky",
+  20665: "rift",
+  20693: "phoenix",
+  20851: "cox",
+  21273: "skotos",
+  21291: "zuk",
+  21509: "herbi",
+  21748: "noon",
+  21992: "vorki",
+  22473: "tob",
+  22746: "hydra",
+  23495: "sraracha",
+  23757: "goa",
+  23760: "zalcano",
+  24491: "nightmare",
+  25348: "lil-creator",
+  25602: "tempoross",
+  26348: "nex",
+  26901: "guardians",
+  27352: "toa",
+  27590: "muspah",
+  28246: "wisp",
+  28248: "butch",
+  28250: "baron",
+  28252: "leviathan",
+  28801: "scurry",
+  28960: "smol-heredit",
+  28962: "quetzin",
+  29836: "nid",
+  30152: "huey",
+  30154: "moons",
+  30622: "bran",
+  30888: "yami",
+  31130: "dom",
+  31283: "soup",
+  31285: "giant-pet",
+  33124: "beef",
+  33642: "maggot-marquess",
+  34040: "mr-mcgroot",
+  34042: "aggy",
+  34646: "orion",
+};
+// Progress is separate from curated owner state. IDs deduplicate repeated reads.
+async function activity(env) {
+  return (await env.SNIFFIN_KV.get("hunt-activity", "json")) || [];
+}
+async function recordEvent(env, event) {
+  const events = await activity(env);
+  if (events.some((e) => e.id === event.id)) return;
+  await env.SNIFFIN_KV.put(
+    "hunt-activity",
+    JSON.stringify(
+      [event, ...events]
+        .sort((a, b) => b.recordedAt - a.recordedAt)
+        .slice(0, 24),
+    ),
+  );
+}
+const validKC = (n) => Number.isInteger(n) && n >= 0 && n <= 1000000000;
+function currentHunt(saved) {
+  return (
+    saved.hunt || {
+      id: "legacy-" + saved.target,
+      petId: saved.target,
+      status: "active",
+      startKC: saved.startKC ?? null,
+      startedAt: null,
+    }
+  );
+}
+function normalizeCharacter(payload) {
+  const d = payload?.data,
+    info = d?.info;
+  if (
+    !info ||
+    String(
+      info.player_name_with_capitalization || info.Username || "",
+    ).toLowerCase() !== RSN
+  )
+    throw Error("Temple returned a different player");
+  const numeric = (value) =>
+    typeof value === "number" && Number.isFinite(value) && value >= 0
+      ? value
+      : null;
+  const ehpKey = info.Primary_ehp,
+    ehbKey = info.Primary_ehb;
+  const metrics = {};
+  for (const [metric, field] of Object.entries(TEMPLE_BOSSES)) {
+    const n = numeric(d[field]);
+    if (n !== null && n > 0 && Number.isInteger(n)) metrics[metric] = n;
+  }
+  const snapshotAt = d.date || info["Last checked"];
+  if (
+    typeof snapshotAt !== "string" ||
+    !Number.isFinite(Date.parse(snapshotAt.replace(" ", "T") + "Z"))
+  )
+    throw Error("Temple snapshot date missing");
+  return {
+    username: RSN,
+    metrics,
+    ehp: typeof ehpKey === "string" ? numeric(d[ehpKey]) : null,
+    ehb: typeof ehbKey === "string" ? numeric(d[ehbKey]) : null,
+    snapshotAt,
+    fetchedAt: Date.now(),
+    stale: false,
+  };
+}
+async function character(req, env, ctx) {
+  const key = "character:" + RSN,
+    cached = await env.SNIFFIN_KV.get(key, "json"),
+    now = Date.now();
+  const window = new URL(req.url).searchParams.has("refresh") ? 60000 : 300000;
+  if (cached && (now - cached.fetchedAt < window || cached.retryAt > now))
+    return cached;
+  try {
+    const response = await fetch(
+      "https://templeosrs.com/api/player_stats.php?player=s%20niffin&bosses=1",
+      {
+        headers: {
+          Accept: "application/json",
+          "User-Agent": "PeakPvM-Sniffin/2.0 (peakpvm.com)",
+        },
+        signal: AbortSignal.timeout(12000),
+      },
+    );
+    if (!response.ok) throw Error("Temple stats returned " + response.status);
+    const result = normalizeCharacter(await response.json());
+    await env.SNIFFIN_KV.put(key, JSON.stringify(result), {
+      expirationTtl: 86400,
+    });
+    await observeKC(result, env);
+    return result;
+  } catch (error) {
+    const result = cached
+      ? { ...cached, stale: true, retryAt: now + 60000 }
+      : {
+          username: RSN,
+          metrics: {},
+          ehp: null,
+          ehb: null,
+          unavailable: true,
+          stale: true,
+          fetchedAt: now,
+          retryAt: now + 60000,
+        };
+    await env.SNIFFIN_KV.put(key, JSON.stringify(result), {
+      expirationTtl: 86400,
+    });
+    return result;
+  }
+}
+async function observeKC(snapshot, env) {
+  const saved = await state(env),
+    hunt = currentHunt(saved),
+    metric = PET_METRICS[hunt.petId],
+    kc = snapshot.metrics[metric];
+  if (
+    hunt.status !== "active" ||
+    !metric ||
+    !validKC(kc) ||
+    !validKC(hunt.startKC) ||
+    kc < hunt.startKC
+  )
+    return;
+  const key = "hunt-progress:" + hunt.id,
+    previous = await env.SNIFFIN_KV.get(key, "json");
+  const milestone = Math.floor((kc - hunt.startKC) / 500) * 500;
+  if (
+    previous &&
+    kc > previous.kc &&
+    milestone > previous.milestone &&
+    milestone > 0
+  )
+    await recordEvent(env, {
+      id: "kc:" + hunt.id + ":" + milestone,
+      type: "kc",
+      petId: hunt.petId,
+      kc,
+      gained: milestone,
+      recordedAt: Date.now(),
+      sourceAt: snapshot.snapshotAt,
+    });
+  await env.SNIFFIN_KV.put(key, JSON.stringify({ kc, milestone }));
+}
+async function observePets(log, oldCache, env) {
+  const key = "temple-confirmed-pets";
+  const prior = await env.SNIFFIN_KV.get(key, "json");
+  const positives = (rows) =>
+    (rows || [])
+      .filter((i) => Number(i.count) > 0 && ITEM_PETS[i.id])
+      .map((i) => Number(i.id));
+  const baseline = prior?.ids || positives(oldCache?.collection?.data?.items),
+    current = positives(log.data.items);
+  const ids = [...new Set([...baseline, ...current])];
+  if (prior || oldCache?.collection)
+    for (const id of current.filter((id) => !baseline.includes(id)))
+      await recordEvent(env, {
+        id: "pet:" + id,
+        type: "pet",
+        petId: ITEM_PETS[id],
+        recordedAt: Date.now(),
+        sourceAt: log.data.last_checked,
+      });
+  await env.SNIFFIN_KV.put(key, JSON.stringify({ ids }));
+  return ids;
+}
+async function changeHunt(input, req, env, ctx) {
+  const saved = await state(env),
+    hunt = currentHunt(saved),
+    now = Date.now();
+  if (Number(input.expectedUpdatedAt || 0) !== Number(saved.updatedAt || 0)) {
+    const error = Error(
+      "State changed. Reopen the editor before changing the hunt.",
+    );
+    error.status = 409;
+    throw error;
+  }
+  if (!["start", "end", "complete"].includes(input.action))
+    throw Error("Unknown chase action");
+  if (input.huntId !== hunt.id) {
+    const error = Error("This hunt has changed. Reopen the editor.");
+    error.status = 409;
+    throw error;
+  }
+  const next = structuredClone(saved);
+  next.hunts = Array.isArray(saved.hunts) ? saved.hunts.slice() : [];
+  const snapshot = await character(req, env, ctx);
+  const fallback = await env.SNIFFIN_KV.get("wom:" + RSN, "json");
+  const getKC = (id) => {
+    const n = snapshot.metrics?.[PET_METRICS[id]];
+    if (validKC(n)) return n;
+    const wom = fallback?.data?.latestSnapshot?.data?.bosses?.[PET_METRICS[id]];
+    if (validKC(wom?.kills) && !(wom.kills === 0 && wom.rank === -1))
+      return wom.kills;
+    return validKC(saved.manualKC?.[id]) ? saved.manualKC[id] : null;
+  };
+  function close(status) {
+    if (hunt.status !== "active")
+      throw Error("There is no active hunt to close");
+    const acquisitionKC = input.acquisitionKC ?? null;
+    if (
+      acquisitionKC !== null &&
+      (!validKC(acquisitionKC) ||
+        (validKC(hunt.startKC) && acquisitionKC < hunt.startKC))
+    )
+      throw Error("Acquisition KC must be at least the recorded starting KC");
+    if (
+      input.acquisitionDate &&
+      (!/^\d{4}-\d{2}-\d{2}$/.test(input.acquisitionDate) ||
+        new Date(input.acquisitionDate + "T00:00:00Z")
+          .toISOString()
+          .slice(0, 10) !== input.acquisitionDate)
+    )
+      throw Error("Invalid acquisition date");
+    const record = {
+      ...hunt,
+      status,
+      endedAt: now,
+      endKC: getKC(hunt.petId),
+      acquisitionKC: status === "completed" ? acquisitionKC : null,
+      acquisitionDate:
+        status === "completed" ? input.acquisitionDate || null : null,
+      note: String(input.note || saved.huntNote || "").slice(0, 300),
+    };
+    if (!next.hunts.some((h) => h.id === record.id)) next.hunts.push(record);
+    next.hunts = next.hunts.slice(-100);
+    next.hunt = record;
+    if (status === "completed") {
+      next.owned = {
+        ...next.owned,
+        [hunt.petId]: {
+          ...next.owned?.[hunt.petId],
+          kc: acquisitionKC ?? next.owned?.[hunt.petId]?.kc ?? null,
+          note: record.note,
+        },
+      };
+    }
+    return record;
+  }
+  const newTarget =
+    input.action === "start"
+      ? input.petId
+      : input.action === "complete"
+        ? input.nextPetId
+        : null;
+  if (
+    (input.action === "start" && !newTarget) ||
+    (newTarget && !Object.hasOwn(PET_METRICS, newTarget))
+  )
+    throw Error("Unknown target pet");
+  let baseline = null;
+  if (newTarget) {
+    baseline =
+      input.startKC === null || input.startKC === undefined
+        ? getKC(newTarget)
+        : input.startKC;
+    if (baseline !== null && !validKC(baseline))
+      throw Error("Invalid starting KC");
+  }
+  let closed;
+  if (input.action === "end") closed = close("ended");
+  if (input.action === "complete") closed = close("completed");
+  if (input.action === "start" && hunt.status === "active") close("ended");
+  if (newTarget) {
+    next.hunt = {
+      id: crypto.randomUUID(),
+      petId: newTarget,
+      status: "active",
+      startKC: baseline,
+      startedAt: now,
+    };
+    next.target = newTarget;
+    next.startKC = baseline ?? 0;
+    next.huntNote = String(input.note || "").slice(0, 140);
+  }
+  next.updatedAt = Math.max(now, Number(saved.updatedAt || 0) + 1);
+  await env.SNIFFIN_KV.put("site-state", JSON.stringify(next));
+  if (newTarget) {
+    const kc = getKC(newTarget);
+    if (kc !== null)
+      await env.SNIFFIN_KV.put(
+        "hunt-progress:" + next.hunt.id,
+        JSON.stringify({
+          kc,
+          milestone: validKC(baseline)
+            ? Math.floor(Math.max(0, kc - baseline) / 500) * 500
+            : 0,
+        }),
+      );
+  }
+  if (closed?.status === "completed")
+    await recordEvent(env, {
+      id: "complete:" + closed.id,
+      type: "completed",
+      petId: closed.petId,
+      kc: closed.acquisitionKC,
+      recordedAt: now,
+      acquisitionDate: closed.acquisitionDate,
+    });
+  return next;
+}
+
 export default {
   async fetch(req, env, ctx) {
     const origin = req.headers.get("Origin");

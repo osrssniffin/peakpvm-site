@@ -27,6 +27,7 @@ const element = (id) => {
       },
       setAttribute() {},
       addEventListener() {},
+      remove() {},
     });
   return nodes.get(id);
 };
@@ -112,6 +113,7 @@ vm.runInContext(
   context,
 );
 vm.runInContext(fs.readFileSync(path.join(root, "app.js"), "utf8"), context);
+vm.runInContext(fs.readFileSync(path.join(root, "chase.js"), "utf8"), context);
 const run = (s) => vm.runInContext(s, context);
 (async () => {
   assert.equal(catalog.length, 72);
@@ -126,7 +128,11 @@ const run = (s) => vm.runInContext(s, context);
   await context.loadState();
   await context.syncPets();
   await context.syncKC();
-  assert.equal(run('metrics.nex'),undefined,'unranked zero is unavailable, not confirmed zero KC');
+  assert.equal(
+    run("metrics.nex"),
+    undefined,
+    "unranked zero is unavailable, not confirmed zero KC",
+  );
   assert.ok(requests.some((r) => r.url.includes("username=s%20niffin")));
   assert.equal(element("targetKC").textContent, "590");
   assert.equal(element("targetChance").textContent, "17.9%");
@@ -242,7 +248,9 @@ const run = (s) => vm.runInContext(s, context);
       collection: {
         data: {
           ...collection.data,
-          items: collection.data.items.map(item => item.id === 23495 ? {...item, count: 1} : item),
+          items: collection.data.items.map((item) =>
+            item.id === 23495 ? { ...item, count: 1 } : item,
+          ),
         },
       },
       fetchedAt: Date.now(),
@@ -251,24 +259,94 @@ const run = (s) => vm.runInContext(s, context);
   });
   run("filter='owned';category='all';search=''");
   await context.syncPets();
-  assert.equal(run("isOwned(pet('sraracha'))"), true, 'a new Temple record confirms ownership without manual edits');
-  assert.match(element('petGrid').innerHTML, /class="pet-tile owned" data-pet-id="sraracha"/, 'the next sync automatically gives the newly owned pet its gold card class');
-  assert.equal(element('ownedNum').textContent, '4');
+  assert.equal(
+    run("isOwned(pet('sraracha'))"),
+    true,
+    "a new Temple record confirms ownership without manual edits",
+  );
+  assert.match(
+    element("petGrid").innerHTML,
+    /class="pet-tile owned" data-pet-id="sraracha"/,
+    "the next sync automatically gives the newly owned pet its gold card class",
+  );
+  assert.equal(element("ownedNum").textContent, "4");
   context.fetch = goodFetch;
   const refreshOriginal = context.refreshAll;
   let autoRefreshes = 0;
-  context.refreshAll = () => { autoRefreshes++; };
-  context.document.visibilityState = 'hidden';
-  run('lastRefreshAttempt=0');
+  context.refreshAll = () => {
+    autoRefreshes++;
+  };
+  context.document.visibilityState = "hidden";
+  run("lastRefreshAttempt=0");
   context.refreshWhenVisible();
-  assert.equal(autoRefreshes, 0, 'hidden pages do not poll');
-  context.document.visibilityState = 'visible';
+  assert.equal(autoRefreshes, 0, "hidden pages do not poll");
+  context.document.visibilityState = "visible";
   context.refreshWhenVisible();
-  assert.equal(autoRefreshes, 1, 'returning to an overdue visible page automatically syncs');
-  run('lastRefreshAttempt=Date.now()');
+  assert.equal(
+    autoRefreshes,
+    1,
+    "returning to an overdue visible page automatically syncs",
+  );
+  run("lastRefreshAttempt=Date.now()");
   context.refreshWhenVisible();
-  assert.equal(autoRefreshes, 1, 'fresh data is not repeatedly requested');
+  assert.equal(autoRefreshes, 1, "fresh data is not repeatedly requested");
   context.refreshAll = refreshOriginal;
+  context.fetch = async (url) => ({
+    ok: true,
+    json: async () =>
+      url.includes("/character")
+        ? {
+            username: "s niffin",
+            metrics: { sarachnis: 700 },
+            ehp: 1404.4,
+            ehb: 409.3,
+            snapshotAt: "2026-11-08 14:31:48",
+            stale: false,
+          }
+        : wom,
+  });
+  await context.syncKC();
+  assert.equal(
+    element("targetKC").textContent,
+    "700",
+    "Temple overrides a conflicting WOM counter",
+  );
+  assert.equal(element("headerEhp").textContent, "1,404.4");
+  assert.equal(run("kcSourceFor(pet('sraracha'))"), "TempleOSRS");
+  context.fetch = async (url) => {
+    if (url.includes("/character")) throw Error("Temple unavailable");
+    return { ok: true, json: async () => wom };
+  };
+  await context.syncKC();
+  assert.equal(element("targetKC").textContent, "590");
+  assert.equal(run("kcSourceFor(pet('sraracha'))"), "Wise Old Man fallback");
+  context.fetch = goodFetch;
+  context.document.querySelectorAll = (selector) =>
+    selector === "[data-owned]"
+      ? [{ dataset: { owned: "kraken" }, checked: true }]
+      : [];
+  run("editable=JSON.parse(JSON.stringify(serverState))");
+  element("editUsername").value = "s niffin";
+  element("editTarget").value = "vorki";
+  element("editStartKC").value = "999";
+  element("editHuntNote").value = "";
+  element('[data-drop="kraken"]').value = "17";
+  element('[data-manual="kraken"]').value = "";
+  element('[data-rate="kraken"]').value = "3000";
+  element('[data-pet-note="kraken"]').value = "A recorded personal note";
+  context.captureEditor();
+  assert.equal(
+    run("editable.target"),
+    "sraracha",
+    "general save cannot silently change the chase",
+  );
+  assert.equal(run("editable.petNotes.kraken"), "A recorded personal note");
+  assert.equal(run("editable.owned.kraken.kc"), 17);
+  assert.equal(
+    run("editable.rates.kraken"),
+    undefined,
+    "default published rates are not converted to overrides",
+  );
   const html = fs.readFileSync(path.join(root, "index.html"), "utf8");
   assert.ok(!/all420s|all%20420s/i.test(html));
   for (const match of html.matchAll(
@@ -301,6 +379,7 @@ const run = (s) => vm.runInContext(s, context);
     demo,
   );
   vm.runInContext(fs.readFileSync(path.join(root, "app.js"), "utf8"), demo);
+  vm.runInContext(fs.readFileSync(path.join(root, "chase.js"), "utf8"), demo);
   vm.runInContext("mockFixture=" + JSON.stringify(fixture), demo);
   assert.equal((await demo.api("state")).username, "s niffin");
   assert.equal((await demo.api("wom")).displayName, "s niffin");
@@ -310,7 +389,7 @@ const run = (s) => vm.runInContext(s, context);
     location: {
       hostname: "peakpvm.com",
       origin: "https://peakpvm.com",
-      search: "?mock=1",
+      search: "?mock=1&admin=1",
     },
   });
   vm.runInContext(
@@ -321,6 +400,15 @@ const run = (s) => vm.runInContext(s, context);
     vm.runInContext("MOCK_MODE", production),
     false,
     "mock mode cannot activate in production",
+  );
+  vm.runInContext(
+    fs.readFileSync(path.join(root, "chase.js"), "utf8"),
+    production,
+  );
+  assert.equal(
+    vm.runInContext("MOCK_ADMIN||CAN_EDIT_ORIGIN", production),
+    false,
+    "production query parameters cannot activate the owner preview",
   );
   const worker = (
     await import(
@@ -347,6 +435,7 @@ const run = (s) => vm.runInContext(s, context);
         },
       },
     };
+  kv.set("site-state", JSON.stringify(manual));
   const request = (
     p,
     method = "GET",
