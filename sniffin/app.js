@@ -17,6 +17,12 @@ const API_BASE = (LOCAL_PREVIEW || ON_BACKEND ? "" : BACKEND) + "/sniffin/api/";
 const SYNC_INTERVAL = 5 * 60 * 1000;
 let lastRefreshAttempt = 0;
 const meta = (p) => PET_META[p[0]] || {};
+const petForTempleId = (id) =>
+  CATALOG.find(
+    (p) =>
+      meta(p).templeId === Number(id) ||
+      meta(p).templeAliases?.includes(Number(id)),
+  );
 const fmtRate = (n) =>
   Number.isInteger(n)
     ? fmt(n)
@@ -117,6 +123,12 @@ function probability(k, n) {
   if (n === 1) return 1;
   return -Math.expm1(k * Math.log1p(-1 / n));
 }
+function oddsLabel(chance, digits, guaranteed = false) {
+  const value = (chance * 100).toFixed(digits);
+  return !guaranteed && Number(value) === 100
+    ? ">" + (100 - 10 ** -digits).toFixed(digits) + "%"
+    : value + "%";
+}
 function rateFor(p) {
   const v = serverState.rates?.[p[0]];
   return v === undefined ? p[4] : v;
@@ -214,6 +226,15 @@ async function loadState() {
 }
 function applyTemple(payload) {
   const data = payload?.collection?.data;
+  if (!data && payload?.stale && Array.isArray(payload.confirmedPetIds)) {
+    for (const id of payload.confirmedPetIds) {
+      const p = petForTempleId(id);
+      if (p && !templeState.owned[p[0]])
+        templeState.owned[p[0]] = { count: 1, recordedAt: null };
+    }
+    writeCache("temple", templeState);
+    return { complete: false, count: Object.keys(templeState.owned).length };
+  }
   if (
     !data ||
     String(
@@ -226,7 +247,7 @@ function applyTemple(payload) {
   const ids = new Set(),
     confirmed = {};
   for (const item of data.items) {
-    const p = CATALOG.find((p) => meta(p).templeId === Number(item.id));
+    const p = petForTempleId(item.id);
     if (!p) continue;
     ids.add(p[0]);
     if (Number(item.count) > 0)
@@ -236,7 +257,7 @@ function applyTemple(payload) {
       };
   }
   for (const id of payload.confirmedPetIds || []) {
-    const p = CATALOG.find((p) => meta(p).templeId === Number(id));
+    const p = petForTempleId(id);
     if (p && !confirmed[p[0]]) confirmed[p[0]] = { count: 1, recordedAt: null };
   }
   if (!ids.size) throw Error("Temple returned no recognized pet records");
@@ -285,8 +306,9 @@ async function syncPets(force = false) {
       result.count +
       " confirmed" +
       (result.complete ? "" : " · partial data");
-    $("petLastSync").textContent =
-      "Log synced " + dateLabel(templeState.lastChecked);
+    $("petLastSync").textContent = templeState.lastChecked
+      ? "Log synced " + dateLabel(templeState.lastChecked)
+      : "Showing retained confirmations";
     $("syncHelp").textContent =
       "TempleOSRS collection-log records + confirmed manual ownership. Recorded dates are sync records, not proof of the original drop date." +
       (stateUnavailable ? " Owner storage is temporarily unavailable." : "");
@@ -313,6 +335,10 @@ async function refreshAll(force = true) {
     await Promise.allSettled([loadState(), syncKC(force), syncPets(force)]);
     await syncProgress();
     await checkOwner();
+    if (typeof syncGrind === "function") {
+      syncGrind();
+      syncReceipts();
+    }
     $("lastRefresh").textContent =
       ($("lastRefresh").textContent.startsWith("Snapshot:")
         ? $("lastRefresh").textContent + " · "
@@ -429,39 +455,44 @@ function render() {
     " / " +
     CATALOG.length +
     " OWNED";
-  const total = Object.values(metrics)
-    .filter((n) => Number.isFinite(n) && n >= 0)
-    .reduce((a, b) => a + b, 0);
-  $("kcTotal").textContent = Object.keys(metrics).length ? fmt(total) : "—";
+  const bossKC = Object.entries(templeMetrics).filter(
+    ([key]) =>
+      !/^(chambers_of_xeric|theatre_of_blood|tombs_of_amascut)/.test(key),
+  );
+  $("kcTotal").textContent = bossKC.length
+    ? fmt(bossKC.reduce((sum, [, kc]) => sum + kc, 0))
+    : "—";
   renderTarget();
   renderVault();
   renderFeed();
   renderMenagerie();
+  if (typeof renderShowcase === "function") renderShowcase();
 }
 function renderTarget() {
-  const p = pet(serverState.target),
-    kc = kcFor(p),
-    rate = rateFor(p),
+  const target = huntTarget(),
+    p = target.pet,
+    kc = target.kc,
+    rate = target.rate,
     huntKC =
       kc === null ? null : Math.max(0, kc - (Number(serverState.startKC) || 0)),
-    chance = chanceFor(p, kc);
+    chance = target.chance;
   $("targetImage").src = wikifile(p[1]);
   $("targetImage").alt = p[1] + " in-game follower model";
-  $("targetName").textContent = p[2];
+  $("targetName").textContent = target.name;
   $("targetPet").textContent =
     "CHASING: " +
     p[1] +
     (serverState.huntNote ? " · " + serverState.huntNote : "");
   $("targetKC").textContent = kc === null ? "—" : fmt(kc);
   $("targetRate").textContent = rate ? "1 / " + fmtRate(rate) : "VARIES";
-  $("targetRate").title = meta(p).rateText || "";
+  $("targetRate").title = target.rateText || "";
   $("targetChance").textContent =
-    chance === null ? "UNAVAILABLE" : (chance * 100).toFixed(1) + "%";
+    chance === null ? "UNAVAILABLE" : oddsLabel(chance, 1, rate === 1);
   $("targetPercent").textContent =
-    chance === null ? "METHOD / KC REQUIRED" : (chance * 100).toFixed(2) + "%";
+    chance === null ? "METHOD / KC REQUIRED" : oddsLabel(chance, 2, rate === 1);
   $("targetBar").style.width =
     chance === null ? "0%" : Math.min(chance * 100, 100) + "%";
-  $("targetWiki").href = meta(p).wiki || wiki(p[2]);
+  $("targetWiki").href = target.wiki;
   $("targetSummary").textContent =
     kc === null
       ? "NO KC AVAILABLE · MANUAL TRACKING SUPPORTED"
@@ -472,12 +503,16 @@ function renderTarget() {
           ? " · PET ROLL: 1 IN " + fmtRate(rate)
           : " · METHOD-DEPENDENT RATE");
   $("targetRateNote").textContent =
-    (meta(p).rateText || "Rate varies by method") +
-    (!meta(p).rollsPerKC
+    (target.rateText || "Rate varies by method") +
+    (!target.eligible
       ? " · Boss completions are not assumed to equal eligible reward rolls."
       : " · The boss does not owe you the next roll.");
 }
 function renderVault() {
+  const latestPet =
+    typeof confirmedPetDates === "function"
+      ? [...confirmedPetDates()].sort((a, b) => b[1] - a[1])[0]
+      : null;
   const items = CATALOG.filter(
     (p) => filter === "all" || (filter === "owned") === isOwned(p),
   )
@@ -505,7 +540,7 @@ function renderVault() {
           kc = kcFor(p),
           detail = serverState.owned?.[p[0]] || {},
           rate = rateFor(p);
-        return `<article class="pet-tile ${got ? "owned" : "missing"}" data-pet-id="${p[0]}"><button class="pet-detail-button" data-details="${p[0]}" aria-label="Details for ${escaped(p[1])}">View details</button><div class="pet-crown" aria-hidden="true">${got ? "✦" : "◇"}</div><div class="pet-state">${got ? "OWNED" : templeState.complete ? "MISSING" : "NOT CONFIRMED"}</div><div class="pet-art"><div class="trophy-halo"></div><img loading="lazy" decoding="async" width="${meta(p).imageWidth}" height="${meta(p).imageHeight}" src="${meta(p).image}" alt="${escaped(p[1])} in-game follower model"></div><div class="pet-copy"><div class="pet-name">${escaped(p[1])}</div>${petLuckBadge(p)}<div class="pet-boss">${escaped(p[2])}</div><div class="pet-detail">${got && detail.kc !== null && detail.kc !== undefined ? "DROP @ " + fmt(detail.kc) + " KC" : kc !== null ? fmt(kc) + " KC" : escaped(meta(p).category) + " PET"}</div>${meta(p).note ? `<div class="pet-detail">OWNER NOTE · ${escaped(meta(p).note)}</div>` : ""}<div class="pet-provenance">${ownershipSource(p)}</div></div><a class="pet-wiki" href="${meta(p).wiki}" target="_blank" rel="noopener noreferrer" aria-label="${escaped(p[1])} Wiki and drop rates" title="${escaped(meta(p).rateText)}">${rate ? "1 / " + fmtRate(rate) : "METHOD BASED"} <span>↗</span></a></article>`;
+        return `<article class="pet-tile ${got ? "owned" : "missing"}" data-pet-id="${p[0]}"><button class="pet-detail-button" data-details="${p[0]}" aria-label="Details for ${escaped(p[1])}">View details</button><div class="pet-crown" aria-hidden="true">${got ? "✦" : "◇"}</div><div class="pet-state">${latestPet?.[0] === p[0] ? "LATEST VERIFIED DROP · " : ""}${got ? "OWNED" : templeState.complete ? "MISSING" : "NOT CONFIRMED"}</div><div class="pet-art"><div class="trophy-halo"></div><img loading="lazy" decoding="async" width="${meta(p).imageWidth}" height="${meta(p).imageHeight}" src="${meta(p).image}" alt="${escaped(p[1])} in-game follower model"></div><div class="pet-copy"><div class="pet-name">${escaped(p[1])}</div>${petLuckBadge(p)}<div class="pet-boss">${escaped(p[2])}</div><div class="pet-detail">${got && detail.kc !== null && detail.kc !== undefined ? "DROP @ " + fmt(detail.kc) + " KC" : kc !== null ? fmt(kc) + " KC" : escaped(meta(p).category) + " PET"}</div>${meta(p).note ? `<div class="pet-detail">OWNER NOTE · ${escaped(meta(p).note)}</div>` : ""}<div class="pet-provenance">${ownershipSource(p)}</div></div><a class="pet-wiki" href="${meta(p).wiki}" target="_blank" rel="noopener noreferrer" aria-label="${escaped(p[1])} Wiki and drop rates" title="${escaped(meta(p).rateText)}">${rate ? "1 / " + fmtRate(rate) : "METHOD BASED"} <span>↗</span></a></article>`;
       })
       .join("") || '<div class="empty">NO PETS MATCH THE FILTER.</div>';
 }
@@ -539,29 +574,50 @@ function renderRng() {
           ? "Still dry? A reasonable time to screenshot the log."
           : "Still dry? The calculator is taking this personally.";
 }
+let ownerSession = false,
+  editorMode = "all",
+  editorTrigger = null,
+  openedOwnerLink = false;
 async function checkOwner() {
   try {
     const status = await api("auth/status");
     adminAllowed = !!status.allowed;
-    $("editBtn").classList.toggle("hidden", !adminAllowed);
-    if (CAN_EDIT_ORIGIN && status.authenticated && !editable) showEditor();
-    else if (
-      ON_BACKEND &&
-      status.allowed &&
-      new URLSearchParams(location.search).get("edit") === "1" &&
-      $("editorModal").classList.contains("hidden")
-    )
-      openModal();
-  } catch (_) {
-    adminAllowed = false;
+    ownerSession = !!status.authenticated;
+    for (const id of ["editBtn", "editHuntBtn"])
+      $(id)?.classList.toggle("hidden", !adminAllowed);
+    const mode = new URLSearchParams(location.search).get("edit");
+    if (
+      CAN_EDIT_ORIGIN &&
+      adminAllowed &&
+      !openedOwnerLink &&
+      (mode === "1" || mode === "target")
+    ) {
+      openedOwnerLink = true;
+      openModal(mode === "target" ? "target" : "all");
+    }
+  } catch {
+    adminAllowed = ownerSession = false;
+    for (const id of ["editBtn", "editHuntBtn"]) $(id)?.classList.add("hidden");
   }
 }
-function openModal() {
+function openModal(mode = "all") {
   if (!adminAllowed) return;
+  editorMode = mode;
+  editorTrigger = mode === "target" ? $("editHuntBtn") : $("editBtn");
   if (!CAN_EDIT_ORIGIN) {
-    window.open(BACKEND + "/sniffin/?edit=1", "_blank", "noopener");
+    window.open(
+      BACKEND +
+        "/sniffin/?edit=" +
+        (mode === "target" ? "target#huntSection" : "1"),
+      "_blank",
+      "noopener",
+    );
     return;
   }
+  $("editorModal").classList.toggle("target-mode", mode === "target");
+  $("modalTitle").textContent =
+    mode === "target" ? "EDIT TARGET." : "OWNER SETTINGS.";
+  if (ownerSession) return showEditor();
   $("editorModal").classList.remove("hidden");
   $("loginPanel").classList.remove("hidden");
   $("editPanel").classList.add("hidden");
@@ -572,7 +628,7 @@ function openModal() {
 function closeModal() {
   $("editorModal").classList.add("hidden");
   editable = null;
-  $("editBtn").focus();
+  editorTrigger?.focus();
 }
 function showEditor() {
   if (!adminAllowed) return;
@@ -591,7 +647,7 @@ function showEditor() {
   renderEditPets();
   renderEditNotes();
   setupChaseEditor();
-  $("closeModal").focus();
+  (editorMode === "target" ? $("targetSearch") : $("closeModal")).focus();
 }
 function renderEditPets() {
   $("editPets").innerHTML = CATALOG.map((p) => {
@@ -672,7 +728,7 @@ async function save() {
 }
 async function init() {
   try {
-    await loadCatalog();
+    await Promise.all([loadCatalog(), loadBossDirectory()]);
     await initMenagerie();
   } catch (e) {
     $("syncHelp").textContent =
@@ -728,8 +784,19 @@ async function init() {
       );
     renderVault();
   });
+  const showResidents = () => {
+    if (filter !== "owned")
+      document.querySelector('[data-filter="owned"]')?.click();
+  };
+  document
+    .querySelectorAll('a[href="#residents"]')
+    .forEach((link) => link.addEventListener("click", showResidents));
+  window.addEventListener("hashchange", () => {
+    if (location.hash === "#residents") showResidents();
+  });
   $("refreshBtn").onclick = () => refreshAll(true);
-  $("editBtn").onclick = openModal;
+  $("editBtn").onclick = () => openModal();
+  $("editHuntBtn").onclick = () => openModal("target");
   $("closeModal").onclick = closeModal;
   $("modalBackdrop").onclick = closeModal;
   $("pinInput").addEventListener("keydown", (e) => {
@@ -742,6 +809,8 @@ async function init() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ pin: $("pinInput").value }),
       });
+      ownerSession = true;
+      $("pinInput").value = "";
       showEditor();
     } catch (e) {
       $("loginError").textContent = e.message;
@@ -751,6 +820,7 @@ async function init() {
     try {
       await api("auth/logout", { method: "POST" });
     } catch (_) {}
+    ownerSession = false;
     closeModal();
     toast("EDITOR LOCKED");
   };
@@ -790,6 +860,7 @@ async function init() {
     }
   });
   renderRng();
+  if (typeof setupShowcase === "function") setupShowcase();
   render();
   refreshAll(false);
   setInterval(refreshWhenVisible, SYNC_INTERVAL);

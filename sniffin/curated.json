@@ -5,5 +5,49 @@
     "portrait": "User-supplied character portrait: Torva armour, rancour necklace, scythe. Original preserved in media/portrait-original.png.",
     "boss": "Sarachnis in-game model © Jagex, https://oldschool.runescape.wiki/w/File:Sarachnis.png",
     "pets": "Follower renders © Jagex via OSRS Wiki; individual provenance in catalog.json."
-  }
+  },
+  "achievements": [
+    {
+      "id": "max",
+      "title": "Max cape",
+      "image": "max-cape.png",
+      "source": "https://oldschool.runescape.wiki/w/File:Max_cape_detail.png"
+    },
+    {
+      "id": "infernal",
+      "title": "Infernal cape",
+      "image": "infernal-cape.png",
+      "source": "https://oldschool.runescape.wiki/w/File:Infernal_cape_detail.png"
+    },
+    {
+      "id": "quiver",
+      "title": "Dizana's quiver",
+      "image": "dizanas-quiver.png",
+      "source": "https://oldschool.runescape.wiki/w/File:Dizana's_quiver_detail.png"
+    },
+    {
+      "id": "cooking",
+      "title": "200M Cooking XP",
+      "image": "cooking-cape.png",
+      "source": "https://oldschool.runescape.wiki/w/File:Cooking_cape_detail.png"
+    },
+    {
+      "id": "quest",
+      "title": "Quest point cape",
+      "image": "quest-point-cape.png",
+      "source": "https://oldschool.runescape.wiki/w/File:Quest_point_cape_detail.png"
+    },
+    {
+      "id": "diary",
+      "title": "Achievement diary cape",
+      "image": "achievement-diary-cape.png",
+      "source": "https://oldschool.runescape.wiki/w/File:Achievement_diary_cape_detail.png"
+    },
+    {
+      "id": "combat",
+      "title": "Combat Achievements",
+      "image": "ghommals-hilt-6.png",
+      "source": "https://oldschool.runescape.wiki/w/File:Ghommal's_hilt_6_detail.png"
+    }
+  ]
 }

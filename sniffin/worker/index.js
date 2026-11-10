@@ -135,6 +135,18 @@ const TEMPLE_BOSSES = {
   zalcano: "Zalcano",
   zulrah: "Zulrah",
 };
+const SKILLS =
+  "Attack Defence Strength Hitpoints Ranged Prayer Magic Cooking Woodcutting Fletching Fishing Firemaking Crafting Smithing Mining Herblore Agility Thieving Slayer Farming Runecraft Hunter Construction Sailing".split(
+    " ",
+  );
+const HUNT_METHODS = {
+  gauntlet: "the_gauntlet",
+  "corrupted-gauntlet": "the_corrupted_gauntlet",
+};
+const huntMetric = (id, method) =>
+  id === "goa" && Object.hasOwn(HUNT_METHODS, method)
+    ? HUNT_METHODS[method]
+    : PET_METRICS[id];
 const PET_METRICS = {
   "chaos-elemental": "chaos_elemental",
   "baby-mole": "giant_mole",
@@ -335,6 +347,10 @@ async function handle(req, env, ctx) {
     if (path === "state" && req.method === "GET") return json(await state(env));
     if (path === "character" && req.method === "GET")
       return json(await character(req, env, ctx));
+    if (path === "history" && req.method === "GET")
+      return json(await history(url.searchParams.get("kind"), env));
+    if (path === "receipts" && req.method === "GET")
+      return json(await receipts(env));
     if (path === "progress" && req.method === "GET")
       return json({ events: await activity(env) });
     if (path === "hunt" && req.method === "POST") {
@@ -554,7 +570,7 @@ async function temple(req, env, ctx) {
   if (retryAt > Date.now())
     return cached
       ? json({ ...cached, stale: true })
-      : json({ error: "Temple temporarily unavailable; retry shortly" }, 503);
+      : json(await retainedPets(env));
   try {
     const get = async (path) => {
       const res = await fetch("https://templeosrs.com/api/" + path, {
@@ -601,6 +617,9 @@ async function temple(req, env, ctx) {
       { expirationTtl: 60 },
     );
     if (cached) return json({ ...cached, stale: true });
+    const verified = await env.SNIFFIN_KV.get("temple-confirmed-pets", "json");
+    if (verified?.ids?.length)
+      return json({ stale: true, confirmedPetIds: verified.ids });
     return json(
       {
         error:
@@ -686,17 +705,37 @@ const ITEM_PETS = {
 };
 // Progress is separate from curated owner state. IDs deduplicate repeated reads.
 async function activity(env) {
-  return (await env.SNIFFIN_KV.get("hunt-activity", "json")) || [];
+  const values = await Promise.all(
+    [
+      "hunt-activity",
+      "hunt-activity:pet",
+      "hunt-activity:hunt",
+      "hunt-activity:account",
+    ].map((key) => env.SNIFFIN_KV.get(key, "json")),
+  );
+  const events = new Map(
+    values.flatMap((rows) => rows || []).map((e) => [e.id, e]),
+  );
+  return [...events.values()]
+    .sort((a, b) => b.recordedAt - a.recordedAt)
+    .slice(0, 100);
 }
 async function recordEvent(env, event) {
-  const events = await activity(env);
+  const key =
+    "hunt-activity:" +
+    (event.type === "pet"
+      ? "pet"
+      : ["kc", "completed"].includes(event.type)
+        ? "hunt"
+        : "account");
+  const events = (await env.SNIFFIN_KV.get(key, "json")) || [];
   if (events.some((e) => e.id === event.id)) return;
   await env.SNIFFIN_KV.put(
-    "hunt-activity",
+    key,
     JSON.stringify(
       [event, ...events]
         .sort((a, b) => b.recordedAt - a.recordedAt)
-        .slice(0, 24),
+        .slice(0, 100),
     ),
   );
 }
@@ -742,6 +781,17 @@ function normalizeCharacter(payload) {
   return {
     username: RSN,
     metrics,
+    totalLevel: numeric(d.Overall_level),
+    totalXP: numeric(d.Overall),
+    overallRank: numeric(d.Overall_rank) || null,
+    skills: Object.fromEntries(
+      SKILLS.map((name) => [
+        name,
+        { xp: numeric(d[name]), level: numeric(d[name + "_level"]) },
+      ]),
+    ),
+    ehpKey,
+    ehbKey,
     ehp: typeof ehpKey === "string" ? numeric(d[ehpKey]) : null,
     ehb: typeof ehbKey === "string" ? numeric(d[ehbKey]) : null,
     snapshotAt,
@@ -750,7 +800,7 @@ function normalizeCharacter(payload) {
   };
 }
 async function character(req, env, ctx) {
-  const key = "character:" + RSN,
+  const key = "character-v2:" + RSN,
     cached = await env.SNIFFIN_KV.get(key, "json"),
     now = Date.now();
   const window = new URL(req.url).searchParams.has("refresh") ? 60000 : 300000;
@@ -772,7 +822,9 @@ async function character(req, env, ctx) {
     await env.SNIFFIN_KV.put(key, JSON.stringify(result), {
       expirationTtl: 86400,
     });
-    await observeKC(result, env);
+    ctx.waitUntil(
+      Promise.allSettled([observeKC(result, env), observeAccount(result, env)]),
+    );
     return result;
   } catch (error) {
     const result = cached
@@ -793,10 +845,225 @@ async function character(req, env, ctx) {
     return result;
   }
 }
+function templeTime(value) {
+  if (
+    typeof value !== "string" ||
+    !/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(value)
+  )
+    return null;
+  const at = Date.parse(value.replace(" ", "T") + "Z");
+  return Number.isFinite(at) ? at : null;
+}
+async function receipts(env) {
+  const key = "temple-receipts:" + RSN;
+  const prior = (await env.SNIFFIN_KV.get(key, "json")) || {
+    datedItems: {},
+    unlocks: {},
+  };
+  const now = Date.now();
+  if (now < prior.retryAt || now - prior.fetchedAt < 900000) return prior;
+  const get = async (endpoint) => {
+    const res = await fetch(
+      "https://templeosrs.com/api/collection-log/" + endpoint,
+      {
+        headers: {
+          Accept: "application/json",
+          "User-Agent": "PeakPvM-Sniffin/2.0 (peakpvm.com)",
+        },
+        signal: AbortSignal.timeout(12000),
+      },
+    );
+    if (!res.ok) throw Error("Temple receipts " + res.status);
+    return (await res.json()).data;
+  };
+  const [recent, gear] = await Promise.allSettled([
+    get("player_recent_items.php?player=s%20niffin&count=100&onlynotable=1"),
+    get(
+      "player_collection_log.php?player=s%20niffin&categories=inferno,fortis_colosseum&includenames=1&onlyitems=1",
+    ),
+  ]);
+  const datedItems = { ...prior.datedItems },
+    unlocks = { ...prior.unlocks };
+  const recentOk = Array.isArray(recent.value);
+  if (recentOk)
+    for (const item of recent.value) {
+      const id = Number(item.id),
+        at = templeTime(item.date);
+      if (
+        Number.isSafeInteger(id) &&
+        id > 0 &&
+        at &&
+        (!datedItems[id] || datedItems[id] > at)
+      )
+        datedItems[id] = at;
+    }
+  const log = gear.value;
+  const gearOk =
+    Array.isArray(log?.items) &&
+    String(
+      log.player_name_with_capitalization || log.player || "",
+    ).toLowerCase() === RSN;
+  if (gearOk)
+    for (const item of log.items) {
+      const trophy =
+        item.id === 21295
+          ? "infernal"
+          : item.id === 28947 ||
+              /^Dizana.s quiver( \([a-z]+\))?$/i.test(item.name || "")
+            ? "quiver"
+            : null;
+      if (trophy && Number(item.count) > 0) unlocks[trophy] = true;
+    }
+  const result = {
+    datedItems,
+    unlocks,
+    fetchedAt: recentOk && gearOk ? now : prior.fetchedAt,
+    stale: !recentOk || !gearOk,
+    retryAt: now + 300000,
+  };
+  await env.SNIFFIN_KV.put(key, JSON.stringify(result));
+  return result;
+}
+async function history(kind, env) {
+  if (!["skills", "bosses", "rank"].includes(kind))
+    return { unavailable: true };
+  const key = "history:" + kind + ":" + RSN;
+  const cached = await env.SNIFFIN_KV.get(key, "json");
+  if (kind === "rank") return cached || { rows: [] };
+  const now = Date.now();
+  if (cached && (now - cached.fetchedAt < 900000 || cached.retryAt > now))
+    return cached;
+  try {
+    const res = await fetch(
+      "https://templeosrs.com/api/player_datapoints.php?player=" +
+        encodeURIComponent(RSN) +
+        "&time=100000000" +
+        (kind === "bosses" ? "&bosses=1" : ""),
+      {
+        headers: {
+          Accept: "application/json",
+          "User-Agent": "PeakPvM-Sniffin/2.0 (peakpvm.com)",
+        },
+        signal: AbortSignal.timeout(12000),
+      },
+    );
+    if (!res.ok) throw Error("Temple history " + res.status);
+    const payload = await res.json();
+    if (
+      !payload?.data ||
+      typeof payload.data !== "object" ||
+      Array.isArray(payload.data)
+    )
+      throw Error("Invalid history");
+    const fields =
+      kind === "skills"
+        ? [
+            "Overall",
+            ...SKILLS,
+            "Ehp",
+            "im_ehp",
+            "uim_ehp",
+            "f2p_ehp",
+            "lvl3_ehp",
+            "1def_ehp",
+          ]
+        : [
+            ...Object.values(TEMPLE_BOSSES),
+            "Ehb",
+            "Ehb_im",
+            "Ehb_uim",
+            "Ehb_1def",
+          ];
+    const rows = Object.entries(payload.data)
+      .flatMap(([date, values]) => {
+        const at = templeTime(date);
+        if (!at || !values || typeof values !== "object") return [];
+        const data = Object.fromEntries(
+          fields
+            .filter((f) => Number.isFinite(values[f]) && values[f] >= 0)
+            .map((f) => [f, values[f]]),
+        );
+        return Object.keys(data).length ? [[at, data]] : [];
+      })
+      .sort((a, b) => a[0] - b[0])
+      .slice(-250);
+    if (!rows.length) throw Error("No Temple datapoints");
+    const result = { rows, fetchedAt: now };
+    await env.SNIFFIN_KV.put(key, JSON.stringify(result), {
+      expirationTtl: 604800,
+    });
+    return result;
+  } catch {
+    const result = {
+      rows: [],
+      unavailable: true,
+      ...cached,
+      stale: true,
+      retryAt: now + 300000,
+    };
+    await env.SNIFFIN_KV.put(key, JSON.stringify(result), {
+      expirationTtl: 604800,
+    });
+    return result;
+  }
+}
+async function observeAccount(snapshot, env) {
+  const key = "history:rank:" + RSN;
+  const archive = (await env.SNIFFIN_KV.get(key, "json")) || { rows: [] };
+  const at = templeTime(snapshot.snapshotAt);
+  if (!at || (archive.rows.at(-1)?.[0] ?? 0) >= at) return;
+  const previous = archive.observed,
+    xp = snapshot.totalXP;
+  const skillXP = Object.fromEntries(
+    SKILLS.flatMap((name) =>
+      Number.isFinite(snapshot.skills[name]?.xp)
+        ? [[name, snapshot.skills[name].xp]]
+        : [],
+    ),
+  );
+  const oldSkills = {
+    ...previous?.skills,
+    ...(Number.isFinite(previous?.cooking) &&
+    previous?.skills?.Cooking === undefined
+      ? { Cooking: previous.cooking }
+      : {}),
+  };
+  const observed = {
+    xp: xp ?? previous?.xp,
+    skills: { ...oldSkills, ...skillXP },
+  };
+  if (previous && Number.isFinite(xp) && Number.isFinite(previous.xp)) {
+    const milestone = Math.floor(xp / 100000000) * 100000000;
+    if (previous.xp < milestone && milestone > 0)
+      await recordEvent(env, {
+        id: "xp:" + milestone,
+        type: "xp",
+        value: milestone,
+        recordedAt: at,
+      });
+  }
+  for (const [name, xp] of Object.entries(skillXP)) {
+    if (
+      Number.isFinite(oldSkills[name]) &&
+      oldSkills[name] < 200000000 &&
+      xp === 200000000
+    )
+      await recordEvent(env, {
+        id: name === "Cooking" ? "cooking:200m" : "skill:200m:" + name,
+        type: "skill",
+        skill: name,
+        recordedAt: at,
+      });
+  }
+  const rows = [...archive.rows, [at, { Rank: snapshot.overallRank }]].slice(
+    -365,
+  );
+  await env.SNIFFIN_KV.put(key, JSON.stringify({ rows, observed }));
+}
 async function observeKC(snapshot, env) {
   const saved = await state(env),
     hunt = currentHunt(saved),
-    metric = PET_METRICS[hunt.petId],
+    metric = huntMetric(hunt.petId, hunt.method),
     kc = snapshot.metrics[metric];
   if (
     hunt.status !== "active" ||
@@ -808,6 +1075,7 @@ async function observeKC(snapshot, env) {
     return;
   const key = "hunt-progress:" + hunt.id,
     previous = await env.SNIFFIN_KV.get(key, "json");
+  if (previous && kc <= previous.kc) return;
   const milestone = Math.floor((kc - hunt.startKC) / 500) * 500;
   if (
     previous &&
@@ -826,12 +1094,21 @@ async function observeKC(snapshot, env) {
     });
   await env.SNIFFIN_KV.put(key, JSON.stringify({ kc, milestone }));
 }
+async function retainedPets(env) {
+  const verified = await env.SNIFFIN_KV.get("temple-confirmed-pets", "json");
+  return { stale: true, confirmedPetIds: verified?.ids || [] };
+}
 async function observePets(log, oldCache, env) {
   const key = "temple-confirmed-pets";
   const prior = await env.SNIFFIN_KV.get(key, "json");
   const positives = (rows) =>
     (rows || [])
-      .filter((i) => Number(i.count) > 0 && ITEM_PETS[i.id])
+      .filter(
+        (i) =>
+          Number(i.count) > 0 &&
+          Number.isSafeInteger(Number(i.id)) &&
+          Number(i.id) > 0,
+      )
       .map((i) => Number(i.id));
   const baseline = prior?.ids || positives(oldCache?.collection?.data?.items),
     current = positives(log.data.items);
@@ -841,7 +1118,8 @@ async function observePets(log, oldCache, env) {
       await recordEvent(env, {
         id: "pet:" + id,
         type: "pet",
-        petId: ITEM_PETS[id],
+        petId: ITEM_PETS[id] || null,
+        templeItemId: id,
         recordedAt: Date.now(),
         sourceAt: log.data.last_checked,
       });
@@ -870,13 +1148,14 @@ async function changeHunt(input, req, env, ctx) {
   next.hunts = Array.isArray(saved.hunts) ? saved.hunts.slice() : [];
   const snapshot = await character(req, env, ctx);
   const fallback = await env.SNIFFIN_KV.get("wom:" + RSN, "json");
-  const getKC = (id) => {
-    const n = snapshot.metrics?.[PET_METRICS[id]];
+  const getKC = (id, method) => {
+    const metric = huntMetric(id, method);
+    const n = snapshot.metrics?.[metric];
     if (validKC(n)) return n;
-    const wom = fallback?.data?.latestSnapshot?.data?.bosses?.[PET_METRICS[id]];
+    const wom = fallback?.data?.latestSnapshot?.data?.bosses?.[metric];
     if (validKC(wom?.kills) && !(wom.kills === 0 && wom.rank === -1))
       return wom.kills;
-    return validKC(saved.manualKC?.[id]) ? saved.manualKC[id] : null;
+    return !method && validKC(saved.manualKC?.[id]) ? saved.manualKC[id] : null;
   };
   function close(status) {
     if (hunt.status !== "active")
@@ -900,7 +1179,7 @@ async function changeHunt(input, req, env, ctx) {
       ...hunt,
       status,
       endedAt: now,
-      endKC: getKC(hunt.petId),
+      endKC: getKC(hunt.petId, hunt.method),
       acquisitionKC: status === "completed" ? acquisitionKC : null,
       acquisitionDate:
         status === "completed" ? input.acquisitionDate || null : null,
@@ -932,14 +1211,49 @@ async function changeHunt(input, req, env, ctx) {
     (newTarget && !Object.hasOwn(PET_METRICS, newTarget))
   )
     throw Error("Unknown target pet");
+  const rawMethod =
+    input.action === "complete" ? input.nextMethod : input.method;
+  const method = rawMethod || (newTarget === "goa" ? "gauntlet" : null);
+  if (method && (newTarget !== "goa" || !Object.hasOwn(HUNT_METHODS, method)))
+    throw Error("Invalid activity for this pet");
   let baseline = null;
   if (newTarget) {
     baseline =
       input.startKC === null || input.startKC === undefined
-        ? getKC(newTarget)
+        ? getKC(newTarget, method)
         : input.startKC;
     if (baseline !== null && !validKC(baseline))
       throw Error("Invalid starting KC");
+  }
+  const effectiveMethod = (id, value) =>
+    id === "goa" ? value || "gauntlet" : null;
+  if (
+    input.action === "start" &&
+    hunt.status === "active" &&
+    hunt.petId === newTarget &&
+    effectiveMethod(newTarget, hunt.method) ===
+      effectiveMethod(newTarget, method) &&
+    !input.restart
+  ) {
+    next.hunt = { ...hunt, method: method || null, startKC: baseline };
+    next.startKC = baseline ?? 0;
+    next.huntNote = String(input.note || "").slice(0, 140);
+    next.updatedAt = Math.max(now, Number(saved.updatedAt || 0) + 1);
+    await env.SNIFFIN_KV.put("site-state", JSON.stringify(next));
+    if (hunt.startKC !== baseline) {
+      const kc = getKC(newTarget, method);
+      if (kc !== null)
+        await env.SNIFFIN_KV.put(
+          "hunt-progress:" + hunt.id,
+          JSON.stringify({
+            kc,
+            milestone: validKC(baseline)
+              ? Math.floor(Math.max(0, kc - baseline) / 500) * 500
+              : 0,
+          }),
+        );
+    }
+    return next;
   }
   let closed;
   if (input.action === "end") closed = close("ended");
@@ -949,6 +1263,7 @@ async function changeHunt(input, req, env, ctx) {
     next.hunt = {
       id: crypto.randomUUID(),
       petId: newTarget,
+      method: method || null,
       status: "active",
       startKC: baseline,
       startedAt: now,
@@ -960,7 +1275,7 @@ async function changeHunt(input, req, env, ctx) {
   next.updatedAt = Math.max(now, Number(saved.updatedAt || 0) + 1);
   await env.SNIFFIN_KV.put("site-state", JSON.stringify(next));
   if (newTarget) {
-    const kc = getKC(newTarget);
+    const kc = getKC(newTarget, method);
     if (kc !== null)
       await env.SNIFFIN_KV.put(
         "hunt-progress:" + next.hunt.id,

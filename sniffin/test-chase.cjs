@@ -16,6 +16,13 @@ const minimalStats = {
     date: "2026-11-08 14:31:48",
     Ehp: 1404.4026,
     Ehb: 409.3358,
+    Overall: 725855885,
+    Overall_level: 2376,
+    Overall_rank: 15000,
+    Cooking: 200000000,
+    Cooking_level: 99,
+    "The Gauntlet": 24,
+    "The Corrupted Gauntlet": 229,
     Sarachnis: 590,
     "Giant Mole": 2211,
     Vorkath: 1172,
@@ -60,6 +67,36 @@ global.fetch = async (url) => {
     return statsFailure
       ? new Response("rate limited", { status: 429 })
       : Response.json(stats);
+  if (String(url).includes("player_datapoints.php"))
+    return Response.json({
+      data: {
+        "2026-11-08 14:31:48": {
+          Overall: 725855885,
+          Ehp: 1404.4026,
+          "The Corrupted Gauntlet": 229,
+        },
+        "2026-11-07 14:30:00": {
+          Overall: 724855885,
+          Ehp: 1404,
+          "The Corrupted Gauntlet": 220,
+        },
+        "malformed date": { Overall: 1 },
+      },
+    });
+  if (String(url).includes("player_recent_items.php"))
+    return Response.json({
+      data: [{ id: 12646, date: "2026-11-06 19:05:01" }],
+    });
+  if (String(url).includes("categories=inferno"))
+    return Response.json({
+      data: {
+        player: "s niffin",
+        items: [
+          { id: 28947, count: 1 },
+          { id: 21295, count: 0 },
+        ],
+      },
+    });
   if (String(url).includes("player_collection_log.php"))
     return collectionFailure
       ? new Response("unavailable", { status: 503 })
@@ -183,7 +220,7 @@ global.fetch = async (url) => {
   };
   assert.equal((await act("start", { petId: "not-a-pet" })).status, 400);
   saved = await (
-    await act("start", { petId: "sraracha", startKC: null })
+    await act("start", { petId: "sraracha", startKC: null, restart: true })
   ).json();
   assert.equal(saved.hunt.status, "active");
   assert.equal(
@@ -194,7 +231,7 @@ global.fetch = async (url) => {
   assert.ok(saved.hunt.startedAt);
   const firstHuntId = saved.hunt.id;
   stats.data.Sarachnis = 1100;
-  kv.delete("character:s niffin");
+  kv.delete("character-v2:s niffin");
   await get("character");
   const kcEvents = (await get("progress")).events.filter(
     (e) => e.type === "kc",
@@ -229,15 +266,15 @@ global.fetch = async (url) => {
   assert.equal(outage.stale, true);
   assert.ok(outage.confirmedPetIds.includes(23495));
   collectionFailure = false;
-  const characterCached = JSON.parse(kv.get("character:s niffin"));
+  const characterCached = JSON.parse(kv.get("character-v2:s niffin"));
   characterCached.fetchedAt = Date.now() - 600000;
-  kv.set("character:s niffin", JSON.stringify(characterCached));
+  kv.set("character-v2:s niffin", JSON.stringify(characterCached));
   statsFailure = true;
   const staleStats = await get("character");
   assert.equal(staleStats.stale, true);
   assert.equal(staleStats.ehp, 1404.4026);
   statsFailure = false;
-  kv.delete("character:s niffin");
+  kv.delete("character-v2:s niffin");
   const wrong = structuredClone(stats);
   stats = {
     ...wrong,
@@ -254,7 +291,7 @@ global.fetch = async (url) => {
   assert.equal(rejected.unavailable, true);
   assert.deepEqual(rejected.metrics, {});
   stats = wrong;
-  kv.delete("character:s niffin");
+  kv.delete("character-v2:s niffin");
   await get("character");
   assert.equal(
     (await act("complete", { acquisitionKC: 100 })).status,
@@ -344,8 +381,70 @@ global.fetch = async (url) => {
     (await get("progress")).events.filter((e) => e.type === "completed").length,
     2,
   );
+  assert.equal(
+    (await act("start", { petId: "sraracha", method: "corrupted-gauntlet" }))
+      .status,
+    400,
+  );
+  saved = await (
+    await act("start", { petId: "goa", method: "corrupted-gauntlet" })
+  ).json();
+  assert.equal(saved.hunt.startKC, 229);
+  const corrupted = saved.hunt.id;
+  saved = await (
+    await act("start", {
+      petId: "goa",
+      method: "corrupted-gauntlet",
+      startKC: 200,
+      note: "Recorded baseline",
+    })
+  ).json();
+  assert.equal(saved.hunt.id, corrupted);
+  assert.equal((await get("state")).hunt.startKC, 200);
+  saved = await (
+    await act("start", { petId: "goa", method: "gauntlet" })
+  ).json();
+  assert.equal(saved.hunt.startKC, 24);
+  assert.equal(saved.hunts.find((h) => h.id === corrupted).endKC, 229);
+  const keeper = await get("character");
+  assert.equal(keeper.totalXP, 725855885);
+  assert.equal(keeper.skills.Cooking.xp, 200000000);
+  assert.equal(keeper.overallRank, 15000);
+  assert.equal((await get("history?kind=rank")).rows[0][1].Rank, 15000);
+  const history = (await get("history?kind=skills")).rows;
+  assert.equal(history.length, 2);
+  assert.ok(history[0][0] < history[1][0]);
+  assert.equal(history[1][1].Overall, 725855885);
+  assert.equal(history[1][1]["The Corrupted Gauntlet"], undefined);
+  assert.equal(
+    (await get("history?kind=bosses")).rows[1][1]["The Corrupted Gauntlet"],
+    229,
+  );
+  assert.equal((await get("history?kind=not-supported")).unavailable, true);
+  const receipts = await get("receipts");
+  assert.equal(receipts.unlocks.quiver, true);
+  assert.equal(receipts.unlocks.infernal, undefined);
+  assert.equal(receipts.datedItems[12646], Date.parse("2026-11-06T19:05:01Z"));
+  kv.delete("temple:s niffin");
+  collectionFailure = true;
+  assert.ok((await get("temple")).confirmedPetIds.includes(23495));
+  for (let i = 0; i < 6; i++)
+    assert.equal(
+      (
+        await send("auth/login", {
+          method: "POST",
+          body: { pin: "wrong-test-pin" },
+        })
+      ).status,
+      401,
+    );
+  assert.equal(
+    (await send("auth/login", { method: "POST", body: { pin: "test-only" } }))
+      .status,
+    429,
+  );
   console.log(
-    "PASS: Temple primary stats and exact identity; unranked zeros; initial/changed/duplicate/failed pet syncs; significant KC events; rate-limit/stale/wrong-player fallback; protected hunt start/change/end/complete/next; preserved history and notes; unknown acquisition data; replay and cross-origin restrictions.",
+    "PASS: Keeper totals and ranks, validated snapshot history, dated receipts, durable outage ownership, separate Gauntlet counters, editable baselines, PIN lockout. Temple primary stats and exact identity; unranked zeros; initial/changed/duplicate/failed pet syncs; significant KC events; rate-limit/stale/wrong-player fallback; protected hunt start/change/end/complete/next; preserved history and notes; unknown acquisition data; replay and cross-origin restrictions.",
   );
 })()
   .catch((error) => {

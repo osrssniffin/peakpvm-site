@@ -40,20 +40,47 @@ const previewStats = {
     date: "2026-01-01 12:00:00",
     Ehp: previewData.character.ehp,
     Ehb: previewData.character.ehb,
+    Overall: 725000000,
+    Overall_level: 2376,
+    Overall_rank: 15000,
+    Cooking: 200000000,
+    Cooking_level: 99,
+    "The Gauntlet": 24,
+    "The Corrupted Gauntlet": 229,
     Sarachnis: 590,
     "Giant Mole": 120,
     Vorkath: 2500,
     Kraken: 3000,
   },
 };
+const previewHistory = {
+  data: Object.fromEntries(
+    [0, 3, 8, 20, 45].map((day, i) => [
+      new Date(Date.now() - day * 86400000)
+        .toISOString()
+        .slice(0, 19)
+        .replace("T", " "),
+      {
+        Overall: 725000000 - i * 500000,
+        Ehp: 1400 - i * 2,
+        Ehb: 400 - i,
+        Sarachnis: 590 - i * 35,
+        "The Corrupted Gauntlet": 229 - i * 5,
+        Cooking: 200000000,
+      },
+    ]),
+  ),
+};
 const previewWorkerSource =
   "const PREVIEW_STATS=" +
   JSON.stringify(previewStats) +
+  ";const PREVIEW_HISTORY=" +
+  JSON.stringify(previewHistory) +
   ";const PREVIEW_TEMPLE=" +
   JSON.stringify(previewData.temple) +
   ";const PREVIEW_WOM=" +
   JSON.stringify(previewData.wom) +
-  ';const fetch=async url=>Response.json(url.includes("player_stats.php")?PREVIEW_STATS:url.includes("player_collection_log.php")?PREVIEW_TEMPLE.collection:url.includes("pet_count.php")?{error:{message:"Fixture has no rank"}}:PREVIEW_WOM);\n' +
+  ';const fetch=async url=>Response.json(url.includes("player_stats.php")?PREVIEW_STATS:url.includes("player_datapoints.php")?PREVIEW_HISTORY:url.includes("player_recent_items.php")?{data:[]}:url.includes("player_collection_log.php")?PREVIEW_TEMPLE.collection:url.includes("pet_count.php")?{error:{message:"Fixture has no rank"}}:PREVIEW_WOM);\n' +
   fs.readFileSync(path.join(__dirname, "../worker/index.js"), "utf8");
 const previewWorker = import(
   "data:text/javascript;base64," +

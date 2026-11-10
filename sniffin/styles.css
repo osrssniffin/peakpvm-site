@@ -1988,3 +1988,252 @@ footer p {
   margin: 0;
   color: var(--gold);
 }
+
+/* Keeper additions; the resident cards retain their existing finish. */
+.keeper,
+.archive-panel,
+.archive-details,
+.ledger-counter {
+  border: 1px solid #372d24;
+  background: #15110f;
+}
+.keeper-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.4rem;
+  padding: 1.2rem 1.5rem;
+}
+.keeper h2 {
+  margin: 0.18rem 0 0;
+  font-size: clamp(1.7rem, 4vw, 2.8rem);
+  line-height: 1;
+}
+.keeper h2 em,
+.keeper-metrics b,
+.ledger-counter strong {
+  color: #e6c285;
+}
+.keeper-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.6rem;
+}
+.keeper-metrics span {
+  display: grid;
+  gap: 0.18rem;
+}
+.keeper-metrics small,
+.ledger-counter small,
+.ledger-counter span {
+  font-size: 0.69rem;
+  letter-spacing: 0.09em;
+  color: #c6b7a5;
+}
+.keeper-metrics b,
+.ledger-counter strong {
+  font-size: clamp(1.15rem, 3vw, 1.5rem);
+  font-variant-numeric: tabular-nums;
+}
+.keeper .stat-strip {
+  margin: 0;
+}
+.archive-panel {
+  padding: clamp(0.9rem, 3vw, 1.6rem);
+}
+.archive-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 0.75rem 1rem;
+}
+.archive-controls label,
+.grind-picker {
+  display: grid;
+  min-width: 0;
+  gap: 0.4rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  color: #dfc6a4;
+}
+.archive-controls input,
+.archive-controls select {
+  color: #f0e7db;
+  border: 1px solid #514239;
+  background: #0f0d0c;
+  padding: 0.55rem 0.65rem;
+  max-width: min(68vw, 22rem);
+  min-height: 40px;
+  font: inherit;
+  letter-spacing: normal;
+  font-size: 0.9rem;
+}
+.archive-details {
+  margin-top: 0.85rem;
+}
+.archive-details summary {
+  cursor: pointer;
+  padding: 0.9rem 1rem;
+  min-height: 44px;
+  color: #e6c285;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+.archive-details summary span {
+  color: #c3b4a3;
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: normal;
+  margin-left: 0.6rem;
+}
+.archive-details > :not(summary) {
+  margin: 0.6rem 1rem 1rem;
+}
+.hunt-tools .section {
+  margin-top: 1.5rem;
+}
+.grind-picker[hidden] {
+  display: none;
+}
+.grind-picker {
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  margin-top: 0.8rem;
+}
+.grind-picker input {
+  width: 100%;
+  accent-color: #d3a962;
+}
+#grindPlot svg {
+  width: 100%;
+  max-height: 260px;
+  display: block;
+}
+#grindPlot path {
+  fill: none;
+  stroke: #46382e;
+  vector-effect: non-scaling-stroke;
+}
+#grindPlot circle {
+  fill: #c69b5e;
+  cursor: pointer;
+}
+#grindPlot circle:hover,
+#grindPlot circle.selected {
+  fill: #ffdf97;
+  stroke: #fff2d7;
+  stroke-width: 2;
+}
+.grind-dates {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.4rem;
+  color: #c6b7a5;
+  font-size: 0.75rem;
+}
+#grindReading {
+  display: block;
+  color: #e6c285;
+  font-size: 0.88rem;
+  margin-top: 0.4rem;
+}
+.ledger-featured {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+.ledger-counter {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 5rem;
+  padding: 0.65rem;
+}
+.ledger-counter img {
+  width: 50px;
+  height: 60px;
+  object-fit: contain;
+}
+.ledger-counter small {
+  display: block;
+  margin-bottom: 0.2rem;
+}
+.ledger-link {
+  cursor: pointer;
+  background: transparent;
+  color: #e6c285;
+  border: 0;
+  min-height: 40px;
+  text-decoration: underline;
+  white-space: nowrap;
+}
+.keeper-trophy img {
+  width: 96px;
+  height: 96px;
+  object-fit: contain;
+}
+.target-picker {
+  margin-bottom: 0.85rem;
+}
+.target-preview {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  min-height: 86px;
+  padding: 0.55rem;
+  border: 1px solid #4b382a;
+  background: #15110f;
+  margin-top: 0.45rem;
+}
+.target-preview img {
+  width: 80px;
+  height: 78px;
+  object-fit: contain;
+}
+.target-preview small {
+  display: block;
+  color: #d6c3a7;
+  margin-top: 0.25rem;
+}
+.target-mode #editPanel .owner-pet-details,
+.target-mode #editPanel .edit-subhead,
+.target-mode #editNotes,
+.target-mode #addNoteBtn,
+.target-mode #editPanel .modal-actions,
+.target-mode #endChase,
+.target-mode #completeChase,
+.target-mode #chaseControls .edit-grid,
+.target-mode #chaseControls > .modal-help:not(#editorHuntStatus),
+.target-mode #editPanel > .edit-grid > label:first-child {
+  display: none;
+}
+#cancelTarget {
+  display: none;
+}
+.target-mode #cancelTarget {
+  display: inline-flex;
+  margin-top: 0.5rem;
+}
+.feed-copy strong {
+  display: block;
+}
+@media (max-width: 680px) {
+  .ledger-featured {
+    grid-template-columns: 1fr;
+  }
+  .ledger-counter {
+    min-height: 3.6rem;
+  }
+  .ledger-counter img {
+    height: 42px;
+  }
+  .keeper-heading {
+    padding: 0.95rem;
+  }
+}
+
+.residents-anchor {
+  display: block;
+  scroll-margin-top: 7rem;
+}

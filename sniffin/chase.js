@@ -30,20 +30,132 @@ function activeHunt() {
     }
   );
 }
+const CHASE_METHODS = {
+  gauntlet: { metric: "the_gauntlet", name: "The Gauntlet", rate: 2000 },
+  "corrupted-gauntlet": {
+    metric: "the_corrupted_gauntlet",
+    name: "Corrupted Gauntlet",
+    rate: 800,
+  },
+};
+let bossDirectory = { bosses: {}, art: {} };
+async function loadBossDirectory() {
+  try {
+    const result = await fetch("./bosses.json?v=keeper-1");
+    if (result.ok) bossDirectory = await result.json();
+  } catch {}
+}
+function huntTarget(id = serverState.target, method = activeHunt().method) {
+  const p = pet(id),
+    variant = id === "goa" ? CHASE_METHODS[method] : null;
+  const metric = variant?.metric || p[3],
+    name = variant?.name || p[2];
+  const kc = variant ? (metrics[metric] ?? null) : kcFor(p);
+  const rate = variant?.rate ?? rateFor(p),
+    eligible = !!variant || modelEligible(p);
+  const boss = bossDirectory.art[metric];
+  const builtIn =
+    id === "sraracha"
+      ? { file: "sarachnis.png", label: "Sarachnis" }
+      : variant
+        ? {
+            file:
+              method === "gauntlet"
+                ? "crystalline-hunllef.png"
+                : "corrupted-hunllef.png",
+            label: name,
+          }
+        : null;
+  const render = boss || builtIn;
+  return {
+    pet: p,
+    method: variant ? method : null,
+    metric,
+    name,
+    kc,
+    rate,
+    eligible,
+    chance: eligible ? probability(kc, rate) : null,
+    rateText: variant
+      ? "1 in " + fmtRate(rate) + " per successful " + name + " completion"
+      : meta(p).rateText,
+    wiki: variant
+      ? wiki(name === "Corrupted Gauntlet" ? "The Corrupted Gauntlet" : name)
+      : meta(p).wiki || wiki(p[2]),
+    image: render ? "./media/" + render.file : meta(p).image,
+    imageLabel: render
+      ? render.label + " in-game boss model"
+      : p[1] + " follower render (boss artwork unavailable)",
+    paceId: variant ? id + ":" + method : id,
+  };
+}
+function chaseOptions() {
+  return CATALOG.flatMap((p) =>
+    p[0] === "goa"
+      ? Object.keys(CHASE_METHODS).map((method) => ({
+          id: p[0],
+          method,
+          value: p[0] + ":" + method,
+          name: CHASE_METHODS[method].name + " — " + p[1],
+        }))
+      : [{ id: p[0], method: null, value: p[0], name: p[2] + " — " + p[1] }],
+  ).sort((a, b) => a.name.localeCompare(b.name));
+}
+function parseChase(value) {
+  const [id, method] = (value || "").split(":");
+  return { id, method: method || null };
+}
+function selectedChase() {
+  const { id, method } = parseChase($("editTarget").value);
+  return id ? huntTarget(id, method) : null;
+}
+function showTargetPreview() {
+  const target = selectedChase();
+  $("targetPreview").innerHTML = target
+    ? '<img alt="' +
+      escaped(target.imageLabel) +
+      '" src="' +
+      escaped(target.image) +
+      '"><div><strong>' +
+      escaped(target.name) +
+      "</strong><small>" +
+      escaped(target.pet[1]) +
+      " · " +
+      (target.kc === null ? "KC unavailable" : fmt(target.kc) + " current KC") +
+      "</small><small>" +
+      escaped(target.rateText || "Rate depends on method") +
+      "</small></div>"
+    : "<p>No matching boss or pet.</p>";
+  $("startChase").disabled = !target;
+}
+function fillTargetPicker(query = "", preferred = "") {
+  const options = chaseOptions().filter((row) =>
+    row.name.toLowerCase().includes(query.trim().toLowerCase()),
+  );
+  $("editTarget").innerHTML = options
+    .map(
+      (row) =>
+        '<option value="' + row.value + '">' + escaped(row.name) + "</option>",
+    )
+    .join("");
+  if (options.some((row) => row.value === preferred))
+    $("editTarget").value = preferred;
+  showTargetPreview();
+}
 function mergeBossMetrics() {
   metrics =
     characterState.stale && syncOk
       ? { ...templeMetrics, ...womMetrics }
       : { ...womMetrics, ...templeMetrics };
 }
-function kcSourceFor(p) {
+function kcSourceFor(p, metric = p[3], kc = kcFor(p)) {
   if (
-    templeMetrics[p[3]] !== undefined &&
-    (!characterState.stale || !syncOk || womMetrics[p[3]] === undefined)
+    templeMetrics[metric] !== undefined &&
+    (!characterState.stale || !syncOk || womMetrics[metric] === undefined)
   )
     return "TempleOSRS";
-  if (womMetrics[p[3]] !== undefined) return "Wise Old Man fallback";
-  return kcFor(p) !== null ? "Owner record" : null;
+  if (womMetrics[metric] !== undefined) return "Wise Old Man fallback";
+  return kc !== null ? "Owner record" : null;
 }
 async function syncCharacter(force = false) {
   try {
@@ -126,16 +238,18 @@ function templePetRank() {
 function renderChase() {
   renderCharacterHeader();
   const hunt = activeHunt(),
-    p = pet(serverState.target),
-    kc = kcFor(p),
+    target = huntTarget(),
+    p = target.pet,
+    kc = target.kc,
     start = hunt.startKC;
   const gained =
     Number.isInteger(start) && kc !== null && kc >= start ? kc - start : null;
   $("huntStartKC").textContent = Number.isInteger(start) ? fmt(start) : "—";
   $("huntGainedKC").textContent = gained === null ? "—" : fmt(gained);
-  $("huntSource").textContent = kcSourceFor(p)
-    ? kcSourceFor(p) +
-      (characterState.stale && kcSourceFor(p) === "TempleOSRS"
+  $("huntSource").textContent = kcSourceFor(p, target.metric, kc)
+    ? kcSourceFor(p, target.metric, kc) +
+      (characterState.stale &&
+      kcSourceFor(p, target.metric, kc) === "TempleOSRS"
         ? " · cached"
         : "")
     : "";
@@ -149,7 +263,7 @@ function renderChase() {
         : "NO ACTIVE CHASE";
   if (hunt.status !== "active") {
     $("targetName").textContent = "NO ACTIVE CHASE";
-    $("targetPet").textContent = "LAST TARGET: " + p[2] + " // " + p[1];
+    $("targetPet").textContent = "LAST TARGET: " + target.name + " // " + p[1];
     $("heroHuntLabel").textContent = "NO ACTIVE CHASE";
     $("targetSummary").textContent =
       "Last hunt " +
@@ -178,6 +292,7 @@ function acquisitionFor(p) {
     );
   if (completed)
     return {
+      method: completed.method,
       kc: completed.acquisitionKC,
       rolls:
         Number.isInteger(completed.startKC) &&
@@ -193,9 +308,10 @@ function acquisitionFor(p) {
   if (record) return { kc: record.kc };
   return null;
 }
-function recordedLuck(p, kc) {
-  if (!modelEligible(p)) return null;
-  const chance = probability(kc, rateFor(p));
+function recordedLuck(p, kc, method = null) {
+  const target = huntTarget(p[0], method);
+  if (!target.eligible) return null;
+  const chance = probability(kc, target.rate);
   if (chance === null) return null;
   const label =
     chance <= 0.01
@@ -211,7 +327,9 @@ function recordedLuck(p, kc) {
 }
 function petLuckBadge(p) {
   const record = isOwned(p) ? acquisitionFor(p) : null,
-    luck = record ? recordedLuck(p, record.rolls ?? record.kc) : null;
+    luck = record
+      ? recordedLuck(p, record.rolls ?? record.kc, record.method)
+      : null;
   return luck?.label
     ? '<div class="pet-detail luck-label">' + luck.label + "</div>"
     : "";
@@ -220,11 +338,21 @@ function petRecordDetails(p) {
   if (!isOwned(p)) return "";
   const record = acquisitionFor(p),
     note = serverState.petNotes?.[p[0]] || serverState.owned?.[p[0]]?.note;
-  const luck = record ? recordedLuck(p, record.rolls ?? record.kc) : null;
+  const luck = record
+    ? recordedLuck(p, record.rolls ?? record.kc, record.method)
+    : null;
+  const date =
+    typeof confirmedPetDates === "function"
+      ? confirmedPetDates().get(p[0])
+      : null;
   return (
     (record
       ? `<p class="pet-acquisition">RECORDED ACQUISITION: <strong>${fmt(record.kc)} KC</strong>${luck ? `<br>${luck.label ? '<b class="luck-label">' + luck.label + "</b> · " : ""}${(luck.chance * 100).toFixed(2)}% base-model chance ${record.hunt ? "in " + fmt(record.rolls) + " recorded hunt kills" : "by this KC"}` : ""}</p>`
-      : "") + (note ? `<p class="pet-personal-note">${escaped(note)}</p>` : "")
+      : "") +
+    (date
+      ? "<p>Temple acquisition record: " + escaped(snapshotDate(date)) + "</p>"
+      : "") +
+    (note ? `<p class="pet-personal-note">${escaped(note)}</p>` : "")
   );
 }
 function renderHuntArchive() {
@@ -240,66 +368,155 @@ function renderHuntArchive() {
       const p = CATALOG.find((p) => p[0] === h.petId);
       if (!p) return "";
       const end = h.status === "completed" ? h.acquisitionKC : h.endKC;
-      return `<article class="hunt-history-row"><div><strong>${escaped(p[1])}</strong><small>${h.status === "completed" ? "COMPLETED" : "ENDED"}${h.acquisitionDate ? " · ACQUIRED " + escaped(h.acquisitionDate) : ""}</small></div><span>${Number.isInteger(h.startKC) ? fmt(h.startKC) : "—"} → ${Number.isInteger(end) ? fmt(end) : "—"} KC</span>${h.note ? `<p>${escaped(h.note)}</p>` : ""}</article>`;
+      return `<article class="hunt-history-row"><div><strong>${escaped(huntTarget(p[0], h.method || null).name)} · ${escaped(p[1])}</strong><small>${h.status === "completed" ? "COMPLETED" : "ENDED"}${h.acquisitionDate ? " · ACQUIRED " + escaped(h.acquisitionDate) : ""}</small></div><span>${Number.isInteger(h.startKC) ? fmt(h.startKC) : "—"} → ${Number.isInteger(end) ? fmt(end) : "—"} KC</span>${h.note ? `<p>${escaped(h.note)}</p>` : ""}</article>`;
     })
     .join("");
   $("historyItems").prepend(element);
   $("historyItems").querySelector(".empty")?.remove();
 }
 function renderRecentProgress() {
+  const dates =
+    typeof confirmedPetDates === "function" ? confirmedPetDates() : new Map();
+  const dateText = (t) =>
+    typeof snapshotDate === "function"
+      ? snapshotDate(t)
+      : new Date(t).toLocaleString();
+  const hunts = (serverState.hunts || []).filter(
+    (h) => h.status === "completed",
+  );
+  const completed = new Set(hunts.map((h) => h.petId));
   const events = [
     ...progressEvents,
     ...templeRecent.map((r) => ({
-      id: "local:" + r.id,
+      id: "pet:" + r.id,
       type: "pet",
       petId: r.id,
       recordedAt: r.detectedAt,
     })),
-    ...(serverState.hunts || [])
-      .filter((h) => h.status === "completed")
-      .map((h) => ({
-        id: "complete:" + h.id,
-        type: "completed",
-        petId: h.petId,
-        kc: h.acquisitionKC,
-        recordedAt: h.endedAt,
-        acquisitionDate: h.acquisitionDate,
+    ...[...dates].map(([id, at]) => ({
+      id: "pet:" + id,
+      type: "pet",
+      petId: id,
+      recordedAt: at,
+      acquired: true,
+    })),
+    ...hunts.map((h) => ({
+      id: "complete:" + h.id,
+      type: "completed",
+      petId: h.petId,
+      kc: h.acquisitionKC,
+      recordedAt: h.acquisitionDate
+        ? stamp(h.acquisitionDate)?.getTime()
+        : h.endedAt,
+      acquisitionDate: h.acquisitionDate,
+    })),
+    ...(typeof earnedTrophies === "function" ? earnedTrophies() : [])
+      .filter((t) => t.recordedAt)
+      .map((t) => ({
+        id: "achievement:" + t.id,
+        type: "achievement",
+        title: t.title,
+        source: t.provenance,
+        recordedAt: t.recordedAt,
       })),
   ];
-  const seen = new Set();
-  const rows = events
+  const unique = new Map();
+  for (const event of events) {
+    const petId =
+      event.petId ||
+      (event.templeItemId && petForTempleId(event.templeItemId)?.[0]);
+    const e = { ...event, petId };
+    if (!Number.isFinite(e.recordedAt)) continue;
+    if (e.type === "pet") {
+      if (!petId || completed.has(petId)) continue;
+      if (dates.has(petId)) {
+        e.recordedAt = dates.get(petId);
+        e.acquired = true;
+      }
+    }
+    if (
+      ["pet", "completed", "kc"].includes(e.type) &&
+      !CATALOG.some((p) => p[0] === petId)
+    )
+      continue;
+    const key = e.type === "pet" ? "pet:" + petId : e.id;
+    if (!unique.has(key) || e.acquired || e.acquisitionDate) unique.set(key, e);
+  }
+  const rows = [...unique.values()]
     .sort((a, b) => b.recordedAt - a.recordedAt)
-    .filter((e) => {
-      const id = e.type === "pet" ? "pet:" + e.petId : e.id;
-      if (seen.has(id)) return false;
-      seen.add(id);
-      return CATALOG.some((p) => p[0] === e.petId);
-    })
-    .slice(0, 6);
+    .slice(0, 8);
   $("feedItems").innerHTML = rows.length
-    ? '<div class="eyebrow progress-label">RECENT PROGRESS</div>' +
-      rows
+    ? rows
         .map((e) => {
-          const p = pet(e.petId);
-          const text =
-            e.type === "pet"
-              ? p[1] + " newly confirmed in Temple."
-              : e.type === "completed"
-                ? p[1] +
-                  " hunt completed" +
-                  (Number.isInteger(e.kc)
-                    ? " at " + fmt(e.kc) + " acquisition KC."
-                    : ".")
-                : fmt(e.gained) + " KC gained chasing " + p[1] + ".";
-          return `<div class="feed-item"><div class="feed-icon">✦</div><div class="feed-copy"><strong>${e.type === "pet" ? "TEMPLE SYNC" : e.type === "completed" ? "HUNT COMPLETED" : "KC MILESTONE"}</strong><p>${escaped(text)}</p><small>${e.type === "pet" ? "Detected" : "Recorded"} ${escaped(new Date(e.recordedAt).toLocaleString())}</small></div></div>`;
+          const p = e.petId ? pet(e.petId) : null;
+          let label, text, date;
+          switch (e.type) {
+            case "pet":
+              label = e.acquired
+                ? "PET ACQUIRED · TEMPLE"
+                : "PET CONFIRMED · TEMPLE";
+              text = p[1];
+              date =
+                (e.acquired ? "Acquired " : "Detected ") +
+                dateText(e.recordedAt);
+              break;
+            case "completed":
+              label = "HUNT COMPLETED · OWNER";
+              text =
+                p[1] +
+                (Number.isInteger(e.kc)
+                  ? " · " + fmt(e.kc) + " acquisition KC"
+                  : "");
+              date = e.acquisitionDate
+                ? "Acquired " + e.acquisitionDate
+                : "Recorded " + dateText(e.recordedAt);
+              break;
+            case "kc":
+              label = "HUNT MILESTONE · TEMPLE";
+              text = fmt(e.gained) + " KC gained chasing " + p[1];
+              date = "Recorded " + dateText(e.recordedAt);
+              break;
+            case "xp":
+              label = "XP MILESTONE · TEMPLE";
+              text = fmt(e.value) + " total XP";
+              date = "Observed " + dateText(e.recordedAt);
+              break;
+            case "skill":
+            case "cooking":
+              label = "SKILL MILESTONE · TEMPLE";
+              text = "200M " + (e.skill || "Cooking") + " XP";
+              date = "Observed " + dateText(e.recordedAt);
+              break;
+            case "achievement":
+              label = e.source;
+              text = e.title;
+              date = dateText(e.recordedAt);
+              break;
+            default:
+              return "";
+          }
+          return (
+            '<div class="feed-item"><div class="feed-icon" aria-hidden="true">✦</div><div class="feed-copy"><small>' +
+            escaped(label) +
+            "</small><strong>" +
+            escaped(text) +
+            "</strong><small>" +
+            escaped(date) +
+            "</small></div></div>"
+          );
         })
         .join("")
-    : "";
-  const notes = (serverState.notes || []).slice(-2).reverse();
-  $("feedItems").innerHTML += notes
+    : '<p class="fineprint">No dated milestones recorded yet. Confirmed residents are listed in the collection.</p>';
+  $("feedItems").innerHTML += (serverState.notes || [])
+    .slice(-2)
+    .reverse()
     .map(
       (n) =>
-        `<div class="feed-item"><div class="feed-copy"><strong>OWNER NOTE</strong><p>${escaped(n.body)}</p>${n.date ? "<small>" + escaped(n.date) + "</small>" : ""}</div></div>`,
+        '<div class="feed-item"><div class="feed-copy"><strong>OWNER NOTE</strong><p>' +
+        escaped(n.body) +
+        "</p>" +
+        (n.date ? "<small>" + escaped(n.date) + "</small>" : "") +
+        "</div></div>",
     )
     .join("");
 }
@@ -310,33 +527,53 @@ function setupChaseEditor() {
     section.id = "chaseControls";
     section.className = "chase-controls";
     section.innerHTML =
-      '<p id="editorHuntStatus" class="modal-help"></p><div class="chase-actions"><button id="useCurrentKC" class="secondary-button" type="button">USE CURRENT KC</button><button id="startChase" class="primary-button" type="button">START / CHANGE CHASE</button><button id="endChase" class="secondary-button" type="button">END WITHOUT PET</button></div><div class="edit-grid"><label class="form-label">ACQUISITION KC (IF KNOWN)<input id="acquisitionKC" type="number" min="0" step="1" placeholder="Leave unknown blank"></label><label class="form-label">ACQUISITION DATE (IF KNOWN)<input id="acquisitionDate" type="date"></label><label class="form-label">NEXT CHASE AFTER COMPLETION<select id="nextChase" aria-label="NEXT CHASE AFTER COMPLETION"></select></label></div><button id="completeChase" class="primary-button" type="button">PET OBTAINED · COMPLETE HUNT</button><p class="modal-help">Chase buttons save immediately. Save other owner edits separately below. Blank starting KC uses the latest Temple snapshot when available; acquisition KC and acquisition date are never inferred.</p><p id="chaseError" class="error" role="status"></p>';
+      '<p id="editorHuntStatus" class="modal-help"></p><div class="chase-actions"><button id="useCurrentKC" class="secondary-button" type="button">USE CURRENT KC</button><button id="startChase" class="primary-button" type="button">START / CHANGE CHASE</button><button id="endChase" class="secondary-button" type="button">END WITHOUT PET</button></div><div class="edit-grid"><label class="form-label">ACQUISITION KC (IF KNOWN)<input id="acquisitionKC" type="number" min="0" step="1" placeholder="Leave unknown blank"></label><label class="form-label">ACQUISITION DATE (IF KNOWN)<input id="acquisitionDate" type="date"></label><label class="form-label">NEXT CHASE AFTER COMPLETION<select id="nextChase" aria-label="NEXT CHASE AFTER COMPLETION"></select></label></div><button id="completeChase" class="primary-button" type="button">PET OBTAINED · COMPLETE HUNT</button><p class="modal-help">Chase buttons save immediately. Save other owner edits separately below. Blank starting KC uses the latest Temple snapshot when available; acquisition KC and acquisition date are never inferred.</p><button id="cancelTarget" class="secondary-button" type="button">CANCEL</button><p id="chaseError" class="error" role="status"></p>';
     $("editPanel").querySelector(".edit-grid").after(section);
     const importer = $("editPanel").querySelector(".collection-import");
     if (importer) section.after(importer);
-    $("useCurrentKC").onclick = () => {
-      $("editStartKC").value = kcFor(pet($("editTarget").value)) ?? "";
-    };
+    const useCurrent = () =>
+      ($("editStartKC").value = selectedChase()?.kc ?? "");
+    $("useCurrentKC").onclick = useCurrent;
     $("editTarget").onchange = () => {
-      $("editStartKC").value = kcFor(pet($("editTarget").value)) ?? "";
+      showTargetPreview();
+      useCurrent();
     };
+    $("targetSearch").oninput = () => {
+      const before = $("editTarget").value;
+      fillTargetPicker($("targetSearch").value, before);
+      if ($("editTarget").value !== before) useCurrent();
+    };
+    $("cancelTarget").onclick = closeModal;
     $("startChase").onclick = () => saveChase("start");
     $("endChase").onclick = () => saveChase("end");
     $("completeChase").onclick = () => saveChase("complete");
   }
   const hunt = activeHunt();
+  $("targetSearch").value = "";
+  fillTargetPicker(
+    "",
+    hunt.petId === "goa" ? "goa:" + (hunt.method || "gauntlet") : hunt.petId,
+  );
+  $("editStartKC").value = hunt.startKC ?? "";
+  $("startChase").textContent =
+    editorMode === "target" ? "SAVE TARGET" : "START / CHANGE CHASE";
   $("editorHuntStatus").textContent =
     (hunt.status === "active" ? "Active: " : "Last chase: ") +
-    pet(hunt.petId)[1] +
+    huntTarget().name +
     (Number.isInteger(hunt.startKC)
       ? " · Starting KC " + fmt(hunt.startKC)
       : " · Starting KC unknown");
   $("nextChase").innerHTML =
     '<option value="">No next chase yet</option>' +
-    CATALOG.filter((p) => p[0] !== hunt.petId)
+    chaseOptions()
+      .filter((row) => row.id !== hunt.petId)
       .map(
-        (p) =>
-          `<option value="${p[0]}">${escaped(p[1])} · ${escaped(p[2])}</option>`,
+        (row) =>
+          '<option value="' +
+          row.value +
+          '">' +
+          escaped(row.name) +
+          "</option>",
       )
       .join("");
   $("acquisitionKC").value = "";
@@ -357,13 +594,19 @@ async function saveChase(action) {
     note: $("editHuntNote").value,
   };
   if (action === "start") {
-    input.petId = $("editTarget").value;
+    const selected = selectedChase();
+    if (!selected) return;
+    input.petId = selected.pet[0];
+    input.method = selected.method;
+    input.restart = editorMode !== "target";
     input.startKC = start === "" ? null : Number(start);
   }
   if (action === "complete") {
     input.acquisitionKC = drop === "" ? null : Number(drop);
     input.acquisitionDate = $("acquisitionDate").value || null;
-    input.nextPetId = $("nextChase").value || null;
+    const next = parseChase($("nextChase").value);
+    input.nextPetId = next.id || null;
+    input.nextMethod = next.method;
   }
   $("chaseError").textContent = "";
   const buttons = ["startChase", "endChase", "completeChase"];
@@ -376,7 +619,8 @@ async function saveChase(action) {
     });
     writeCache("manual", serverState);
     render();
-    showEditor();
+    if (editorMode === "target" && action === "start") closeModal();
+    else showEditor();
     await syncProgress();
     toast(
       action === "complete"
@@ -389,6 +633,7 @@ async function saveChase(action) {
     $("chaseError").textContent = error.message;
   } finally {
     buttons.forEach((id) => ($(id).disabled = false));
+    if (editable) showTargetPreview();
     if (activeHunt().status !== "active")
       $("endChase").disabled = $("completeChase").disabled = true;
   }

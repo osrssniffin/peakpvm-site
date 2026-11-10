@@ -191,7 +191,7 @@ async function initMenagerie() {
     renderPlanner();
   };
   $("huntKph").oninput = (e) => {
-    setPace(serverState.target, e.target.value);
+    setPace(huntTarget().paceId, e.target.value);
     renderHuntExtras();
     renderPlanner();
   };
@@ -214,7 +214,7 @@ async function initMenagerie() {
         k = killsForTarget(planTarget, planModel(p).rate);
       row.querySelector("[data-hours]").textContent = hours(k, paceFor(id));
     }
-    if (id === serverState.target) {
+    if (id === huntTarget().paceId) {
       $("huntKph").value = e.target.value;
       renderHuntExtras();
     }
@@ -299,25 +299,35 @@ function renderCategories() {
     .join("");
 }
 function renderHuntExtras() {
-  const p = pet(serverState.target),
-    kc = kcFor(p),
-    chance = chanceFor(p, kc),
-    pace = paceFor(p[0]);
+  const target = huntTarget(),
+    p = target.pet,
+    kc = target.kc,
+    chance = target.chance,
+    pace = paceFor(target.paceId);
   const boss = $("bossImage");
   $("targetRateLabel").textContent =
-    serverState.rates?.[p[0]] !== undefined
+    !target.method && serverState.rates?.[p[0]] !== undefined
       ? "OWNER RATE OVERRIDE"
       : "BASE PET RATE";
-  const src = p[0] === "sraracha" ? "./media/sarachnis.png" : meta(p).image;
-  if (!boss.getAttribute("src")?.endsWith(src.replace("./", "")))
-    boss.src = src;
-  boss.alt =
-    p[0] === "sraracha"
-      ? "Sarachnis in-game boss model"
-      : p[1] + " follower render (boss render unavailable)";
-  $("huntKph").value = paces[p[0]] || "";
+  if (boss.getAttribute("src") !== target.image) boss.src = target.image;
+  boss.alt = target.imageLabel;
+  if (document.activeElement !== $("huntKph"))
+    $("huntKph").value = paces[target.paceId] || "";
   $("heroHuntLabel").textContent =
-    p[2] + " // " + (kc === null ? "KC UNAVAILABLE" : fmt(kc) + " KC");
+    target.name + " // " + (kc === null ? "KC UNAVAILABLE" : fmt(kc) + " KC");
+  const start = activeHunt().startKC;
+  const time = $("huntTimeSpent");
+  if (time) {
+    time.hidden =
+      !pace ||
+      !Number.isInteger(start) ||
+      kc === null ||
+      kc < start ||
+      activeHunt().status !== "active";
+    if (!time.hidden)
+      time.textContent =
+        "Estimated hunt time at your entered pace: " + hours(kc - start, pace);
+  }
   $("targetZero").textContent =
     chance === null ? "UNAVAILABLE" : ((1 - chance) * 100).toFixed(2) + "%";
   $("dryExplanation").textContent =

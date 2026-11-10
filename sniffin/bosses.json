@@ -1,0 +1,248 @@
+{
+  "bosses": {
+    "abyssal_sire": "Abyssal Sire",
+    "alchemical_hydra": "Alchemical Hydra",
+    "amoxliatl": "Amoxliatl",
+    "araxxor": "Araxxor",
+    "artio": "Artio",
+    "barrows_chests": "Barrows Chests",
+    "brutus": "Brutus",
+    "bryophyta": "Bryophyta",
+    "callisto": "Callisto",
+    "calvarion": "Calvarion",
+    "cerberus": "Cerberus",
+    "chambers_of_xeric": "Chambers of Xeric",
+    "chambers_of_xeric_challenge_mode": "Chambers of Xeric Challenge Mode",
+    "chaos_elemental": "Chaos Elemental",
+    "chaos_fanatic": "Chaos Fanatic",
+    "commander_zilyana": "Commander Zilyana",
+    "corporeal_beast": "Corporeal Beast",
+    "crazy_archaeologist": "Crazy Archaeologist",
+    "dagannoth_prime": "Dagannoth Prime",
+    "dagannoth_rex": "Dagannoth Rex",
+    "dagannoth_supreme": "Dagannoth Supreme",
+    "deranged_archaeologist": "Deranged Archaeologist",
+    "doom_of_mokhaiotl": "Doom of Mokhaiotl",
+    "duke_sucellus": "Duke Sucellus",
+    "general_graardor": "General Graardor",
+    "giant_mole": "Giant Mole",
+    "grotesque_guardians": "Grotesque Guardians",
+    "hespori": "Hespori",
+    "kalphite_queen": "Kalphite Queen",
+    "king_black_dragon": "King Black Dragon",
+    "kraken": "Kraken",
+    "kreearra": "KreeArra",
+    "kril_tsutsaroth": "Kril Tsutsaroth",
+    "lunar_chests": "Lunar Chests",
+    "mad_angel": "Mad Angel",
+    "maggot_king": "Maggot King",
+    "mimic": "Mimic",
+    "nex": "Nex",
+    "nightmare": "The Nightmare",
+    "phosanis_nightmare": "Phosanis Nightmare",
+    "obor": "Obor",
+    "phantom_muspah": "Phantom Muspah",
+    "sarachnis": "Sarachnis",
+    "scorpia": "Scorpia",
+    "scurrius": "Scurrius",
+    "shellbane_gryphon": "Shellbane Gryphon",
+    "skotizo": "Skotizo",
+    "sol_heredit": "Sol Heredit",
+    "spindel": "Spindel",
+    "tempoross": "Tempoross",
+    "the_gauntlet": "The Gauntlet",
+    "the_corrupted_gauntlet": "The Corrupted Gauntlet",
+    "the_fractured_archive": "The Fractured Archive",
+    "the_hueycoatl": "Hueycoatl",
+    "the_leviathan": "The Leviathan",
+    "the_royal_titans": "The Royal Titans",
+    "the_whisperer": "The Whisperer",
+    "theatre_of_blood": "Theatre of Blood",
+    "theatre_of_blood_hard_mode": "Theatre of Blood Challenge Mode",
+    "thermonuclear_smoke_devil": "Thermonuclear Smoke Devil",
+    "tombs_of_amascut": "Tombs of Amascut",
+    "tombs_of_amascut_expert": "Tombs of Amascut Expert",
+    "tzkal_zuk": "TzKal-Zuk",
+    "tztok_jad": "TzTok-Jad",
+    "vardorvis": "Vardorvis",
+    "venenatis": "Venenatis",
+    "vetion": "Vetion",
+    "vorkath": "Vorkath",
+    "wintertodt": "Wintertodt",
+    "yama": "Yama",
+    "zalcano": "Zalcano",
+    "zulrah": "Zulrah"
+  },
+  "art": {
+    "araxxor": {
+      "file": "araxxor.png",
+      "label": "Araxxor",
+      "source": "https://oldschool.runescape.wiki/w/File:Araxxor.png"
+    },
+    "callisto": {
+      "file": "callisto.png",
+      "label": "Callisto",
+      "source": "https://oldschool.runescape.wiki/w/File:Callisto.png"
+    },
+    "cerberus": {
+      "file": "cerberus.png",
+      "label": "Cerberus",
+      "source": "https://oldschool.runescape.wiki/w/File:Cerberus.png"
+    },
+    "commander_zilyana": {
+      "file": "commander-zilyana.png",
+      "label": "Commander Zilyana",
+      "source": "https://oldschool.runescape.wiki/w/File:Commander_Zilyana.png"
+    },
+    "corporeal_beast": {
+      "file": "corporeal-beast.png",
+      "label": "Corporeal Beast",
+      "source": "https://oldschool.runescape.wiki/w/File:Corporeal_Beast.png"
+    },
+    "dagannoth_rex": {
+      "file": "dagannoth-rex.png",
+      "label": "Dagannoth Rex",
+      "source": "https://oldschool.runescape.wiki/w/File:Dagannoth_Rex.png"
+    },
+    "duke_sucellus": {
+      "file": "duke-sucellus.png",
+      "label": "Duke Sucellus",
+      "source": "https://oldschool.runescape.wiki/w/File:Duke_Sucellus.png"
+    },
+    "general_graardor": {
+      "file": "general-graardor.png",
+      "label": "General Graardor",
+      "source": "https://oldschool.runescape.wiki/w/File:General_Graardor.png"
+    },
+    "giant_mole": {
+      "file": "giant-mole.png",
+      "label": "Giant Mole",
+      "source": "https://oldschool.runescape.wiki/w/File:Giant_Mole.png"
+    },
+    "kalphite_queen": {
+      "file": "kalphite-queen.png",
+      "label": "Kalphite Queen",
+      "source": "https://oldschool.runescape.wiki/w/File:Kalphite_Queen.png"
+    },
+    "king_black_dragon": {
+      "file": "king-black-dragon.png",
+      "label": "King Black Dragon",
+      "source": "https://oldschool.runescape.wiki/w/File:King_Black_Dragon.png"
+    },
+    "kraken": {
+      "file": "kraken.png",
+      "label": "Kraken",
+      "source": "https://oldschool.runescape.wiki/w/File:Kraken.png"
+    },
+    "kreearra": {
+      "file": "kreearra.png",
+      "label": "KreeArra",
+      "source": "https://oldschool.runescape.wiki/w/File:KreeArra.png"
+    },
+    "nex": {
+      "file": "nex.png",
+      "label": "Nex",
+      "source": "https://oldschool.runescape.wiki/w/File:Nex.png"
+    },
+    "sarachnis": {
+      "file": "sarachnis.png",
+      "label": "Sarachnis",
+      "source": "https://oldschool.runescape.wiki/w/File:Sarachnis.png"
+    },
+    "scorpia": {
+      "file": "scorpia.png",
+      "label": "Scorpia",
+      "source": "https://oldschool.runescape.wiki/w/File:Scorpia.png"
+    },
+    "skotizo": {
+      "file": "skotizo.png",
+      "label": "Skotizo",
+      "source": "https://oldschool.runescape.wiki/w/File:Skotizo.png"
+    },
+    "sol_heredit": {
+      "file": "sol-heredit.png",
+      "label": "Sol Heredit",
+      "source": "https://oldschool.runescape.wiki/w/File:Sol_Heredit.png"
+    },
+    "the_gauntlet": {
+      "file": "crystalline-hunllef.png",
+      "label": "Crystalline Hunllef",
+      "source": "https://oldschool.runescape.wiki/w/File:Crystalline_Hunllef.png"
+    },
+    "the_corrupted_gauntlet": {
+      "file": "corrupted-hunllef.png",
+      "label": "Corrupted Hunllef",
+      "source": "https://oldschool.runescape.wiki/w/File:Corrupted_Hunllef.png"
+    },
+    "the_leviathan": {
+      "file": "the-leviathan.png",
+      "label": "The Leviathan",
+      "source": "https://oldschool.runescape.wiki/w/File:The_Leviathan.png"
+    },
+    "the_whisperer": {
+      "file": "the-whisperer.png",
+      "label": "The Whisperer",
+      "source": "https://oldschool.runescape.wiki/w/File:The_Whisperer.png"
+    },
+    "theatre_of_blood": {
+      "file": "verzik-vitur.png",
+      "label": "Verzik Vitur",
+      "source": "https://oldschool.runescape.wiki/w/File:Verzik_Vitur.png"
+    },
+    "theatre_of_blood_hard_mode": {
+      "file": "verzik-vitur.png",
+      "label": "Verzik Vitur",
+      "source": "https://oldschool.runescape.wiki/w/File:Verzik_Vitur.png"
+    },
+    "thermonuclear_smoke_devil": {
+      "file": "thermonuclear-smoke-devil.png",
+      "label": "Thermonuclear Smoke Devil",
+      "source": "https://oldschool.runescape.wiki/w/File:Thermonuclear_Smoke_Devil.png"
+    },
+    "tombs_of_amascut": {
+      "file": "tumekens-warden.png",
+      "label": "Tumeken's Warden",
+      "source": "https://oldschool.runescape.wiki/w/File:Tumeken's_Warden.png"
+    },
+    "tombs_of_amascut_expert": {
+      "file": "tumekens-warden.png",
+      "label": "Tumeken's Warden",
+      "source": "https://oldschool.runescape.wiki/w/File:Tumeken's_Warden.png"
+    },
+    "tztok_jad": {
+      "file": "tztok-jad.png",
+      "label": "TzTok-Jad",
+      "source": "https://oldschool.runescape.wiki/w/File:TzTok-Jad.png"
+    },
+    "vardorvis": {
+      "file": "vardorvis.png",
+      "label": "Vardorvis",
+      "source": "https://oldschool.runescape.wiki/w/File:Vardorvis.png"
+    },
+    "venenatis": {
+      "file": "venenatis.png",
+      "label": "Venenatis",
+      "source": "https://oldschool.runescape.wiki/w/File:Venenatis.png"
+    },
+    "vetion": {
+      "file": "vetion.png",
+      "label": "Vet'ion",
+      "source": "https://oldschool.runescape.wiki/w/File:Vet'ion.png"
+    },
+    "vorkath": {
+      "file": "vorkath.png",
+      "label": "Vorkath",
+      "source": "https://oldschool.runescape.wiki/w/File:Vorkath.png"
+    },
+    "yama": {
+      "file": "yama.png",
+      "label": "Yama",
+      "source": "https://oldschool.runescape.wiki/w/File:Yama.png"
+    },
+    "zalcano": {
+      "file": "zalcano.png",
+      "label": "Zalcano",
+      "source": "https://oldschool.runescape.wiki/w/File:Zalcano.png"
+    }
+  }
+}

@@ -17,7 +17,7 @@
       type="font/ttf"
       crossorigin
     />
-    <link rel="stylesheet" href="./styles.css?v=chase-1" />
+    <link rel="stylesheet" href="./styles.css?v=keeper-1" />
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to archive</a>
@@ -28,9 +28,9 @@
         ><span>SNIFFIN<small>THE MENAGERIE</small></span></a
       >
       <nav aria-label="Main navigation">
-        <a href="#huntSection">THE HUNT</a><a href="#vaultSection">COLLECTION</a
+        <a href="#huntSection">THE HUNT</a><a href="#residents">COLLECTION</a
         ><a href="#trophySection">TROPHIES</a
-        ><a href="#plannerSection">NEXT VICTIM</a>
+        ><a href="#plannerSection">HUNT TOOLS</a>
       </nav>
       <div class="top-buttons">
         <a class="peak-link" href="../">PEAK PVM ↗</a
@@ -66,7 +66,7 @@
             home.
           </p>
           <div class="hero-actions">
-            <a class="primary-button" href="#vaultSection"
+            <a class="primary-button" href="#residents"
               >ENTER THE MENAGERIE <span>↗</span></a
             ><a class="text-link" href="#huntSection">CURRENT VICTIM ↓</a>
           </div>
@@ -116,29 +116,42 @@
           <span class="stage-number">ARCHIVE № 001</span>
         </div>
       </section>
-      <section class="stat-strip" aria-label="Account statistics">
-        <div class="stat">
-          <span class="stat-title">01 / RESIDENTS</span>
-          <div class="stat-value" id="ownedNum">—</div>
-          <small id="ownedSub">VERIFYING COLLECTION</small>
+      <section class="keeper" id="keeperSection" aria-labelledby="keeperTitle">
+        <div class="keeper-heading">
+          <div>
+            <div class="eyebrow">ACCOUNT / s niffin</div>
+            <h2 id="keeperTitle">THE <em>KEEPER.</em></h2>
+          </div>
+          <div class="keeper-metrics">
+            <span><small>TOTAL LEVEL</small><b id="keeperLevel">—</b></span
+            ><span><small>TOTAL XP</small><b id="keeperXP">—</b></span
+            ><span><small>OVERALL RANK</small><b id="keeperRank">—</b></span>
+          </div>
         </div>
-        <div class="stat">
-          <span class="stat-title">02 / STILL OUT THERE</span>
-          <div class="stat-value" id="missingNum">—</div>
-          <small>UNCLAIMED SPECIES</small>
-        </div>
-        <div class="stat">
-          <span class="stat-title">03 / THE OBSESSION</span>
-          <div class="stat-value" id="completionNum">—</div>
-          <div class="mini-progress"><span id="completionBar"></span></div>
-        </div>
-        <div class="stat">
-          <span class="stat-title">04 / TRACKED BOSS COUNTERS</span>
-          <div class="stat-value" id="kcTotal">—</div>
-          <small
-            title="Sum of reported WOM boss counters; mode counters may overlap. Not a unique lifetime kill total."
-            >REPORTED SUM · MODES MAY OVERLAP</small
-          >
+        <div class="stat-strip" aria-label="Collection and boss counters">
+          <div class="stat">
+            <span class="stat-title">01 / RESIDENTS</span>
+            <div class="stat-value" id="ownedNum">—</div>
+            <small id="ownedSub">VERIFYING COLLECTION</small>
+          </div>
+          <div class="stat">
+            <span class="stat-title">02 / STILL OUT THERE</span>
+            <div class="stat-value" id="missingNum">—</div>
+            <small>UNCLAIMED SPECIES</small>
+          </div>
+          <div class="stat">
+            <span class="stat-title">03 / THE OBSESSION</span>
+            <div class="stat-value" id="completionNum">—</div>
+            <div class="mini-progress"><span id="completionBar"></span></div>
+          </div>
+          <div class="stat">
+            <span class="stat-title">04 / TRACKED BOSS KC</span>
+            <div class="stat-value" id="kcTotal">—</div>
+            <small
+              title="Sum of supported Temple boss counters, excluding raid counters to avoid overlap. Unranked or unsupported activities are omitted."
+              >TEMPLE TOTAL · EXCLUDES RAIDS</small
+            >
+          </div>
         </div>
       </section>
       <details class="data-ledger">
@@ -175,7 +188,10 @@
             <div class="eyebrow">01 / AN UNFINISHED CONVERSATION</div>
             <h2>CURRENT <em>VICTIM.</em></h2>
           </div>
-          <span class="tiny-badge">ONE MORE TRIP. APPARENTLY.</span>
+          <span class="tiny-badge">ONE MORE TRIP. APPARENTLY.</span
+          ><button id="editHuntBtn" class="edit-button hidden" type="button">
+            EDIT TARGET
+          </button>
         </div>
         <div class="hunt-card">
           <div class="hunt-art">
@@ -237,6 +253,7 @@
                   placeholder="Enter your pace"
               /></label>
             </div>
+            <p id="huntTimeSpent" class="fineprint" hidden></p>
             <div id="huntMilestones" class="milestone-strip"></div>
             <p id="targetRateNote" class="rate-note"></p>
             <div class="hunt-bottom">
@@ -253,6 +270,7 @@
         </div>
       </section>
       <section class="section vault" id="vaultSection">
+        <span id="residents" class="residents-anchor" aria-hidden="true"></span>
         <div class="section-head">
           <div>
             <div class="eyebrow">02 / THE ONES THAT FOLLOWED ME HOME</div>
@@ -311,115 +329,204 @@
         </div>
         <div id="trophyWall" class="trophy-wall"></div>
       </section>
-      <section class="section" id="plannerSection">
+      <section class="section" id="grindSection">
         <div class="section-head">
           <div>
-            <div class="eyebrow">04 / STILL EVADING CAPTURE</div>
-            <h2>NEXT ON THE <em>HIT LIST.</em></h2>
-            <p class="section-caption">
-              Compare the commitment. Pick your next bad decision.
-            </p>
+            <div class="eyebrow">04 / TEMPLE SNAPSHOTS</div>
+            <h2>THE <em>GRIND.</em></h2>
           </div>
         </div>
-        <div class="planner-controls">
-          <label
-            >FUTURE CHANCE TARGET<select id="planTarget">
-              <option value="0.5">50%</option>
-              <option value="0.75">75%</option>
-              <option value="0.9">90%</option>
-              <option value="0.95">95%</option>
-              <option value="0.99">99%</option>
-            </select></label
-          ><label
-            >COMPARE<select id="planSort">
-              <option value="name">Pet name</option>
-              <option value="hours">Estimated hours (entered pace only)</option>
-            </select></label
-          >
+        <div class="archive-panel">
+          <div class="archive-controls">
+            <label>TRACK<select id="grindMetric"></select></label
+            ><label
+              >WINDOW<select id="grindRange">
+                <option value="7">7 days</option>
+                <option value="30" selected>30 days</option>
+                <option value="90">90 days</option>
+                <option value="0">All available</option>
+              </select></label
+            >
+          </div>
+          <p id="grindSummary" class="fineprint" role="status">
+            Waiting for Temple history…
+          </p>
+          <div id="grindPlot"></div>
+          <label class="grind-picker" id="grindPicker" hidden
+            >SNAPSHOT
+            <input
+              id="grindPoint"
+              type="range"
+              min="0"
+              max="1"
+              value="0" /></label
+          ><output id="grindReading" for="grindPoint"></output>
         </div>
-        <p class="fineprint">
-          Targets apply to additional eligible rolls starting now. Past KC does
-          not improve the next independent roll. KPH is your editable estimate,
-          including banking and downtime. No pace is assumed.
-        </p>
-        <div class="planner-scroll">
-          <table class="planner-table">
-            <thead>
-              <tr>
-                <th scope="col">TARGET / METHOD</th>
-                <th scope="col">CURRENT KC</th>
-                <th scope="col">BASE RATE</th>
-                <th scope="col">KILLS OR ROLLS / HOUR</th>
-                <th scope="col">EXPECTED MORE</th>
-                <th scope="col">TARGET ROLLS / HOURS</th>
-              </tr>
-            </thead>
-            <tbody id="plannerBody"></tbody>
-          </table>
+      </section>
+      <section class="section" id="ledgerSection">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">05 / CONFIRMED COUNTERS</div>
+            <h2>THE KILL <em>LEDGER.</em></h2>
+          </div>
         </div>
+        <div id="ledgerFeatured" class="ledger-featured"></div>
+        <details class="archive-details">
+          <summary>OPEN THE FULL LEDGER</summary>
+          <div class="archive-controls">
+            <label
+              >FIND A BOSS<input
+                type="search"
+                id="ledgerSearch"
+                placeholder="Sarachnis…" /></label
+            ><label
+              >ORDER<select id="ledgerSort">
+                <option value="kc">Highest KC</option>
+                <option value="name">Name</option>
+              </select></label
+            >
+          </div>
+          <div class="planner-scroll">
+            <table class="planner-table">
+              <thead>
+                <tr>
+                  <th scope="col">BOSS / ACTIVITY</th>
+                  <th scope="col">TEMPLE KC</th>
+                  <th scope="col">30D CHANGE</th>
+                  <th scope="col">VIEW</th>
+                </tr>
+              </thead>
+              <tbody id="ledgerBody"></tbody>
+            </table>
+          </div>
+        </details>
         <p class="fineprint">
-          Fixed-rate rows use a geometric model: mean additional kills = 1/p;
-          target kills = ceil(log(1−target) / log(1−p)). Special mechanics, team
-          contribution, reward rolls and skilling methods require an explicit
-          method; those rows link to the Wiki instead of estimating.
+          Temple counters are listed individually. Some raid mode counters
+          overlap. Unreported KC is omitted.
         </p>
       </section>
-      <section class="section two-col">
+      <section class="section" id="timelineSection">
         <div id="historySection">
           <div class="section-head">
             <div>
-              <div class="eyebrow">05 / THE PAPER TRAIL</div>
-              <h2>HUNT <em>HISTORY.</em></h2>
+              <div class="eyebrow">06 / THE PAPER TRAIL</div>
+              <h2>THE <em>TIMELINE.</em></h2>
             </div>
           </div>
-          <div id="historyItems" class="history-items"></div>
           <div class="feed-panel" id="feedItems"></div>
+          <details class="archive-details">
+            <summary>HUNT HISTORY / OWNER RECORDS</summary>
+            <div id="historyItems" class="history-items"></div>
+          </details>
           <p class="fineprint">
-            Drop dates and drop KC appear only in curated records. A Temple sync
-            date is never presented as an acquisition date.
+            Dates come from Temple’s post-import collection records or owner
+            receipts. A sync timestamp is shown only as a detection time.
           </p>
         </div>
-        <div class="rng-section">
-          <div class="section-head">
-            <div>
-              <div class="eyebrow">06 / STATISTICALLY UNFORTUNATE</div>
-              <h2>THE <em>ODDS.</em></h2>
-            </div>
-          </div>
-          <div class="rng-panel">
-            <p>For a known, independent roll. The boss has no memory.</p>
-            <div class="input-row">
-              <label
-                >1 IN N<input
-                  id="rngRate"
-                  type="number"
-                  min="1"
-                  step="any"
-                  value="3000" /></label
-              ><label
-                >ELIGIBLE ROLLS<input
-                  id="rngKills"
-                  type="number"
-                  min="0"
-                  step="1"
-                  value="2000"
-              /></label>
-            </div>
-            <div class="rng-result">
+      </section>
+      <details class="section archive-details" id="plannerSection">
+        <summary>
+          HUNT TOOLS <span>Next victim &amp; odds calculator</span>
+        </summary>
+        <div class="hunt-tools">
+          <section class="section" id="nextVictim">
+            <div class="section-head">
               <div>
-                <span>AT LEAST ONE</span><strong id="rngSuccess">—</strong>
+                <div class="eyebrow">04 / STILL EVADING CAPTURE</div>
+                <h2>NEXT ON THE <em>HIT LIST.</em></h2>
+                <p class="section-caption">
+                  Compare the commitment. Pick your next bad decision.
+                </p>
               </div>
-              <div><span>ZERO DROPS</span><strong id="rngDry">—</strong></div>
             </div>
-            <div class="rng-verdict" id="rngVerdict"></div>
+            <div class="planner-controls">
+              <label
+                >FUTURE CHANCE TARGET<select id="planTarget">
+                  <option value="0.5">50%</option>
+                  <option value="0.75">75%</option>
+                  <option value="0.9">90%</option>
+                  <option value="0.95">95%</option>
+                  <option value="0.99">99%</option>
+                </select></label
+              ><label
+                >COMPARE<select id="planSort">
+                  <option value="name">Pet name</option>
+                  <option value="hours">
+                    Estimated hours (entered pace only)
+                  </option>
+                </select></label
+              >
+            </div>
             <p class="fineprint">
-              A probability, never a guarantee. This calculator does not model
-              variable rates, thresholds, duplicate protection or team
-              contribution.
+              Targets apply to additional eligible rolls starting now. Past KC
+              does not improve the next independent roll. KPH is your editable
+              estimate, including banking and downtime. No pace is assumed.
             </p>
+            <div class="planner-scroll">
+              <table class="planner-table">
+                <thead>
+                  <tr>
+                    <th scope="col">TARGET / METHOD</th>
+                    <th scope="col">CURRENT KC</th>
+                    <th scope="col">BASE RATE</th>
+                    <th scope="col">KILLS OR ROLLS / HOUR</th>
+                    <th scope="col">EXPECTED MORE</th>
+                    <th scope="col">TARGET ROLLS / HOURS</th>
+                  </tr>
+                </thead>
+                <tbody id="plannerBody"></tbody>
+              </table>
+            </div>
+            <p class="fineprint">
+              Fixed-rate rows use a geometric model: mean additional kills =
+              1/p; target kills = ceil(log(1−target) / log(1−p)). Special
+              mechanics, team contribution, reward rolls and skilling methods
+              require an explicit method; those rows link to the Wiki instead of
+              estimating.
+            </p>
+          </section>
+          <div class="rng-section">
+            <div class="section-head">
+              <div>
+                <div class="eyebrow">06 / STATISTICALLY UNFORTUNATE</div>
+                <h2>THE <em>ODDS.</em></h2>
+              </div>
+            </div>
+            <div class="rng-panel">
+              <p>For a known, independent roll. The boss has no memory.</p>
+              <div class="input-row">
+                <label
+                  >1 IN N<input
+                    id="rngRate"
+                    type="number"
+                    min="1"
+                    step="any"
+                    value="3000" /></label
+                ><label
+                  >ELIGIBLE ROLLS<input
+                    id="rngKills"
+                    type="number"
+                    min="0"
+                    step="1"
+                    value="2000"
+                /></label>
+              </div>
+              <div class="rng-result">
+                <div>
+                  <span>AT LEAST ONE</span><strong id="rngSuccess">—</strong>
+                </div>
+                <div><span>ZERO DROPS</span><strong id="rngDry">—</strong></div>
+              </div>
+              <div class="rng-verdict" id="rngVerdict"></div>
+              <p class="fineprint">
+                A probability, never a guarantee. This calculator does not model
+                variable rates, thresholds, duplicate protection or team
+                contribution.
+              </p>
+            </div>
           </div>
         </div>
-      </section>
+      </details>
       <footer>
         <div class="footer-brand">
           SNIFFIN<span>.</span><small>EVERY BOSS. EVERY PET. EVENTUALLY.</small>
@@ -471,9 +578,18 @@
               maxlength="32"
               placeholder="••••" /></label
           ><button class="primary-button" id="loginBtn">UNLOCK EDITOR →</button>
-          <p id="loginError" class="error"></p>
+          <p id="loginError" class="error" role="alert"></p>
         </div>
         <div id="editPanel" class="hidden">
+          <div class="target-picker">
+            <label class="form-label"
+              >FIND A BOSS OR PET<input
+                id="targetSearch"
+                type="search"
+                placeholder="Try Corrupted Gauntlet"
+            /></label>
+            <div id="targetPreview" class="target-preview"></div>
+          </div>
           <div class="edit-grid">
             <label class="form-label"
               >TRACKED RSN<input
@@ -536,8 +652,9 @@
         account statistics are available without it.
       </p></noscript
     >
-    <script src="./menagerie.js?v=chase-1" defer></script>
-    <script src="./chase.js?v=chase-1" defer></script>
-    <script src="./app.js?v=chase-1" defer></script>
+    <script src="./menagerie.js?v=keeper-1" defer></script>
+    <script src="./chase.js?v=keeper-1" defer></script>
+    <script src="./showcase.js?v=keeper-1" defer></script>
+    <script src="./app.js?v=keeper-1" defer></script>
   </body>
 </html>
