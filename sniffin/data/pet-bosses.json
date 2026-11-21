@@ -1,0 +1,698 @@
+[
+  {
+    "id": "abyssal-sire",
+    "name": "Abyssal Sire",
+    "kcKey": "Abyssal Sire",
+    "pet": "Abyssal orphan",
+    "kcAliases": [],
+    "itemId": null,
+    "note": "",
+    "ambiguousRate": false
+  },
+  {
+    "id": "alchemical-hydra",
+    "name": "Alchemical Hydra",
+    "kcKey": "Alchemical Hydra",
+    "pet": "Ikkle hydra",
+    "kcAliases": [],
+    "itemId": null,
+    "note": "",
+    "ambiguousRate": false
+  },
+  {
+    "id": "amoxliatl",
+    "name": "Amoxliatl",
+    "kcKey": "Amoxliatl",
+    "pet": "Moxi",
+    "kcAliases": [],
+    "itemId": null,
+    "note": "",
+    "ambiguousRate": false
+  },
+  {
+    "id": "araxxor",
+    "name": "Araxxor",
+    "kcKey": "Araxxor",
+    "pet": "Nid",
+    "kcAliases": [],
+    "itemId": null,
+    "note": "Rate depends on harvest/destroy choice.",
+    "ambiguousRate": true
+  },
+  {
+    "id": "artio",
+    "name": "Artio",
+    "kcKey": "Artio",
+    "pet": "Callisto cub",
+    "kcAliases": [],
+    "itemId": null,
+    "note": "",
+    "ambiguousRate": true
+  },
+  {
+    "id": "barbarian-assault",
+    "name": "Barbarian Assault",
+    "kcKey": "Barbarian Assault",
+    "pet": "Pet penance queen",
+    "kcAliases": [],
+    "itemId": null,
+    "note": "Chance per high-level gamble, not KC.",
+    "ambiguousRate": true
+  },
+  {
+    "id": "brutus",
+    "name": "Brutus",
+    "kcKey": "Brutus",
+    "pet": "Beef",
+    "kcAliases": [],
+    "itemId": null,
+    "note": "",
+    "ambiguousRate": false
+  },
+  {
+    "id": "callisto",
+    "name": "Callisto",
+    "kcKey": "Callisto",
+    "pet": "Callisto cub",
+    "kcAliases": [],
+    "itemId": null,
+    "note": "",
+    "ambiguousRate": true
+  },
+  {
+    "id": "calvar-ion",
+    "name": "Calvar’ion",
+    "kcKey": "Calvar'ion",
+    "pet": "Vet'ion Jr.",
+    "kcAliases": [
+      "Calvarion"
+    ],
+    "itemId": null,
+    "note": "",
+    "ambiguousRate": true
+  },
+  {
+    "id": "cerberus",
+    "name": "Cerberus",
+    "kcKey": "Cerberus",
+    "pet": "Hellpuppy",
+    "kcAliases": [],
+    "itemId": null,
+    "note": "",
+    "ambiguousRate": false
+  },
+  {
+    "id": "chambers-of-xeric",
+    "name": "Chambers of Xeric",
+    "kcKey": "Chambers of Xeric",
+    "pet": "Olmlet",
+    "kcAliases": [
+      "COX"
+    ],
+    "itemId": null,
+    "note": "Pet roll depends on receiving a unique.",
+    "ambiguousRate": true
+  },
+  {
+    "id": "chambers-of-xeric-challenge-mode",
+    "name": "Chambers of Xeric: Challenge Mode",
+    "kcKey": "Chambers of Xeric: Challenge Mode",
+    "pet": "Olmlet",
+    "kcAliases": [
+      "COX CM"
+    ],
+    "itemId": null,
+    "note": "Pet roll depends on receiving a unique.",
+    "ambiguousRate": true
+  },
+  {
+    "id": "chaos-elemental",
+    "name": "Chaos Elemental",
+    "kcKey": "Chaos Elemental",
+    "pet": "Pet chaos elemental",
+    "kcAliases": [],
+    "itemId": null,
+    "note": "",
+    "ambiguousRate": false
+  },
+  {
+    "id": "chaos-fanatic",
+    "name": "Chaos Fanatic",
+    "kcKey": "Chaos Fanatic",
+    "pet": "Pet chaos elemental",
+    "kcAliases": [],
+    "itemId": null,
+    "note": "",
+    "ambiguousRate": true
+  },
+  {
+    "id": "commander-zilyana",
+    "name": "Commander Zilyana",
+    "kcKey": "Commander Zilyana",
+    "pet": "Pet zilyana",
+    "kcAliases": [],
+    "itemId": null,
+    "note": "",
+    "ambiguousRate": false
+  },
+  {
+    "id": "corporeal-beast",
+    "name": "Corporeal Beast",
+    "kcKey": "Corporeal Beast",
+    "pet": "Pet dark core",
+    "kcAliases": [],
+    "itemId": null,
+    "note": "",
+    "ambiguousRate": false
+  },
+  {
+    "id": "corrupted-gauntlet",
+    "name": "Corrupted Gauntlet",
+    "kcKey": "Corrupted Gauntlet",
+    "pet": "Youngllef",
+    "kcAliases": [
+      "Corrupted Hunllef"
+    ],
+    "itemId": null,
+    "note": "",
+    "ambiguousRate": true
+  },
+  {
+    "id": "dagannoth-prime",
+    "name": "Dagannoth Prime",
+    "kcKey": "Dagannoth Prime",
+    "pet": "Pet dagannoth prime",
+    "kcAliases": [],
+    "itemId": null,
+    "note": "",
+    "ambiguousRate": false
+  },
+  {
+    "id": "dagannoth-rex",
+    "name": "Dagannoth Rex",
+    "kcKey": "Dagannoth Rex",
+    "pet": "Pet dagannoth rex",
+    "kcAliases": [],
+    "itemId": null,
+    "note": "",
+    "ambiguousRate": false
+  },
+  {
+    "id": "dagannoth-supreme",
+    "name": "Dagannoth Supreme",
+    "kcKey": "Dagannoth Supreme",
+    "pet": "Pet dagannoth supreme",
+    "kcAliases": [],
+    "itemId": null,
+    "note": "",
+    "ambiguousRate": false
+  },
+  {
+    "id": "demonic-brutus",
+    "name": "Demonic Brutus",
+    "kcKey": "Demonic Brutus",
+    "pet": "Beef",
+    "kcAliases": [],
+    "itemId": null,
+    "note": "Demonic Brutus has different odds from regular Brutus.",
+    "ambiguousRate": true
+  },
+  {
+    "id": "doom-of-mokhaiotl",
+    "name": "Doom of Mokhaiotl",
+    "kcKey": "Doom of Mokhaiotl",
+    "pet": "Dom",
+    "kcAliases": [],
+    "itemId": null,
+    "note": "Rate varies by delve level.",
+    "ambiguousRate": true
+  },
+  {
+    "id": "duke-sucellus",
+    "name": "Duke Sucellus",
+    "kcKey": "Duke Sucellus",
+    "pet": "Baron",
+    "kcAliases": [],
+    "itemId": null,
+    "note": "",
+    "ambiguousRate": false
+  },
+  {
+    "id": "fight-caves-jad",
+    "name": "Fight Caves (Jad)",
+    "kcKey": "TzHaar Fight Cave",
+    "pet": "TzRek-Jad",
+    "kcAliases": [
+      "TzHaar Fight Caves",
+      "The Fight Caves",
+      "Jad"
+    ],
+    "itemId": null,
+    "note": "Rates differ on Slayer task and cape gambles.",
+    "ambiguousRate": true
+  },
+  {
+    "id": "general-graardor",
+    "name": "General Graardor",
+    "kcKey": "General Graardor",
+    "pet": "Pet general graardor",
+    "kcAliases": [],
+    "itemId": null,
+    "note": "",
+    "ambiguousRate": false
+  },
+  {
+    "id": "giant-mole",
+    "name": "Giant Mole",
+    "kcKey": "Giant Mole",
+    "pet": "Baby mole",
+    "kcAliases": [],
+    "itemId": null,
+    "note": "",
+    "ambiguousRate": false
+  },
+  {
+    "id": "grotesque-guardians",
+    "name": "Grotesque Guardians",
+    "kcKey": "Grotesque Guardians",
+    "pet": "Noon",
+    "kcAliases": [],
+    "itemId": null,
+    "note": "",
+    "ambiguousRate": false
+  },
+  {
+    "id": "inferno-zuk",
+    "name": "Inferno (Zuk)",
+    "kcKey": "The Inferno",
+    "pet": "Jal-Nib-Rek",
+    "kcAliases": [
+      "Inferno",
+      "TzKal-Zuk"
+    ],
+    "itemId": null,
+    "note": "Rates differ on task and cape gambles.",
+    "ambiguousRate": true
+  },
+  {
+    "id": "k-ril-tsutsaroth",
+    "name": "K'ril Tsutsaroth",
+    "kcKey": "K'ril Tsutsaroth",
+    "pet": "Pet k'ril tsutsaroth",
+    "kcAliases": [
+      "Kril Tsutsaroth"
+    ],
+    "itemId": null,
+    "note": "",
+    "ambiguousRate": false
+  },
+  {
+    "id": "kalphite-queen",
+    "name": "Kalphite Queen",
+    "kcKey": "Kalphite Queen",
+    "pet": "Kalphite princess",
+    "kcAliases": [],
+    "itemId": null,
+    "note": "",
+    "ambiguousRate": false
+  },
+  {
+    "id": "king-black-dragon",
+    "name": "King Black Dragon",
+    "kcKey": "King Black Dragon",
+    "pet": "Prince black dragon",
+    "kcAliases": [],
+    "itemId": null,
+    "note": "",
+    "ambiguousRate": false
+  },
+  {
+    "id": "kraken",
+    "name": "Kraken",
+    "kcKey": "Kraken",
+    "pet": "Pet kraken",
+    "kcAliases": [],
+    "itemId": null,
+    "note": "",
+    "ambiguousRate": false
+  },
+  {
+    "id": "kree-arra",
+    "name": "Kree'arra",
+    "kcKey": "Kree'arra",
+    "pet": "Pet kree'arra",
+    "kcAliases": [
+      "Kree arra"
+    ],
+    "itemId": null,
+    "note": "",
+    "ambiguousRate": false
+  },
+  {
+    "id": "leviathan",
+    "name": "Leviathan",
+    "kcKey": "The Leviathan",
+    "pet": "Lil'viathan",
+    "kcAliases": [
+      "Leviathan"
+    ],
+    "itemId": null,
+    "note": "",
+    "ambiguousRate": false
+  },
+  {
+    "id": "mad-angel",
+    "name": "Mad Angel",
+    "kcKey": "Mad Angel",
+    "pet": "Aggy",
+    "kcAliases": [],
+    "itemId": null,
+    "note": "",
+    "ambiguousRate": false
+  },
+  {
+    "id": "maggot-king",
+    "name": "Maggot King",
+    "kcKey": "Maggot King",
+    "pet": "Maggot marquess",
+    "kcAliases": [],
+    "itemId": null,
+    "note": "",
+    "ambiguousRate": false
+  },
+  {
+    "id": "nex",
+    "name": "Nex",
+    "kcKey": "Nex",
+    "pet": "Nexling",
+    "kcAliases": [],
+    "itemId": null,
+    "note": "",
+    "ambiguousRate": false
+  },
+  {
+    "id": "nightmare",
+    "name": "Nightmare",
+    "kcKey": "The Nightmare",
+    "pet": "Little nightmare",
+    "kcAliases": [
+      "Nightmare"
+    ],
+    "itemId": null,
+    "note": "Team size changes rate.",
+    "ambiguousRate": true
+  },
+  {
+    "id": "phantom-muspah",
+    "name": "Phantom Muspah",
+    "kcKey": "Phantom Muspah",
+    "pet": "Muphin",
+    "kcAliases": [],
+    "itemId": null,
+    "note": "",
+    "ambiguousRate": false
+  },
+  {
+    "id": "phosani-s-nightmare",
+    "name": "Phosani's Nightmare",
+    "kcKey": "Phosani's Nightmare",
+    "pet": "Little nightmare",
+    "kcAliases": [],
+    "itemId": null,
+    "note": "",
+    "ambiguousRate": false
+  },
+  {
+    "id": "royal-titans",
+    "name": "Royal Titans",
+    "kcKey": "Royal Titans",
+    "pet": "Bran",
+    "kcAliases": [],
+    "itemId": null,
+    "note": "Rate changes when loot is sacrificed.",
+    "ambiguousRate": true
+  },
+  {
+    "id": "sarachnis",
+    "name": "Sarachnis",
+    "kcKey": "Sarachnis",
+    "pet": "Sraracha",
+    "kcAliases": [],
+    "itemId": 23495,
+    "note": "",
+    "ambiguousRate": false
+  },
+  {
+    "id": "scorpia",
+    "name": "Scorpia",
+    "kcKey": "Scorpia",
+    "pet": "Scorpia's offspring",
+    "kcAliases": [
+      "Scorpia"
+    ],
+    "itemId": null,
+    "note": "",
+    "ambiguousRate": false
+  },
+  {
+    "id": "scurrius",
+    "name": "Scurrius",
+    "kcKey": "Scurrius",
+    "pet": "Scurry",
+    "kcAliases": [],
+    "itemId": null,
+    "note": "MVP-only drop roll.",
+    "ambiguousRate": true
+  },
+  {
+    "id": "shellbane-gryphon",
+    "name": "Shellbane Gryphon",
+    "kcKey": "Shellbane Gryphon",
+    "pet": "Gull",
+    "kcAliases": [],
+    "itemId": null,
+    "note": "",
+    "ambiguousRate": false
+  },
+  {
+    "id": "skotizo",
+    "name": "Skotizo",
+    "kcKey": "Skotizo",
+    "pet": "Skotos",
+    "kcAliases": [],
+    "itemId": null,
+    "note": "",
+    "ambiguousRate": false
+  },
+  {
+    "id": "sol-heredit",
+    "name": "Sol Heredit",
+    "kcKey": "Sol Heredit",
+    "pet": "Smol Heredit",
+    "kcAliases": [
+      "Fortis Colosseum"
+    ],
+    "itemId": null,
+    "note": "Gambles add rolls beyond KC.",
+    "ambiguousRate": true
+  },
+  {
+    "id": "spindel",
+    "name": "Spindel",
+    "kcKey": "Spindel",
+    "pet": "Venenatis spiderling",
+    "kcAliases": [],
+    "itemId": null,
+    "note": "",
+    "ambiguousRate": true
+  },
+  {
+    "id": "tempoross",
+    "name": "Tempoross",
+    "kcKey": "Tempoross",
+    "pet": "Tiny tempor",
+    "kcAliases": [],
+    "itemId": null,
+    "note": "Chance per reward pool roll, not per KC.",
+    "ambiguousRate": true
+  },
+  {
+    "id": "the-fractured-archive",
+    "name": "The Fractured Archive",
+    "kcKey": "The Fractured Archive",
+    "pet": "Orion",
+    "kcAliases": [
+      "TFA"
+    ],
+    "itemId": null,
+    "note": "Raid pet drop rate may depend on rewards or participation.",
+    "ambiguousRate": true
+  },
+  {
+    "id": "the-gauntlet",
+    "name": "The Gauntlet",
+    "kcKey": "The Gauntlet",
+    "pet": "Youngllef",
+    "kcAliases": [
+      "Crystalline Hunllef",
+      "Gauntlet"
+    ],
+    "itemId": null,
+    "note": "",
+    "ambiguousRate": true
+  },
+  {
+    "id": "the-hueycoatl",
+    "name": "The Hueycoatl",
+    "kcKey": "The Hueycoatl",
+    "pet": "Huberte",
+    "kcAliases": [
+      "Hueycoatl"
+    ],
+    "itemId": null,
+    "note": "",
+    "ambiguousRate": false
+  },
+  {
+    "id": "the-whisperer",
+    "name": "The Whisperer",
+    "kcKey": "The Whisperer",
+    "pet": "Wisp",
+    "kcAliases": [
+      "Whisperer"
+    ],
+    "itemId": null,
+    "note": "",
+    "ambiguousRate": false
+  },
+  {
+    "id": "theatre-of-blood",
+    "name": "Theatre of Blood",
+    "kcKey": "Theatre of Blood",
+    "pet": "Lil' Zik",
+    "kcAliases": [
+      "TOB"
+    ],
+    "itemId": null,
+    "note": "Rates vary by performance and mode.",
+    "ambiguousRate": true
+  },
+  {
+    "id": "theatre-of-blood-hard-mode",
+    "name": "Theatre of Blood: Hard Mode",
+    "kcKey": "Theatre of Blood: Hard Mode",
+    "pet": "Lil' Zik",
+    "kcAliases": [
+      "TOB Hard Mode"
+    ],
+    "itemId": null,
+    "note": "Rates vary by performance and mode.",
+    "ambiguousRate": true
+  },
+  {
+    "id": "thermonuclear-smoke-devil",
+    "name": "Thermonuclear smoke devil",
+    "kcKey": "Thermonuclear Smoke Devil",
+    "pet": "Pet smoke devil",
+    "kcAliases": [
+      "Thermy"
+    ],
+    "itemId": null,
+    "note": "",
+    "ambiguousRate": false
+  },
+  {
+    "id": "tombs-of-amascut",
+    "name": "Tombs of Amascut",
+    "kcKey": "Tombs of Amascut",
+    "pet": "Tumeken's guardian",
+    "kcAliases": [
+      "TOA"
+    ],
+    "itemId": null,
+    "note": "Raid pet odds depend on raid points and level.",
+    "ambiguousRate": true
+  },
+  {
+    "id": "vardorvis",
+    "name": "Vardorvis",
+    "kcKey": "Vardorvis",
+    "pet": "Butch",
+    "kcAliases": [],
+    "itemId": null,
+    "note": "",
+    "ambiguousRate": false
+  },
+  {
+    "id": "venenatis",
+    "name": "Venenatis",
+    "kcKey": "Venenatis",
+    "pet": "Venenatis spiderling",
+    "kcAliases": [],
+    "itemId": null,
+    "note": "",
+    "ambiguousRate": true
+  },
+  {
+    "id": "vet-ion",
+    "name": "Vet'ion",
+    "kcKey": "Vet'ion",
+    "pet": "Vet'ion Jr.",
+    "kcAliases": [
+      "Vetion"
+    ],
+    "itemId": null,
+    "note": "",
+    "ambiguousRate": true
+  },
+  {
+    "id": "vorkath",
+    "name": "Vorkath",
+    "kcKey": "Vorkath",
+    "pet": "Vorki",
+    "kcAliases": [],
+    "itemId": null,
+    "note": "",
+    "ambiguousRate": false
+  },
+  {
+    "id": "wintertodt",
+    "name": "Wintertodt",
+    "kcKey": "Wintertodt",
+    "pet": "Phoenix",
+    "kcAliases": [],
+    "itemId": null,
+    "note": "Reward-roll based, not per KC.",
+    "ambiguousRate": true
+  },
+  {
+    "id": "yama",
+    "name": "Yama",
+    "kcKey": "Yama",
+    "pet": "Yami",
+    "kcAliases": [],
+    "itemId": null,
+    "note": "Contracts change the rate.",
+    "ambiguousRate": true
+  },
+  {
+    "id": "zalcano",
+    "name": "Zalcano",
+    "kcKey": "Zalcano",
+    "pet": "Smolcano",
+    "kcAliases": [],
+    "itemId": null,
+    "note": "",
+    "ambiguousRate": false
+  },
+  {
+    "id": "zulrah",
+    "name": "Zulrah",
+    "kcKey": "Zulrah",
+    "pet": "Pet snakeling",
+    "kcAliases": [],
+    "itemId": null,
+    "note": "",
+    "ambiguousRate": false
+  }
+]
