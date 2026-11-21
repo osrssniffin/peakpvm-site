@@ -2,10 +2,10 @@
 window.SNIFFIN_CONFIG = {
   PLAYER: 's niffin',
   DEFAULT_TARGET: 'sarachnis',
-  // Optional shared Cloudflare Worker URL; blank = browser-only changes.
-  TARGET_API_URL: '',
+  // Server-side shared target, PIN verification, and Temple sync.
+  TARGET_API_URL: 'https://peakpvm-sniffin-api.bells-pvm.workers.dev/sniffin/api',
   TEST_MODE: false, // Local tester writes true in its own copy; never commit true to GitHub.
-  DIRECT_TEMPLE: true,
+  DIRECT_TEMPLE: false,
   SNAPSHOT_PATH: './data/live.json',
   REFRESH_MS: 15 * 60 * 1000
 };
