@@ -89,7 +89,8 @@
     ],
     "itemId": null,
     "note": "",
-    "ambiguousRate": true
+    "ambiguousRate": false,
+    "dropRate": 2800
   },
   {
     "id": "cerberus",
@@ -175,7 +176,8 @@
     ],
     "itemId": null,
     "note": "",
-    "ambiguousRate": true
+    "ambiguousRate": false,
+    "dropRate": 800
   },
   {
     "id": "dagannoth-prime",
@@ -504,7 +506,8 @@
     "kcAliases": [],
     "itemId": null,
     "note": "",
-    "ambiguousRate": true
+    "ambiguousRate": false,
+    "dropRate": 2800
   },
   {
     "id": "tempoross",
@@ -539,7 +542,8 @@
     ],
     "itemId": null,
     "note": "",
-    "ambiguousRate": true
+    "ambiguousRate": false,
+    "dropRate": 2000
   },
   {
     "id": "the-hueycoatl",
@@ -631,7 +635,8 @@
     "kcAliases": [],
     "itemId": null,
     "note": "",
-    "ambiguousRate": true
+    "ambiguousRate": false,
+    "dropRate": 1500
   },
   {
     "id": "vet-ion",
@@ -643,7 +648,8 @@
     ],
     "itemId": null,
     "note": "",
-    "ambiguousRate": true
+    "ambiguousRate": false,
+    "dropRate": 1500
   },
   {
     "id": "vorkath",
