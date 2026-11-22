@@ -71,38 +71,36 @@
 .profile-skill{overflow:visible;cursor:help}.profile-boss{overflow:hidden;cursor:help}
 .profile-skill:hover,.profile-skill:focus-within,.profile-boss:hover{background:#38352d;border-color:#786441}
 
-/* Animated OSRS avatar: all effects stay inside the portrait frame. */
+/* Animated OSRS avatar: restrained edge effects preserve the portrait. */
 .hero-image.avatar-frame{perspective:900px;isolation:isolate;cursor:pointer;touch-action:manipulation}
 .hero-image.avatar-frame:focus-visible{outline:3px solid #f7c568;outline-offset:3px}
-.hero-image.avatar-frame::after{z-index:3}
+.hero-image.avatar-frame::after{z-index:4}
 .avatar-scene{position:absolute;inset:0;z-index:1;transform-style:preserve-3d;transform:perspective(900px) rotateX(var(--avatar-tilt-y,0deg)) rotateY(var(--avatar-tilt-x,0deg));transition:transform .22s cubic-bezier(.2,.7,.25,1);will-change:transform}
-.hero-image img.avatar-portrait{position:absolute;inset:0;z-index:0;display:block;width:100%;height:100%;max-height:none;object-fit:cover;object-position:50% 35%;filter:contrast(1.07);transform:translateZ(-12px)}
-.avatar-smoke{position:absolute;z-index:1;left:7%;top:20%;width:86%;height:75%;border-radius:50%;background:radial-gradient(ellipse at 50% 55%,#ff9b2e36 0, #ff5c1a20 37%,transparent 72%);filter:blur(8px);opacity:.44;animation:avatar-smoke 6s ease-in-out infinite alternate;pointer-events:none}
-.avatar-aura{position:absolute;z-index:2;left:50%;top:54%;width:min(92%,310px);aspect-ratio:1;border:2px solid transparent;border-radius:50%;background:conic-gradient(from 20deg,#ff5729,#ffc45c 17%,#fff0a5 22%,#d64c20 37%,#ffb53b 56%,#72291e 73%,#ffd16a 88%,#ff5729);-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 14px),#000 calc(100% - 12px));mask:radial-gradient(farthest-side,transparent calc(100% - 14px),#000 calc(100% - 12px));box-shadow:0 0 13px #ff9c38a6,inset 0 0 13px #ff9c3838;transform:translate(-50%,-50%) translateZ(12px);animation:avatar-spin 18s linear infinite;pointer-events:none}
-.avatar-aura::after{content:"";position:absolute;inset:8px;border:1px solid #ffd77d82;border-radius:50%;box-shadow:0 0 18px #ff8a2b77;animation:avatar-pulse 3.6s ease-in-out infinite alternate}
-.hero-image img.avatar-partyhat{position:absolute;z-index:5;left:54%;top:7%;width:68px;height:56px;max-height:none;object-fit:contain;image-rendering:pixelated;filter:drop-shadow(0 0 8px #ffd06d) drop-shadow(0 3px 3px #100700);transform:translateZ(32px) rotate(-7deg);animation:avatar-float 3.2s ease-in-out infinite;pointer-events:none}
-.avatar-embers{position:absolute;z-index:4;inset:0;overflow:hidden;pointer-events:none}
-.avatar-embers span{position:absolute;left:var(--x);top:var(--y);width:4px;height:4px;border-radius:50%;background:#ffd574;box-shadow:0 0 7px 2px #ff7b24c7;opacity:0;animation:avatar-ember var(--dur) linear var(--delay) infinite}
-.avatar-lightning{position:absolute;z-index:6;inset:0;pointer-events:none;opacity:0;background:linear-gradient(180deg,#e4f8ff,#fff 40%,#ffb65c);clip-path:polygon(62% 0,65% 0,57% 42%,65% 40%,46% 100%,52% 53%,44% 56%);mix-blend-mode:screen;animation:avatar-lightning 11s linear infinite}
-.avatar-flash{position:absolute;z-index:7;inset:0;opacity:0;background:radial-gradient(ellipse at 52% 44%,#fff7d9d9 0,#ffc14f6b 30%,transparent 72%);pointer-events:none}
-.avatar-burst{position:absolute;z-index:8;inset:0;display:grid;align-content:center;justify-items:center;gap:3px;text-align:center;opacity:0;transform:scale(.82);background:radial-gradient(ellipse at 52% 48%,#15100bc9 0,#15100b52 53%,transparent 76%);pointer-events:none}
-.avatar-burst span{font-size:clamp(17px,5vw,25px);letter-spacing:.19em;color:#ffd474;text-shadow:0 0 12px #ff7c27,2px 3px #090604}
-.avatar-burst strong{font-size:clamp(25px,8vw,40px);font-weight:normal;letter-spacing:.07em;color:#fff0b9;text-shadow:0 0 18px #ff602b,2px 3px #080503}
+.hero-image img.avatar-portrait{position:absolute;inset:0;z-index:1;display:block;width:100%;height:100%;max-height:none;object-fit:cover;object-position:50% 35%;filter:contrast(1.07);transform:translateZ(0)}
+.avatar-smoke{position:absolute;z-index:0;inset:2px;border:1px solid transparent;background:transparent;box-shadow:0 0 12px 2px #ff642b5c;filter:blur(2px);opacity:.35;animation:avatar-smoke 6s ease-in-out infinite alternate;pointer-events:none}
+.avatar-aura{position:absolute;z-index:2;inset:4px;border:2px solid transparent;border-image:linear-gradient(135deg,#ffd77f 0%,#a9432c 23%,#711f1d 48%,#cf7839 72%,#ffe0a0 100%) 1;box-shadow:0 0 8px 2px #ff682d55,0 0 16px #e5a54c22;animation:avatar-border 3.8s ease-in-out infinite alternate;pointer-events:none}
+.avatar-aura::after{content:none}
+.hero-image img.avatar-partyhat{position:absolute;z-index:5;left:50%;top:7%;width:34px;height:28px;max-height:none;object-fit:contain;image-rendering:pixelated;filter:drop-shadow(0 0 4px #ffd06d99) drop-shadow(0 2px 2px #100700);transform:translateX(-50%) translateZ(18px) rotate(-9deg);animation:avatar-float 4s ease-in-out infinite;pointer-events:none}
+.avatar-embers{position:absolute;z-index:3;inset:0;overflow:hidden;pointer-events:none}
+.avatar-embers span{position:absolute;left:var(--x);top:var(--y);width:2px;height:2px;border-radius:50%;background:#ffd574;box-shadow:0 0 3px 1px #ff7b2470;opacity:0;animation:avatar-ember var(--dur) linear var(--delay) infinite}
+.avatar-lightning{position:absolute;z-index:4;inset:1px;opacity:0;border:2px solid transparent;border-image:conic-gradient(from 200deg,transparent 0 23%,#e4f8ff 27%,#fff 30%,transparent 34% 72%,#ffbf59 76%,transparent 80%) 1;background:none;pointer-events:none;mix-blend-mode:screen;animation:avatar-lightning 11s linear infinite}
+.avatar-flash{position:absolute;z-index:6;inset:3px;opacity:0;border:2px solid #fff0b973;box-shadow:0 0 18px 3px #ffb84a80;background:none;pointer-events:none}
+.avatar-burst{position:absolute;z-index:7;inset:auto 0 10px;display:grid;align-content:center;justify-items:center;gap:1px;text-align:center;opacity:0;transform:translateY(6px) scale(.96);transform-origin:bottom center;background:none;pointer-events:none}
+.avatar-burst span{font-size:clamp(15px,4.4vw,21px);letter-spacing:.16em;color:#ffd474;text-shadow:0 0 7px #ff7c27,2px 2px #090604}
+.avatar-burst strong{font-size:clamp(22px,6.5vw,32px);font-weight:normal;letter-spacing:.06em;color:#fff0b9;text-shadow:0 0 9px #ff602b,2px 2px #080503}
 .avatar-bursting .avatar-scene{transition:none}
-.avatar-bursting .avatar-aura{animation-duration:1s;filter:brightness(1.7) drop-shadow(0 0 18px #ff6931)}
-.avatar-bursting .avatar-aura::after{animation-duration:.55s}
+.avatar-bursting .avatar-aura{animation-duration:.75s;filter:brightness(1.35) drop-shadow(0 0 7px #ff6931)}
 .avatar-bursting .avatar-lightning{animation:avatar-bolt .36s steps(1,end) both}
 .avatar-bursting .avatar-flash{animation:avatar-flash .48s ease-out both}
 .avatar-bursting .avatar-burst{animation:avatar-title 1.55s cubic-bezier(.16,.8,.22,1) both}
-@keyframes avatar-spin{to{transform:translate(-50%,-50%) translateZ(12px) rotate(360deg)}}
-@keyframes avatar-pulse{from{transform:scale(.94);opacity:.45}to{transform:scale(1.04);opacity:.95}}
-@keyframes avatar-float{0%,100%{translate:0 0}50%{translate:0 -7px}}
-@keyframes avatar-smoke{from{transform:scale(.94) translateY(5px);opacity:.28}to{transform:scale(1.04) translateY(-5px);opacity:.56}}
-@keyframes avatar-ember{0%{transform:translate3d(0,0,0) scale(.45);opacity:0}18%{opacity:.9}78%{opacity:.7}100%{transform:translate3d(var(--dx),-118px,0) scale(0);opacity:0}}
-@keyframes avatar-lightning{0%,43%,44%,100%{opacity:0}43.1%,43.8%{opacity:.75}44.1%{opacity:0}}
+@keyframes avatar-border{from{opacity:.72;filter:brightness(.82)}to{opacity:1;filter:brightness(1.16)}}
+@keyframes avatar-float{0%,100%{translate:0 0}50%{translate:0 -3px}}
+@keyframes avatar-smoke{from{opacity:.2}to{opacity:.45}}
+@keyframes avatar-ember{0%{transform:translate3d(0,0,0) scale(.5);opacity:0}20%{opacity:.55}78%{opacity:.35}100%{transform:translate3d(var(--dx),-96px,0) scale(0);opacity:0}}
+@keyframes avatar-lightning{0%,43%,44%,100%{opacity:0}43.1%,43.8%{opacity:.85}44.1%{opacity:0}}
 @keyframes avatar-bolt{0%,100%{opacity:0}18%,32%{opacity:.95}25%,40%{opacity:.12}}
-@keyframes avatar-flash{0%{opacity:.95}100%{opacity:0}}
-@keyframes avatar-title{0%{opacity:0;transform:scale(.72)}16%{opacity:1;transform:scale(1.04)}76%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1.08)}}
-@media(hover:hover) and (pointer:fine){.avatar-frame:hover .avatar-aura{filter:brightness(1.32) drop-shadow(0 0 12px #ff8c34);animation-duration:5.5s}.avatar-frame:hover .avatar-aura::after{animation-duration:1.8s}.avatar-frame:hover .avatar-smoke{opacity:.78;filter:blur(11px)}.avatar-frame:hover .avatar-embers span{animation-duration:calc(var(--dur)*.68);filter:brightness(1.35)}.avatar-frame:hover .avatar-lightning{animation-duration:6.5s}.avatar-frame:hover .avatar-partyhat{filter:drop-shadow(0 0 13px #ffe08a) drop-shadow(0 4px 5px #100700)}}
-@media(max-width:700px){.avatar-aura{width:min(90%,190px);top:50%;animation-duration:22s}.avatar-lightning{animation-duration:14s}.avatar-embers span{width:3px;height:3px}}
-@media(prefers-reduced-motion:reduce){.avatar-scene,.avatar-partyhat,.avatar-aura,.avatar-aura::after,.avatar-smoke,.avatar-embers span,.avatar-lightning,.avatar-flash,.avatar-burst{animation:none!important;transition:none!important}.avatar-scene{transform:none!important}.avatar-bursting .avatar-burst{opacity:1;transform:none}.avatar-bursting .avatar-flash{opacity:.2}}
+@keyframes avatar-flash{0%{opacity:.9}100%{opacity:0}}
+@keyframes avatar-title{0%{opacity:0;transform:translateY(8px) scale(.94)}16%{opacity:1;transform:translateY(0) scale(1.02)}76%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-3px) scale(1.02)}}
+@media(hover:hover) and (pointer:fine){.avatar-frame:hover .avatar-aura{animation-duration:1.9s;filter:brightness(1.22) drop-shadow(0 0 7px #ff8c3470)}.avatar-frame:hover .avatar-smoke{opacity:.55;box-shadow:0 0 15px 3px #ff682966}.avatar-frame:hover .avatar-embers span{animation-duration:calc(var(--dur)*.8);filter:brightness(1.15)}.avatar-frame:hover .avatar-lightning{animation-duration:6.5s}.avatar-frame:hover .avatar-partyhat{filter:drop-shadow(0 0 6px #ffe08a) drop-shadow(0 2px 3px #100700)}}
+@media(max-width:700px){.avatar-lightning{animation-duration:14s}.avatar-embers span{width:2px;height:2px}}
+@media(prefers-reduced-motion:reduce){.avatar-scene,.avatar-partyhat,.avatar-aura,.avatar-smoke,.avatar-embers span,.avatar-lightning,.avatar-flash,.avatar-burst{animation:none!important;transition:none!important}.avatar-scene{transform:none!important}.avatar-bursting .avatar-burst{opacity:1;transform:none}.avatar-bursting .avatar-flash{opacity:.2}}
