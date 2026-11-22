@@ -227,3 +227,16 @@ async function refresh(){
 if(CFG.TEST_MODE){$('test-strip').hidden=false}
 $('log-search').addEventListener('input',event=>{query=event.target.value.trim();selected=visible()[0]||null;renderEntries();renderDetail()});$('refresh').addEventListener('click',refresh);
 setupEditor();setupProfile();Promise.allSettled([loadBosses(),loadIconMap()]).then(refresh);if(CFG.REFRESH_MS>0)setInterval(()=>{if(!document.hidden)refresh()},CFG.REFRESH_MS);
+
+
+function setupAvatar(){
+ const avatar=$('profile-avatar');if(!avatar)return;
+ const reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)');let pointer=null,frame=0,burstTimer=0;
+ const updateTilt=()=>{frame=0;if(!pointer||reduceMotion.matches)return;const r=avatar.getBoundingClientRect(),x=(pointer.x-r.left)/r.width,y=(pointer.y-r.top)/r.height;avatar.style.setProperty('--avatar-tilt-x',((x-.5)*8).toFixed(2)+'deg');avatar.style.setProperty('--avatar-tilt-y',((.5-y)*7).toFixed(2)+'deg')};
+ avatar.addEventListener('pointermove',e=>{if(reduceMotion.matches||e.pointerType!=='mouse')return;pointer={x:e.clientX,y:e.clientY};if(!frame)frame=requestAnimationFrame(updateTilt)});
+ avatar.addEventListener('pointerleave',()=>{pointer=null;avatar.style.removeProperty('--avatar-tilt-x');avatar.style.removeProperty('--avatar-tilt-y')});
+ const activate=()=>{avatar.classList.remove('avatar-bursting');void avatar.offsetWidth;avatar.classList.add('avatar-bursting');clearTimeout(burstTimer);burstTimer=window.setTimeout(()=>avatar.classList.remove('avatar-bursting'),1700)};
+ avatar.addEventListener('click',activate);
+ avatar.addEventListener('keydown',e=>{if(e.target!==avatar)return;if(e.key==='Enter'||e.key===' '){e.preventDefault();activate()}});
+}
+setupAvatar();
