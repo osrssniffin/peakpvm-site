@@ -100,7 +100,7 @@ function makeModel(){catalog=categoryCatalog();names=mapItems();owned=parseOwned
 function visible(){return Object.keys(catalog[tab]||{}).filter(slug=>{const matchesName=norm(niceName(slug)).includes(norm(query));const matchItems=(catalog[tab][slug]||[]).some(id=>norm(names[id]||'').includes(norm(query)));return !query||matchesName||matchItems})}
 function obtained(ids){return ids.filter(id=>{const v=owned.byId.get(String(id))??owned.byName.get(norm(names[String(id)]));return v!=null&&v>0}).length}
 function renderTabs(){const node=$('log-tabs');node.replaceChildren();for(const cat of categories){const button=document.createElement('button');button.type='button';button.textContent=titleCase(cat);button.className=tab===cat?'selected':'';button.setAttribute('role','tab');button.setAttribute('aria-selected',String(tab===cat));button.onclick=()=>{tab=cat;selected=visible()[0]||Object.keys(catalog[tab]||{})[0]||null;renderTabs();renderEntries();renderDetail()};node.append(button)}}
-function renderEntries(){const node=$('log-list');node.replaceChildren();const rows=visible();for(const slug of rows){const ids=catalog[tab][slug];const button=document.createElement('button');button.className=selected===slug?'selected':'';const span=document.createElement('span');span.textContent=niceName(slug);const small=document.createElement('small');small.textContent=owned.valid?`${obtained(ids)}/${ids.length}`:'—/'+ids.length;button.append(span,small);button.onclick=()=>{selected=slug;renderEntries();renderDetail()};node.append(button)}if(!rows.length)node.innerHTML='<div class="placeholder">No matching categories</div>'}
+function renderEntries(){const node=$('log-list');node.replaceChildren();const rows=visible();for(const slug of rows){const ids=catalog[tab][slug];const button=document.createElement('button');button.className=[selected===slug?'selected':'',owned.valid&&obtained(ids)===ids.length?'complete':''].filter(Boolean).join(' ');const span=document.createElement('span');span.textContent=niceName(slug);const small=document.createElement('small');small.textContent=owned.valid?`${obtained(ids)}/${ids.length}`:'—/'+ids.length;button.append(span,small);button.onclick=()=>{selected=slug;renderEntries();renderDetail()};node.append(button)}if(!rows.length)node.innerHTML='<div class="placeholder">No matching categories</div>'}
 function renderDetail(){const ids=catalog[tab]?.[selected];const box=$('log-slots');box.replaceChildren();if(!ids){set('entry-name','No collection available');set('entry-obtained','Temple categories have not loaded');set('entry-kc','');set('entry-ratio','—');box.innerHTML='<div class="placeholder">No verified category data loaded. Use Refresh or local live test.</div>';return}
  set('entry-name',niceName(selected));set('entry-obtained',owned.valid?`Obtained: ${obtained(ids)}/${ids.length}`:`Obtained: —/${ids.length} (unsynced)`);set('entry-ratio',owned.valid?`${Math.round(obtained(ids)/Math.max(ids.length,1)*100)}%`:'—');const bossStats=data(live.stats);const kc= bossKC({name:niceName(selected),kcKey:selected,kcAliases:[selected.replaceAll('_',' ')]});set('entry-kc',kc===null?'':`Kills: ${format(kc)}`);
  for(const id of ids){const itemName=names[String(id)] || `Item ${id}`;const count=owned.byId.get(String(id))??owned.byName.get(norm(itemName));const slot=document.createElement('div');const confirmedMissing=owned.valid && !count;slot.className='slot'+(confirmedMissing?' missing':'');slot.title=itemName+(owned.valid?` · ${format(count||0)} recorded`:' · Not synced');const img=createIcon(id,itemName);slot.append(img);if(count>0){const qty=document.createElement('span');qty.className='qty';qty.textContent=format(count);slot.append(qty)}const label=document.createElement('span');label.className='item-label';label.textContent=itemName;slot.append(label);box.append(slot)}set('log-footer-msg',`${Object.values(catalog[tab]||{}).length} categories · ${tab.toUpperCase()} · Temple catalog`)}
@@ -140,7 +140,8 @@ function readSkillRecord(skill){
    xp??=value(findKey(source,[skill+'_xp',skill+'_experience',skill+' xp',skill+' experience']));
  }
  const virtual=xp!==null?virtualLevel(xp):null;
- return {level:level===null?(virtual===null?null:Math.min(virtual,99)):Math.floor(level),xp};
+ const displayLevel=virtual!==null?virtual:(level===null?null:Math.min(Math.floor(level),99));
+ return {level:displayLevel,xp};
 }
 function skillLevel(skill){return readSkillRecord(skill).level}
 function wikiIcon(name){return 'https://oldschool.runescape.wiki/Special:FilePath/'+encodeURIComponent(name.replaceAll(' ','_')+' icon.png')}
@@ -152,9 +153,8 @@ function statsIcon(name,kind){
  }else{
    const boss=bossOptions.find(b=>norm(b.name)===norm(name));
    // Prefer actual game item sprites where a reliable item ID exists.
-   const itemId=boss?.itemId;
-   img.src=itemId ? iconUrl(itemId,boss.pet) : wikiIcon(boss?.pet||name);
-   img.onerror=()=>{img.onerror=null;img.src=MISSING_SPRITE;img.classList.add('error-icon')};
+   const itemId=boss?.itemId ?? petItemId(boss?.pet||name);
+   return createIcon(itemId,boss?.pet||name);
  }
  return img;
 }
