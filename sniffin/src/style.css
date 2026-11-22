@@ -58,7 +58,7 @@
 .profile-empty{grid-column:1/-1;padding:24px 12px;font-size:18px;color:#bba98f;text-align:center}
 .profile-dialog-foot{font-size:14px;color:#b2a18b;padding:8px 16px 13px;border-top:2px ridge #4b3b2d;background:#211c17}
 @media(max-width:760px){.profile-panels{grid-template-columns:1fr}.profile-dialog{max-height:90vh;overflow:auto}.profile-bosses{max-height:350px}.profile-dialog-head h2{font-size:35px}}
-@media(max-width:425px){.profile-skills{grid-template-columns:repeat(3,minmax(0,1fr))}.profile-bosses{grid-template-columns:repeat(2,minmax(0,1fr))}.profile-skill,.profile-boss{padding:3px}.profile-skill img,.profile-boss img{width:22px;height:22px}}
+@media(max-width:425px){.profile-skills{grid-template-columns:repeat(3,minmax(0,1fr))}.profile-bosses{grid-template-columns:repeat(2,minmax(0,1fr))}.profile-skill,.profile-boss{padding:3px}.profile-skill img,.profile-boss img{width:22px;height:22px}.section-top{align-items:flex-start;flex-wrap:wrap;gap:8px}.rune-chip{max-width:100%}}
 
 /* v5 interaction clarity: preserve existing RuneScape typography and colors. */
 .profile-name.profile-open{position:relative;display:inline-block;padding-right:.42em;text-decoration:underline;text-decoration-color:rgba(255,204,119,.42);text-decoration-thickness:2px;text-underline-offset:.11em;transition:filter .15s,text-decoration-color .15s}
