@@ -61,7 +61,7 @@ async function track(request, env) {
   if (!body) return json({ error: "Invalid request" }, 400);
 
   let path = cleanPath(body.path);
-  if (!path || path.startsWith("/admin")) {
+  if (!path || path === "/admin/" || path.startsWith("/admin/")) {
     return json({ ok: true, ignored: true });
   }
 
@@ -174,150 +174,147 @@ async function requireAdmin(request, env) {
 
 async function analytics(request, env) {
   const url = new URL(request.url);
-  const allowedRanges = new Set(["7", "30", "90", "365", "all"]);
+  const allowedRanges = new Set(["24h", "7", "30", "all"]);
   const range = allowedRanges.has(url.searchParams.get("range"))
     ? url.searchParams.get("range")
     : "30";
+  const requestedBranch = url.searchParams.get("branch") || "all";
+  const branch = requestedBranch === "all" || requestedBranch === "other" ||
+    /^\/[^/?#]{1,128}\/$/.test(requestedBranch)
+    ? requestedBranch
+    : "all";
 
   const now = Math.floor(Date.now() / 1000);
   const today = centralParts(new Date()).day;
-  const since = range === "all" ? 0 : now - Number(range) * 86400;
+  const since = range === "all" ? 0 : now - (range === "24h" ? 86400 : Number(range) * 86400);
+  const known = ["all420s", "sniffin", "catchup", "ge"];
+  let branchClause = " AND lower(path) <> '/admin/' AND lower(path) NOT LIKE '/admin/%'";
+  let branchBinds = [];
+  if (branch === "other") {
+    branchClause += " AND (path = '/' OR lower(path) NOT LIKE '/all420s/%' AND lower(path) NOT LIKE '/all420s' AND lower(path) NOT LIKE '/sniffin/%' AND lower(path) NOT LIKE '/sniffin' AND lower(path) NOT LIKE '/catchup/%' AND lower(path) NOT LIKE '/catchup' AND lower(path) NOT LIKE '/ge/%' AND lower(path) NOT LIKE '/ge')";
+  } else if (branch !== "all") {
+    const bare = branch.replace(/\/$/, "");
+    branchClause += " AND (lower(path) = ? OR lower(path) LIKE ?)";
+    branchBinds = [bare, branch + "%"];
+  }
+  const where = "ts >= ? " + branchClause;
+  const binds = since === 0 ? [0, ...branchBinds] : [since, ...branchBinds];
+  const trendSql = range === "24h"
+    ? "day || ' ' || printf('%02d:00', hour)"
+    : "day";
+  const trendGroup = range === "24h" ? "day, hour" : "day";
+  const routeSql = "CASE WHEN path = '/' THEN 'Other Pages' ELSE '/' || lower(substr(path, 2, CASE WHEN instr(substr(path, 2), '/') = 0 THEN length(path) - 1 ELSE instr(substr(path, 2), '/') - 1 END)) || '/' END";
 
   const [
-    summary,
-    todaySummary,
-    online,
-    daily,
-    topPages,
-    referrers,
-    countries,
-    devices,
-    browsers,
-    operatingSystems,
-    recent,
-    hourly,
+    summary, online, daily, topPages, referrers, countries, devices, browsers,
+    operatingSystems, recent, hourly, branches,
   ] = await Promise.all([
     env.DB.prepare(`
-      SELECT
-        COUNT(*) AS pageviews,
-        COUNT(DISTINCT visitor_hash) AS visitors,
-        COUNT(DISTINCT session_hash) AS sessions,
-        MIN(ts) AS first_seen,
-        MAX(ts) AS last_seen
-      FROM pageviews
-      WHERE ts >= ?
-    `).bind(since).first(),
-
-    env.DB.prepare(`
-      SELECT
-        COUNT(*) AS pageviews,
-        COUNT(DISTINCT visitor_hash) AS visitors,
-        COUNT(DISTINCT session_hash) AS sessions
-      FROM pageviews
-      WHERE day = ?
-    `).bind(today).first(),
+      SELECT COUNT(*) AS pageviews,
+             COUNT(DISTINCT visitor_hash) AS visitors,
+             COUNT(DISTINCT session_hash) AS sessions,
+             MIN(ts) AS first_seen,
+             MAX(ts) AS last_seen
+      FROM pageviews WHERE ${where}
+    `).bind(...binds).first(),
 
     env.DB.prepare(`
       SELECT COUNT(DISTINCT visitor_hash) AS visitors
-      FROM pageviews
-      WHERE ts >= ?
-    `).bind(now - 300).first(),
+      FROM pageviews WHERE ts >= ?${branchClause}
+    `).bind(now - 300, ...branchBinds).first(),
 
     env.DB.prepare(`
-      SELECT day,
+      SELECT ${trendSql} AS day,
              COUNT(*) AS pageviews,
              COUNT(DISTINCT visitor_hash) AS visitors,
              COUNT(DISTINCT session_hash) AS sessions
-      FROM pageviews
-      WHERE ts >= ?
-      GROUP BY day
+      FROM pageviews WHERE ${where}
+      GROUP BY ${trendGroup}
       ORDER BY day ASC
-    `).bind(since).all(),
+    `).bind(...binds).all(),
 
     env.DB.prepare(`
-      SELECT path,
+      SELECT CASE WHEN path = '/' THEN '/' ELSE rtrim(path, '/') || '/' END AS path,
              COUNT(*) AS pageviews,
              COUNT(DISTINCT visitor_hash) AS visitors
-      FROM pageviews
-      WHERE ts >= ?
-      GROUP BY path
-      ORDER BY pageviews DESC
-      LIMIT 15
-    `).bind(since).all(),
+      FROM pageviews WHERE ${where}
+      GROUP BY CASE WHEN path = '/' THEN '/' ELSE rtrim(path, '/') || '/' END
+      ORDER BY pageviews DESC LIMIT 15
+    `).bind(...binds).all(),
 
     env.DB.prepare(`
-      SELECT referrer,
-             COUNT(*) AS pageviews
-      FROM pageviews
-      WHERE ts >= ? AND referrer <> ''
-      GROUP BY referrer
-      ORDER BY pageviews DESC
-      LIMIT 12
-    `).bind(since).all(),
+      SELECT referrer, COUNT(*) AS pageviews
+      FROM pageviews WHERE ${where} AND referrer <> ''
+      GROUP BY referrer ORDER BY pageviews DESC LIMIT 12
+    `).bind(...binds).all(),
 
     env.DB.prepare(`
-      SELECT country,
-             COUNT(*) AS pageviews,
+      SELECT country, COUNT(*) AS pageviews,
              COUNT(DISTINCT visitor_hash) AS visitors
-      FROM pageviews
-      WHERE ts >= ?
-      GROUP BY country
-      ORDER BY pageviews DESC
-      LIMIT 15
-    `).bind(since).all(),
+      FROM pageviews WHERE ${where}
+      GROUP BY country ORDER BY pageviews DESC LIMIT 15
+    `).bind(...binds).all(),
 
     env.DB.prepare(`
       SELECT device AS name, COUNT(*) AS pageviews
-      FROM pageviews
-      WHERE ts >= ?
-      GROUP BY device
-      ORDER BY pageviews DESC
-    `).bind(since).all(),
+      FROM pageviews WHERE ${where}
+      GROUP BY device ORDER BY pageviews DESC
+    `).bind(...binds).all(),
 
     env.DB.prepare(`
       SELECT browser AS name, COUNT(*) AS pageviews
-      FROM pageviews
-      WHERE ts >= ?
-      GROUP BY browser
-      ORDER BY pageviews DESC
-      LIMIT 10
-    `).bind(since).all(),
+      FROM pageviews WHERE ${where}
+      GROUP BY browser ORDER BY pageviews DESC LIMIT 10
+    `).bind(...binds).all(),
 
     env.DB.prepare(`
       SELECT os AS name, COUNT(*) AS pageviews
-      FROM pageviews
-      WHERE ts >= ?
-      GROUP BY os
-      ORDER BY pageviews DESC
-      LIMIT 10
-    `).bind(since).all(),
+      FROM pageviews WHERE ${where}
+      GROUP BY os ORDER BY pageviews DESC LIMIT 10
+    `).bind(...binds).all(),
 
     env.DB.prepare(`
       SELECT ts, path, referrer, country, device, browser, os
-      FROM pageviews
-      WHERE ts >= ?
-      ORDER BY ts DESC
-      LIMIT 50
-    `).bind(since).all(),
+      FROM pageviews WHERE ${where}
+      ORDER BY ts DESC LIMIT 50
+    `).bind(...binds).all(),
 
     env.DB.prepare(`
-      SELECT hour,
-             COUNT(*) AS pageviews,
+      SELECT hour, COUNT(*) AS pageviews,
              COUNT(DISTINCT visitor_hash) AS visitors
-      FROM pageviews
-      WHERE day = ?
-      GROUP BY hour
-      ORDER BY hour ASC
-    `).bind(today).all(),
+      FROM pageviews WHERE ${where}
+      GROUP BY hour ORDER BY hour ASC
+    `).bind(...binds).all(),
+
+    env.DB.prepare(`
+      SELECT ${routeSql} AS branch,
+             COUNT(*) AS pageviews,
+             COUNT(DISTINCT visitor_hash) AS visitors,
+             COUNT(DISTINCT session_hash) AS sessions
+      FROM pageviews WHERE ts >= ? AND lower(path) <> '/admin/' AND lower(path) NOT LIKE '/admin/%'
+      GROUP BY branch ORDER BY pageviews DESC
+    `).bind(since).all(),
   ]);
+
+  const branchRows = (branches.results || []).map(row => ({
+    ...row,
+    branch: row.branch === "Other Pages" ? row.branch : row.branch,
+  }));
+  for (const name of known) {
+    const path = "/" + name + "/";
+    if (!branchRows.some(row => row.branch === path)) {
+      branchRows.push({ branch: path, pageviews: 0, visitors: 0, sessions: 0 });
+    }
+  }
+  branchRows.sort((a, b) => Number(b.pageviews || 0) - Number(a.pageviews || 0));
 
   return json({
     ok: true,
     generatedAt: now,
     timezone: CENTRAL_TZ,
     range,
+    branch,
     summary: normalizeRow(summary),
-    today: normalizeRow(todaySummary),
     onlineNow: Number(online?.visitors || 0),
     daily: daily.results || [],
     topPages: topPages.results || [],
@@ -328,6 +325,7 @@ async function analytics(request, env) {
     operatingSystems: operatingSystems.results || [],
     recent: recent.results || [],
     hourly: hourly.results || [],
+    branches: branchRows,
   });
 }
 
@@ -345,6 +343,7 @@ function cleanPath(value) {
     let s = String(value || "/").trim();
     if (!s.startsWith("/")) s = "/" + s;
     s = s.split("#")[0].split("?")[0];
+    s = s === "/" ? "/" : s.replace(/\/+$/, "") + "/";
     return s.slice(0, 512) || "/";
   } catch {
     return "/";
