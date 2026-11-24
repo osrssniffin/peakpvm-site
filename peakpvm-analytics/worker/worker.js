@@ -52,6 +52,12 @@ export default {
 };
 
 async function track(request, env) {
+  const clientIp = request.headers.get("CF-Connecting-IP");
+  const excludedIps = new Set(String(env.EXCLUDED_ANALYTICS_IPS || "").split(",").map(ip => ip.trim()).filter(Boolean));
+  if (clientIp && excludedIps.has(clientIp)) {
+    return json({ ok: true, ignored: true });
+  }
+
   const origin = request.headers.get("Origin");
   if (origin && !isAllowedOrigin(origin)) {
     return json({ error: "Origin not allowed" }, 403);
