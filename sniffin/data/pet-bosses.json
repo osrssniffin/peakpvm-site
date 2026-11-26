@@ -183,7 +183,8 @@
     "kcKey": "Corrupted Gauntlet",
     "pet": "Youngllef",
     "kcAliases": [
-      "Corrupted Hunllef"
+      "Corrupted Hunllef",
+      "The Corrupted Gauntlet"
     ],
     "itemId": null,
     "note": "",
@@ -263,7 +264,8 @@
     "kcAliases": [
       "TzHaar Fight Caves",
       "The Fight Caves",
-      "Jad"
+      "Jad",
+      "TzTok-Jad"
     ],
     "itemId": null,
     "note": "Rates differ on Slayer task and cape gambles.",
@@ -459,7 +461,9 @@
     "name": "Royal Titans",
     "kcKey": "Royal Titans",
     "pet": "Bran",
-    "kcAliases": [],
+    "kcAliases": [
+      "The Royal Titans"
+    ],
     "itemId": null,
     "note": "Rate changes when loot is sacrificed.",
     "ambiguousRate": true
@@ -626,7 +630,8 @@
     "kcKey": "Theatre of Blood: Hard Mode",
     "pet": "Lil' Zik",
     "kcAliases": [
-      "TOB Hard Mode"
+      "TOB Hard Mode",
+      "Theatre of Blood Challenge Mode"
     ],
     "itemId": null,
     "note": "Rates vary by performance and mode.",
