@@ -229,7 +229,7 @@ async function refresh(force=false){
 }
 if(CFG.TEST_MODE){$('test-strip').hidden=false}
 $('log-search').addEventListener('input',event=>{query=event.target.value.trim();selected=visible()[0]||null;renderEntries();renderDetail()});$('refresh').addEventListener('click',()=>refresh(true));
-setupEditor();setupProfile();Promise.allSettled([loadBosses(),loadIconMap()]).then(refresh);if(CFG.REFRESH_MS>0)setInterval(()=>{if(!document.hidden)refresh()},CFG.REFRESH_MS);
+setupEditor();setupProfile();Promise.allSettled([loadBosses(),loadIconMap()]).then(()=>refresh(false));if(CFG.REFRESH_MS>0)setInterval(()=>{if(!document.hidden)refresh()},CFG.REFRESH_MS);
 
 
 function setupAvatar(){
