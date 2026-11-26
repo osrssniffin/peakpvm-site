@@ -7,7 +7,8 @@
     "kcAliases": [],
     "itemId": null,
     "note": "",
-    "ambiguousRate": false
+    "ambiguousRate": false,
+    "dropRate": 2560
   },
   {
     "id": "alchemical-hydra",
@@ -17,7 +18,8 @@
     "kcAliases": [],
     "itemId": null,
     "note": "",
-    "ambiguousRate": false
+    "ambiguousRate": false,
+    "dropRate": 3000
   },
   {
     "id": "amoxliatl",
@@ -27,7 +29,8 @@
     "kcAliases": [],
     "itemId": null,
     "note": "",
-    "ambiguousRate": false
+    "ambiguousRate": false,
+    "dropRate": 3000
   },
   {
     "id": "araxxor",
@@ -47,7 +50,8 @@
     "kcAliases": [],
     "itemId": null,
     "note": "",
-    "ambiguousRate": true
+    "ambiguousRate": false,
+    "dropRate": 2800
   },
   {
     "id": "barbarian-assault",
@@ -67,7 +71,8 @@
     "kcAliases": [],
     "itemId": null,
     "note": "",
-    "ambiguousRate": false
+    "ambiguousRate": false,
+    "dropRate": 1000
   },
   {
     "id": "callisto",
@@ -77,7 +82,8 @@
     "kcAliases": [],
     "itemId": null,
     "note": "",
-    "ambiguousRate": true
+    "ambiguousRate": false,
+    "dropRate": 1500
   },
   {
     "id": "calvar-ion",
@@ -100,7 +106,8 @@
     "kcAliases": [],
     "itemId": null,
     "note": "",
-    "ambiguousRate": false
+    "ambiguousRate": false,
+    "dropRate": 3000
   },
   {
     "id": "chambers-of-xeric",
@@ -134,7 +141,8 @@
     "kcAliases": [],
     "itemId": null,
     "note": "",
-    "ambiguousRate": false
+    "ambiguousRate": false,
+    "dropRate": 300
   },
   {
     "id": "chaos-fanatic",
@@ -144,7 +152,8 @@
     "kcAliases": [],
     "itemId": null,
     "note": "",
-    "ambiguousRate": true
+    "ambiguousRate": false,
+    "dropRate": 1000
   },
   {
     "id": "commander-zilyana",
@@ -154,7 +163,8 @@
     "kcAliases": [],
     "itemId": null,
     "note": "",
-    "ambiguousRate": false
+    "ambiguousRate": false,
+    "dropRate": 5000
   },
   {
     "id": "corporeal-beast",
@@ -164,7 +174,8 @@
     "kcAliases": [],
     "itemId": null,
     "note": "",
-    "ambiguousRate": false
+    "ambiguousRate": false,
+    "dropRate": 5000
   },
   {
     "id": "corrupted-gauntlet",
@@ -172,7 +183,8 @@
     "kcKey": "Corrupted Gauntlet",
     "pet": "Youngllef",
     "kcAliases": [
-      "Corrupted Hunllef"
+      "Corrupted Hunllef",
+      "The Corrupted Gauntlet"
     ],
     "itemId": null,
     "note": "",
@@ -187,7 +199,8 @@
     "kcAliases": [],
     "itemId": null,
     "note": "",
-    "ambiguousRate": false
+    "ambiguousRate": false,
+    "dropRate": 5000
   },
   {
     "id": "dagannoth-rex",
@@ -197,7 +210,8 @@
     "kcAliases": [],
     "itemId": null,
     "note": "",
-    "ambiguousRate": false
+    "ambiguousRate": false,
+    "dropRate": 5000
   },
   {
     "id": "dagannoth-supreme",
@@ -207,7 +221,8 @@
     "kcAliases": [],
     "itemId": null,
     "note": "",
-    "ambiguousRate": false
+    "ambiguousRate": false,
+    "dropRate": 5000
   },
   {
     "id": "demonic-brutus",
@@ -217,7 +232,8 @@
     "kcAliases": [],
     "itemId": null,
     "note": "Demonic Brutus has different odds from regular Brutus.",
-    "ambiguousRate": true
+    "ambiguousRate": false,
+    "dropRate": 400
   },
   {
     "id": "doom-of-mokhaiotl",
@@ -237,7 +253,8 @@
     "kcAliases": [],
     "itemId": null,
     "note": "",
-    "ambiguousRate": false
+    "ambiguousRate": false,
+    "dropRate": 2500
   },
   {
     "id": "fight-caves-jad",
@@ -247,7 +264,8 @@
     "kcAliases": [
       "TzHaar Fight Caves",
       "The Fight Caves",
-      "Jad"
+      "Jad",
+      "TzTok-Jad"
     ],
     "itemId": null,
     "note": "Rates differ on Slayer task and cape gambles.",
@@ -261,7 +279,8 @@
     "kcAliases": [],
     "itemId": null,
     "note": "",
-    "ambiguousRate": false
+    "ambiguousRate": false,
+    "dropRate": 5000
   },
   {
     "id": "giant-mole",
@@ -271,7 +290,8 @@
     "kcAliases": [],
     "itemId": null,
     "note": "",
-    "ambiguousRate": false
+    "ambiguousRate": false,
+    "dropRate": 3000
   },
   {
     "id": "grotesque-guardians",
@@ -281,7 +301,8 @@
     "kcAliases": [],
     "itemId": null,
     "note": "",
-    "ambiguousRate": false
+    "ambiguousRate": false,
+    "dropRate": 3000
   },
   {
     "id": "inferno-zuk",
@@ -306,7 +327,8 @@
     ],
     "itemId": null,
     "note": "",
-    "ambiguousRate": false
+    "ambiguousRate": false,
+    "dropRate": 5000
   },
   {
     "id": "kalphite-queen",
@@ -316,7 +338,8 @@
     "kcAliases": [],
     "itemId": null,
     "note": "",
-    "ambiguousRate": false
+    "ambiguousRate": false,
+    "dropRate": 3000
   },
   {
     "id": "king-black-dragon",
@@ -326,7 +349,8 @@
     "kcAliases": [],
     "itemId": null,
     "note": "",
-    "ambiguousRate": false
+    "ambiguousRate": false,
+    "dropRate": 3000
   },
   {
     "id": "kraken",
@@ -336,7 +360,8 @@
     "kcAliases": [],
     "itemId": null,
     "note": "",
-    "ambiguousRate": false
+    "ambiguousRate": false,
+    "dropRate": 3000
   },
   {
     "id": "kree-arra",
@@ -348,7 +373,8 @@
     ],
     "itemId": null,
     "note": "",
-    "ambiguousRate": false
+    "ambiguousRate": false,
+    "dropRate": 5000
   },
   {
     "id": "leviathan",
@@ -360,7 +386,8 @@
     ],
     "itemId": null,
     "note": "",
-    "ambiguousRate": false
+    "ambiguousRate": false,
+    "dropRate": 2500
   },
   {
     "id": "mad-angel",
@@ -370,7 +397,8 @@
     "kcAliases": [],
     "itemId": null,
     "note": "",
-    "ambiguousRate": false
+    "ambiguousRate": false,
+    "dropRate": 2000
   },
   {
     "id": "maggot-king",
@@ -379,8 +407,9 @@
     "pet": "Maggot marquess",
     "kcAliases": [],
     "itemId": null,
-    "note": "",
-    "ambiguousRate": false
+    "note": "Base kill rate; Take-eggs changes the effective odds.",
+    "ambiguousRate": false,
+    "dropRate": 3500
   },
   {
     "id": "nex",
@@ -390,7 +419,8 @@
     "kcAliases": [],
     "itemId": null,
     "note": "",
-    "ambiguousRate": false
+    "ambiguousRate": false,
+    "dropRate": 500
   },
   {
     "id": "nightmare",
@@ -412,7 +442,8 @@
     "kcAliases": [],
     "itemId": null,
     "note": "",
-    "ambiguousRate": false
+    "ambiguousRate": false,
+    "dropRate": 2500
   },
   {
     "id": "phosani-s-nightmare",
@@ -422,14 +453,17 @@
     "kcAliases": [],
     "itemId": null,
     "note": "",
-    "ambiguousRate": false
+    "ambiguousRate": false,
+    "dropRate": 1400
   },
   {
     "id": "royal-titans",
     "name": "Royal Titans",
     "kcKey": "Royal Titans",
     "pet": "Bran",
-    "kcAliases": [],
+    "kcAliases": [
+      "The Royal Titans"
+    ],
     "itemId": null,
     "note": "Rate changes when loot is sacrificed.",
     "ambiguousRate": true
@@ -442,7 +476,8 @@
     "kcAliases": [],
     "itemId": 23495,
     "note": "",
-    "ambiguousRate": false
+    "ambiguousRate": false,
+    "dropRate": 3000
   },
   {
     "id": "scorpia",
@@ -454,7 +489,8 @@
     ],
     "itemId": null,
     "note": "",
-    "ambiguousRate": false
+    "ambiguousRate": false,
+    "dropRate": 2015.75
   },
   {
     "id": "scurrius",
@@ -474,7 +510,8 @@
     "kcAliases": [],
     "itemId": null,
     "note": "",
-    "ambiguousRate": false
+    "ambiguousRate": false,
+    "dropRate": 3000
   },
   {
     "id": "skotizo",
@@ -484,7 +521,8 @@
     "kcAliases": [],
     "itemId": null,
     "note": "",
-    "ambiguousRate": false
+    "ambiguousRate": false,
+    "dropRate": 65
   },
   {
     "id": "sol-heredit",
@@ -495,8 +533,9 @@
       "Fortis Colosseum"
     ],
     "itemId": null,
-    "note": "Gambles add rolls beyond KC.",
-    "ambiguousRate": true
+    "note": "Per-kill rolls; familiar-contract rolls add extra chances.",
+    "ambiguousRate": false,
+    "dropRate": 200
   },
   {
     "id": "spindel",
@@ -516,8 +555,9 @@
     "pet": "Tiny tempor",
     "kcAliases": [],
     "itemId": null,
-    "note": "Chance per reward pool roll, not per KC.",
-    "ambiguousRate": true
+    "note": "Rate is per reward pool.",
+    "ambiguousRate": false,
+    "dropRate": 8000
   },
   {
     "id": "the-fractured-archive",
@@ -529,7 +569,8 @@
     ],
     "itemId": null,
     "note": "Raid pet drop rate may depend on rewards or participation.",
-    "ambiguousRate": true
+    "ambiguousRate": false,
+    "dropRate": 750
   },
   {
     "id": "the-gauntlet",
@@ -555,7 +596,8 @@
     ],
     "itemId": null,
     "note": "",
-    "ambiguousRate": false
+    "ambiguousRate": false,
+    "dropRate": 400
   },
   {
     "id": "the-whisperer",
@@ -567,7 +609,8 @@
     ],
     "itemId": null,
     "note": "",
-    "ambiguousRate": false
+    "ambiguousRate": false,
+    "dropRate": 2000
   },
   {
     "id": "theatre-of-blood",
@@ -587,7 +630,8 @@
     "kcKey": "Theatre of Blood: Hard Mode",
     "pet": "Lil' Zik",
     "kcAliases": [
-      "TOB Hard Mode"
+      "TOB Hard Mode",
+      "Theatre of Blood Challenge Mode"
     ],
     "itemId": null,
     "note": "Rates vary by performance and mode.",
@@ -603,7 +647,8 @@
     ],
     "itemId": null,
     "note": "",
-    "ambiguousRate": false
+    "ambiguousRate": false,
+    "dropRate": 3000
   },
   {
     "id": "tombs-of-amascut",
@@ -625,7 +670,8 @@
     "kcAliases": [],
     "itemId": null,
     "note": "",
-    "ambiguousRate": false
+    "ambiguousRate": false,
+    "dropRate": 3000
   },
   {
     "id": "venenatis",
@@ -659,7 +705,8 @@
     "kcAliases": [],
     "itemId": null,
     "note": "",
-    "ambiguousRate": false
+    "ambiguousRate": false,
+    "dropRate": 3000
   },
   {
     "id": "wintertodt",
@@ -668,8 +715,9 @@
     "pet": "Phoenix",
     "kcAliases": [],
     "itemId": null,
-    "note": "Reward-roll based, not per KC.",
-    "ambiguousRate": true
+    "note": "Rate is per reward crate.",
+    "ambiguousRate": false,
+    "dropRate": 5000
   },
   {
     "id": "yama",
@@ -678,8 +726,9 @@
     "pet": "Yami",
     "kcAliases": [],
     "itemId": null,
-    "note": "Contracts change the rate.",
-    "ambiguousRate": true
+    "note": "Standard kill rate; familiar-contract rolls add extra chances.",
+    "ambiguousRate": false,
+    "dropRate": 2500
   },
   {
     "id": "zalcano",
@@ -689,7 +738,8 @@
     "kcAliases": [],
     "itemId": null,
     "note": "",
-    "ambiguousRate": false
+    "ambiguousRate": false,
+    "dropRate": 2250
   },
   {
     "id": "zulrah",
@@ -699,6 +749,7 @@
     "kcAliases": [],
     "itemId": null,
     "note": "",
-    "ambiguousRate": false
+    "ambiguousRate": false,
+    "dropRate": 4000
   }
 ]
